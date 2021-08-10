@@ -2,8 +2,8 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-import Map
 
+from map import Map
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -25,22 +25,36 @@ if __name__ == '__main__':
 #   @ es el player
 #     es blanco
 
-asciiMap =  [['#', '#', '#'],
-        ['#', '.', '#'],
-        ['#', ' ', '#'],
-        ['#', ' ', '#'],
-        ['#', ' ', '#'],
-        ['#', '$', '#'],
-        ['#', ' ', '#'],
-        ['#', '@', '#'],
-        ['#', '#', '#']]
+asciiMap =  [["#", "#", "#"],
+        ["#", ".", "#"],
+        ["#", " ", "#"],
+        ["#", " ", "#"],
+        ["#", " ", "#"],
+        ["#", "$", "#"],
+        ["#", " ", "#"],
+        ["#", "@", "#"],
+        ["#", " ", "#"],
+        ["#", "#", "#"]]
 
-map = Map
+'''
+for i in asciiMap:
+    print()
+    for j in i:
+        print(j, end="")
+        '''
 
-map.fillMap(asciiMap, 9, 3)
+map = Map(asciiMap, 10, 3)
 
+map.printBoard()
+map.movePlayer("up")
+map.printBoard()
 
-
+map.movePlayer("up")
+map.printBoard()
+'''
+map.movePlayer("up")
+map.printBoard()
+'''
 
 state = {'player': [7,1],
          'box': [5,1],

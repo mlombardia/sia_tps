@@ -39,19 +39,16 @@ class Cell:
 class Box(Cell):
     symbol = "$"
     curr_pos = []
-    kind="box"
 
 
 class Wall(Cell):
     symbol = "#"
     curr_pos = []
-    kind="wall"
 
 
 class Blank(Cell):
     symbol = " "
     curr_pos = []
-    kind="blank"
 
     def move_up(self):
         return True
@@ -61,4 +58,3 @@ class Objective(Cell):
     isCompleted = False
     symbol = "."
     curr_pos = []
-    kind="objective"
