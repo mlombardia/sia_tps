@@ -1,5 +1,15 @@
-from main import Map
 
+class Parent():
+    name="pepito"
+    def __init__(self,name):
+        self.name = name
+
+class Child(Parent):
+    def __init__(self,name):
+        super().__init__(name)
+
+    def show_name(self):
+        print(self.name)
 
 class Cell:
     symbol = ""
@@ -26,19 +36,19 @@ class Cell:
 
 
 
-class Box:
+class Box(Cell):
     symbol = "$"
     curr_pos = []
     kind="box"
 
 
-class Wall:
+class Wall(Cell):
     symbol = "#"
     curr_pos = []
     kind="wall"
 
 
-class Blank:
+class Blank(Cell):
     symbol = " "
     curr_pos = []
     kind="blank"
@@ -47,7 +57,7 @@ class Blank:
         return True
 
 
-class Objective:
+class Objective(Cell):
     isCompleted = False
     symbol = "."
     curr_pos = []

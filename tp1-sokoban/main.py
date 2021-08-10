@@ -2,6 +2,7 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import Map
 
 
 def print_hi(name):
@@ -34,9 +35,9 @@ asciiMap =  [['#', '#', '#'],
         ['#', '@', '#'],
         ['#', '#', '#']]
 
+map = Map
 
-
-Map.fillMap(asciiMap, 9, 3)
+map.fillMap(asciiMap, 9, 3)
 
 
 
