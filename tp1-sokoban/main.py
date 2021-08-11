@@ -50,25 +50,19 @@ map.printBoard()
 map.movePlayer("up")
 map.printBoard()
 
-map.movePlayer("up")
+map.movePlayer("right")
 map.printBoard()
 
 map.movePlayer("up")
 map.printBoard()
 
-map.movePlayer("up")
+map.movePlayer("right")
 map.printBoard()
 
-map.movePlayer("up")
+
+map.movePlayer("down")
 map.printBoard()
 
-map.movePlayer("up")
+map.movePlayer("down")
 map.printBoard()
-'''
-map.movePlayer("up")
-map.printBoard()
-'''
 
-state = {'player': [7, 1],
-         'box': [5, 1],
-         }

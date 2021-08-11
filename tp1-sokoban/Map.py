@@ -1,6 +1,7 @@
 from cells import Wall, ObjectiveCell, Cell
 from tokens import Box, Player, Token
 
+
 class Map():
     cellMap = []
     playerFila = 0
@@ -8,20 +9,22 @@ class Map():
     cantFilas = 0
     cantColumnas = 0
     objectiveList = []
+    caja = Box()
+    pared = Wall()
 
     def __init__(self, asciiMap, cantFilas, cantColumnas):
         self.cantColumnas = cantColumnas
         self.cantFilas = cantFilas
-        #for x in range(cantFilas):
+        # for x in range(cantFilas):
         x = 0
         for j in asciiMap:
             y = 0
             aux = []
             for k in j:
                 auxCell = Cell()
-                if(k == "#"):
+                if (k == "#"):
                     aux.append(Wall())
-                elif(k == " "):
+                elif (k == " "):
                     aux.append(auxCell)
                 elif (k == "$"):
                     auxCell.update(Box())
@@ -32,7 +35,7 @@ class Map():
                     self.playerFila = x
                     self.playerColumna = y
                 elif (k == "."):
-                    auxObj=ObjectiveCell()
+                    auxObj = ObjectiveCell()
                     aux.append(auxObj)
                     self.objectiveList.append(auxObj)
                 y += 1
@@ -62,14 +65,20 @@ class Map():
                 self.cellMap[coordinates[0]][coordinates[1] + 1] = element
     '''
 
+    '''
     def isThing(self, row, col, element):
         if isinstance(element, Cell):
+            print("cosa 1")
             return isinstance(self.cellMap[row][col], element)
         elif isinstance(element, Token):
+            print("cosa 2")
             return isinstance(self.cellMap[row][col].token, element)
 
-        print("error in isThing")
-
+        if isinstance(self.caja, Token):
+            print("box es token")
+        
+        #print("error in isThing")
+    '''
 
     def check_if_win(self):
         for cell in self.objectiveList:
@@ -80,69 +89,88 @@ class Map():
         return True
 
     def check_if_loose(self):
-        for row in self.cellMap:
-            for col in j:
-                if isinstance((self.cellMap[row])[self.col].token, Box):
-                    if((isinstance((self.cellMap[row+1])[col], Wall) and isinstance((self.cellMap[row])[col+1], Wall)))
-        return
+        row = 0
+        for x in self.cellMap:
+            col = 0
+            for y in x:
+                # if isinstance(x[y], Box)
+                if isinstance((self.cellMap[row])[col].token, Box):  # si la caja está en una esquina
+                    if ((isinstance((self.cellMap[row + 1])[col], Wall) and isinstance((self.cellMap[row])[col + 1],
+                                                                                       Wall)) or
+                            (isinstance((self.cellMap[row + 1])[col], Wall) and isinstance((self.cellMap[row])[col + 1],
+                                                                                           Wall)) or
+                            (isinstance((self.cellMap[row + 1])[col], Wall) and isinstance((self.cellMap[row])[col + 1],
+                                                                                           Wall)) or
+                            (isinstance((self.cellMap[row + 1])[col], Wall) and isinstance((self.cellMap[row])[col + 1],
+                                                                                           Wall))):
+                        print("perdiste")
+                        return True
+                col += 1
+            row += 1
+        return False
 
     def movePlayer(self, direction):
-            if direction == 'up':
-                if isinstance((self.cellMap[self.playerFila-1])[self.playerColumna], Wall):
+        if direction == 'up':
+            if isinstance((self.cellMap[self.playerFila - 1])[self.playerColumna], Wall):
+                return False
+            elif isinstance((self.cellMap[self.playerFila - 1])[self.playerColumna].token, Box):
+                if isinstance((self.cellMap[self.playerFila - 2])[self.playerColumna].token, Box) or isinstance(
+                        (self.cellMap[self.playerFila - 2])[self.playerColumna], Wall):
                     return False
-                elif isinstance((self.cellMap[self.playerFila-1])[self.playerColumna].token, Box):
-                    if isinstance((self.cellMap[self.playerFila-2])[self.playerColumna].token, Box) or isinstance((self.cellMap[self.playerFila-2])[self.playerColumna], Wall):
-                        return False
-                    else:
-                        (self.cellMap[self.playerFila - 2])[self.playerColumna].update(Box())
+                else:
+                    (self.cellMap[self.playerFila - 2])[self.playerColumna].update(Box())
 
-                (self.cellMap[self.playerFila - 1])[self.playerColumna].update(Player())
-                (self.cellMap[self.playerFila])[self.playerColumna].token = None
-                (self.cellMap[self.playerFila])[self.playerColumna].symbol = " "
-                self.playerFila = self.playerFila - 1
+            (self.cellMap[self.playerFila - 1])[self.playerColumna].update(Player())
+            (self.cellMap[self.playerFila])[self.playerColumna].token = None
+            (self.cellMap[self.playerFila])[self.playerColumna].symbol = " "
+            self.playerFila = self.playerFila - 1
 
-            elif direction == 'down':
-                if isinstance((self.cellMap[self.playerFila + 1])[self.playerColumna], Wall):
+        elif direction == 'down':
+            if isinstance((self.cellMap[self.playerFila + 1])[self.playerColumna], Wall):
+                return False
+            elif isinstance((self.cellMap[self.playerFila + 1])[self.playerColumna].token, Box):
+                if isinstance((self.cellMap[self.playerFila + 2])[self.playerColumna].token, Box) or isinstance(
+                        (self.cellMap[self.playerFila + 2])[self.playerColumna], Wall):
                     return False
-                elif isinstance((self.cellMap[self.playerFila + 1])[self.playerColumna].token, Box):
-                    if isinstance((self.cellMap[self.playerFila + 2])[self.playerColumna].token, Box) or isinstance((self.cellMap[self.playerFila + 2])[self.playerColumna], Wall):
-                        return False
-                    else:
-                        (self.cellMap[self.playerFila + 2])[self.playerColumna].update(Box())
+                else:
+                    (self.cellMap[self.playerFila + 2])[self.playerColumna].update(Box())
 
-                (self.cellMap[self.playerFila + 1])[self.playerColumna].update(Player())
-                (self.cellMap[self.playerFila])[self.playerColumna].token = None
-                (self.cellMap[self.playerFila])[self.playerColumna].symbol = " "
-                self.playerFila = self.playerFila + 1
+            (self.cellMap[self.playerFila + 1])[self.playerColumna].update(Player())
+            (self.cellMap[self.playerFila])[self.playerColumna].token = None
+            (self.cellMap[self.playerFila])[self.playerColumna].symbol = " "
+            self.playerFila = self.playerFila + 1
 
-            elif direction == 'left':
-                if isinstance((self.cellMap[self.playerFila])[self.playerColumna-1], Wall):
+        elif direction == 'left':
+            if isinstance((self.cellMap[self.playerFila])[self.playerColumna - 1], Wall):
+                return False
+            elif isinstance((self.cellMap[self.playerFila])[self.playerColumna - 1].token, Box):
+                if isinstance((self.cellMap[self.playerFila])[self.playerColumna - 2].token, Box) or isinstance(
+                        (self.cellMap[self.playerFila])[self.playerColumna - 2], Wall):
                     return False
-                elif isinstance((self.cellMap[self.playerFila])[self.playerColumna-1].token, Box):
-                    if isinstance((self.cellMap[self.playerFila])[self.playerColumna-2].token, Box) or isinstance((self.cellMap[self.playerFila])[self.playerColumna-2], Wall):
-                        return False
-                    else:
-                        (self.cellMap[self.playerFila])[self.playerColumna-2].update(Box())
+                else:
+                    (self.cellMap[self.playerFila])[self.playerColumna - 2].update(Box())
 
-                (self.cellMap[self.playerFila])[self.playerColumna-1].update(Player())
-                (self.cellMap[self.playerFila])[self.playerColumna].token = None
-                (self.cellMap[self.playerFila])[self.playerColumna].symbol = " "
-                self.playerColumna = self.playerColumna - 1
+            (self.cellMap[self.playerFila])[self.playerColumna - 1].update(Player())
+            (self.cellMap[self.playerFila])[self.playerColumna].token = None
+            (self.cellMap[self.playerFila])[self.playerColumna].symbol = " "
+            self.playerColumna = self.playerColumna - 1
 
-            elif direction == 'right':
-                if isinstance((self.cellMap[self.playerFila])[self.playerColumna+1], Wall):
+        elif direction == 'right':
+            if isinstance((self.cellMap[self.playerFila])[self.playerColumna + 1], Wall):
+                return False
+            elif isinstance((self.cellMap[self.playerFila])[self.playerColumna + 1].token, Box):
+                if isinstance((self.cellMap[self.playerFila])[self.playerColumna + 2].token, Box) or isinstance(
+                        (self.cellMap[self.playerFila])[self.playerColumna + 2], Wall):
                     return False
-                elif isinstance((self.cellMap[self.playerFila])[self.playerColumna+1].token, Box):
-                    if isinstance((self.cellMap[self.playerFila])[self.playerColumna+2].token, Box) or isinstance((self.cellMap[self.playerFila])[self.playerColumna+2], Wall):
-                        return False
-                    else:
-                        (self.cellMap[self.playerFila])[self.playerColumna+2].update(Box())
+                else:
+                    (self.cellMap[self.playerFila])[self.playerColumna + 2].update(Box())
 
-                (self.cellMap[self.playerFila])[self.playerColumna+1].update(Player())
-                (self.cellMap[self.playerFila])[self.playerColumna].token = None
-                (self.cellMap[self.playerFila])[self.playerColumna].symbol = " "
-                self.playerColumna = self.playerColumna + 1
+            (self.cellMap[self.playerFila])[self.playerColumna + 1].update(Player())
+            (self.cellMap[self.playerFila])[self.playerColumna].token = None
+            (self.cellMap[self.playerFila])[self.playerColumna].symbol = " "
+            self.playerColumna = self.playerColumna + 1
 
+        return True  # move successfull
 
     def printBoard(self):
         for i in self.cellMap:
@@ -152,6 +180,8 @@ class Map():
 
         self.check_if_win()
         self.check_if_loose()
+
+
 '''
             case 'down':
                 self.playerFila = self.playerFila + 1
