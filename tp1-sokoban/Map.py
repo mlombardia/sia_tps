@@ -12,6 +12,7 @@ class Map():
     caja = Box()
     pared = Wall()
 
+
     def __init__(self, asciiMap, cantFilas, cantColumnas):
         self.cantColumnas = cantColumnas
         self.cantFilas = cantFilas
@@ -80,7 +81,7 @@ class Map():
         #print("error in isThing")
     '''
 
-    def check_if_win(self):
+    def checkIfWin(self):
         for cell in self.objectiveList:
             if not cell.isCompleted():
                 return False
@@ -88,7 +89,7 @@ class Map():
         exit()
         return True
 
-    def check_if_loose(self):
+    def checkIfLoose(self):
         row = 0
         for x in self.cellMap:
             col = 0
@@ -178,8 +179,8 @@ class Map():
             for j in i:
                 print(j.symbol, end="")
 
-        self.check_if_win()
-        self.check_if_loose()
+        self.checkIfWin()
+        self.checkIfLoose()
 
 
 '''

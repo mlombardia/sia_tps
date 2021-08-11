@@ -4,7 +4,7 @@
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 from Map import Map
-
+from AI import AI
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -46,6 +46,7 @@ for i in asciiMap:
 
 map = Map(asciiMap, 10, 5)
 
+'''
 map.printBoard()
 map.movePlayer("up")
 map.printBoard()
@@ -65,4 +66,7 @@ map.printBoard()
 
 map.movePlayer("down")
 map.printBoard()
+'''
 
+ai = AI(map)
+ai.DFS()
