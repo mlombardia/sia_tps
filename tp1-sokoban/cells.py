@@ -1,7 +1,7 @@
 from tokens import *
 
 class Cell():
-    Token = None
+    token = None
     symbol= ""
 
     def __init__(self):
@@ -17,7 +17,7 @@ class ObjectiveCell(Cell):
         self.symbol = "."
 
     def isCompleted(self):
-        return isinstance(self.Token, Box)
+        return isinstance(self.token, Box)
 
 class Wall(Cell):
     def __init__(self):
