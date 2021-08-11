@@ -1,5 +1,6 @@
 from cells import Wall, ObjectiveCell, Cell
 from tokens import Box, Player, Token
+from node import Node
 
 
 class Map():
@@ -181,6 +182,88 @@ class Map():
 
         self.checkIfWin()
         self.checkIfLoose()
+
+    def can_move(self, direction, position): #chequeo todo el tema de instancias para ver si se puede mover 
+        if direction == 'up':
+            if isinstance((self.cellMap[position[0]])[position[1]], Player):
+                if not isinstance((self.cellMap[position[0]-1])[position[1]], Wall):
+                    if isinstance((self.cellMap[position[0]-1])[position[1]], Box):
+                        return self.can_move('up', [position[0]-1, position[1]])
+                    else:
+                        return True
+                else:
+                    return False
+            elif isinstance((self.cellMap[position[0]])[position[1]], Box):
+                if not isinstance((self.cellMap[position[0]-1])[position[1]], Wall):
+                    if isinstance((self.cellMap[position[0]-1])[position[1]], Box):
+                        return False
+                    else:
+                        return True
+                else:
+                    return False
+        elif direction == 'down':
+            if isinstance((self.cellMap[position[0]])[position[1]], Player):
+                if not isinstance((self.cellMap[position[0] + 1])[position[1]], Wall):
+                    if isinstance((self.cellMap[position[0] + 1])[position[1]], Box):
+                        return self.can_move('down', [position[0] + 1, position[1]])
+                    else:
+                        return True
+                else:
+                    return False
+            elif isinstance((self.cellMap[position[0]])[position[1]], Box):
+                if not isinstance((self.cellMap[position[0] + 1])[position[1]], Wall):
+                    if isinstance((self.cellMap[position[0] + 1])[position[1]], Box):
+                        return False
+                    else:
+                        return True
+                else:
+                    return False
+        elif direction == 'left':
+            if isinstance((self.cellMap[position[0]])[position[1]], Player):
+                if not isinstance((self.cellMap[position[0]])[position[1]+1], Wall):
+                    if isinstance((self.cellMap[position[0]])[position[1]+1], Box):
+                        return self.can_move('left', [position[0], position[1]+1])
+                    else:
+                        return True
+                else:
+                    return False
+            elif isinstance((self.cellMap[position[0]])[position[1]], Box):
+                if not isinstance((self.cellMap[position[0]])[position[1]+1], Wall):
+                    if isinstance((self.cellMap[position[0]])[position[1]+1], Box):
+                        return False
+                    else:
+                        return True
+                else:
+                    return False
+        else:
+            if isinstance((self.cellMap[position[0]])[position[1]], Player):
+                if not isinstance((self.cellMap[position[0]])[position[1] - 1], Wall):
+                    if isinstance((self.cellMap[position[0]])[position[1] - 1], Box):
+                        return self.can_move('left', [position[0], position[1] - 1])
+                    else:
+                        return True
+                else:
+                    return False
+            elif isinstance((self.cellMap[position[0]])[position[1]], Box):
+                if not isinstance((self.cellMap[position[0]])[position[1]-1], Wall):
+                    if isinstance((self.cellMap[position[0]])[position[1]-1], Box):
+                        return False
+                    else:
+                        return True
+                else:
+                    return False
+
+    def check_adjacent_moves(self, previous_node): #version reducida de todo lo de arriba
+        node_list = []
+        if self.can_move('up', previous_node.player):
+            node_list.append(Node([previous_node.player[0]-1, previous_node.player[1]], previous_node, 'up'))
+        if self.can_move('down', previous_node.player):
+            node_list.append(Node([previous_node.player[0]+1, previous_node.player[1]], previous_node, 'down'))
+        if self.can_move('right', previous_node.player):
+            node_list.append(Node([previous_node.player[0], previous_node.player[1]+1], previous_node, 'right'))
+        if self.can_move('left', previous_node.player):
+            node_list.append(Node([previous_node.player[0], previous_node.player[1]-1], previous_node, 'left'))
+        return node_list
 
 
 '''

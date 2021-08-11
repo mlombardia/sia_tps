@@ -5,6 +5,7 @@
 
 from Map import Map
 from AI import AI
+from dfs import DFS
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -68,5 +69,10 @@ map.movePlayer("down")
 map.printBoard()
 '''
 
-ai = AI(map)
-ai.DFS()
+#ai = AI(map)
+#ai.DFS()
+
+dfs = DFS()
+seq = dfs.search(map)
+print(seq)
+print(len(seq))
