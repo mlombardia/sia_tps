@@ -7,6 +7,7 @@ from Map import Map
 from AI import AI
 from dfs import DFS
 
+
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
@@ -27,12 +28,13 @@ if __name__ == '__main__':
 #   @ es el player
 #     es blanco
 
-asciiMap = [["#", "#", "#", "#"],
-            ["#", ".", " ", "#"],
-            ["#", "$", " ", "#"],
-            ["#", " ", " ", "#"],
-            ["#", "@", " ", "#"],
-            ["#", "#", "#", "#"]]
+asciiMap = [["#", "#", "#", "#", "#"],
+            ["#", ".", " ", " ", "#"],
+            ["#", " ", "$", " ", "#"],
+            ["#", " ", " ", " ", "#"],
+            ["#", "@", " ", " ", "#"],
+            ["#", " ", " ", " ", "#"],
+            ["#", "#", "#", "#", "#"]]
 
 '''
 for i in asciiMap:
@@ -65,14 +67,17 @@ map.movePlayer("down")
 map.printBoard()
 '''
 
-#ai = AI(map)
-#ai.DFS()
-#map.printBoard()
+# ai = AI(map)
+# ai.DFS()
+# map.printBoard()
 # for i in map.coordinates:
 #     print()
 #     for j in i:
 #         print(j.element, end=" ")
 dfs = DFS()
 seq = dfs.search(map)
-print(seq.directions)
-print(len(seq.directions))
+if seq is not None:
+    print(seq.directions)
+    print(len(seq.directions))
+else:
+    print("No path was found")
