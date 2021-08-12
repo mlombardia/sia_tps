@@ -27,12 +27,12 @@ if __name__ == '__main__':
 #   @ es el player
 #     es blanco
 
-asciiMap = [["#", "#", "#"],
-            ["#", ".", "#"],
-            ["#", " ", "#"],
-            ["#", "$", "#"],
-            ["#", "@", "#"],
-            ["#", "#", "#"]]
+asciiMap = [["#", "#", "#", "#"],
+            ["#", ".", " ", "#"],
+            ["#", "$", " ", "#"],
+            ["#", " ", " ", "#"],
+            ["#", " ", "@", "#"],
+            ["#", "#", "#", "#"]]
 
 '''
 for i in asciiMap:
@@ -41,7 +41,7 @@ for i in asciiMap:
         print(j, end="")
         '''
 
-map = Map(asciiMap, 6, 4)
+map = Map(asciiMap, 6, 3)
 
 '''
 map.printBoard()
@@ -74,5 +74,5 @@ map.printBoard()
 #         print(j.element, end=" ")
 dfs = DFS()
 seq = dfs.search(map)
-print(seq)
-print(len(seq))
+print(seq.directions)
+print(len(seq.directions))

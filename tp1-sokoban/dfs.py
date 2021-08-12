@@ -18,7 +18,7 @@ class DFS(SearchMethod):
             current = node_stack.pop()                                                  #agarro un nodo, lo agrego a visitados
             visited_nodes.add(current)
             print(current.direction)
-            if game_map.check_if_win():
+            if game_map.check_if_win(current):
                 return Sequence(current)                                                #si en este nodo encuentro que gane,
             else:                                                                       #devuelvo la secuencia de nodos
                 new_moves = game_map.check_adjacent_moves(current)

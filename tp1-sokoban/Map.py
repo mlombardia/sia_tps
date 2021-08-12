@@ -199,29 +199,28 @@ class Map():
 
     def can_move_box(self, direction, position, boxes, new_boxes):
         if direction == 'up':
-            if ([position[0] - 1, position[1]] not in self.walls) and ([position[0] - 1, position[1]] not in boxes):
+            if ([position[0]-1, position[1]] not in self.walls) and ([position[0]-1, position[1]] not in boxes):
                 new_boxes.append([position[0]-1, position[1]])
                 return True
             else:
                 return False
 
         elif direction == 'down':
-            if ([position[0] + 1, position[1]] not in self.walls) and ([position[0] + 1, position[1]] not in boxes):
+            if ([position[0]+1, position[1]] not in self.walls) and ([position[0]+1, position[1]] not in boxes):
                 new_boxes.append([position[0]+1, position[1]])
                 return True
             else:
                 return False
-
-        elif direction == 'left':
-            if([position[0], position[1] + 1] not in self.walls) and ([position[0], position[1] + 1] not in boxes):
-                new_boxes.append([position[0], position[1]+1])
+        elif direction =='left':
+            if([position[0], position[1]-1] not in self.walls) and ([position[0], position[1]-1] not in boxes):
+                new_boxes.append([position[0], position[1]-1])
                 return True
             else:
                 return False
 
         elif direction == 'right':
-            if ([position[0], position[1] - 1] not in self.walls) and ([position[0], position[1] - 1] not in boxes):
-                new_boxes.append([position[0], position[1]-1])
+            if([position[0], position[1]+1] not in self.walls) and ([position[0], position[1]+1] not in boxes):
+                new_boxes.append([position[0], position[1]+1])
                 return True
             else:
                 return False
@@ -230,7 +229,7 @@ class Map():
         if direction == 'up':
             if [position[0] - 1, position[1]] not in self.walls:
                 if [position[0] - 1, position[1]] in boxes:
-                    if self.can_move_box('up', [position[0]-1, position[1]], boxes, new_boxes):
+                    if self.can_move_box( 'up', [position[0]-1, position[1]], boxes, new_boxes):
                         #if existe una caja en la lista con esas coordenadas
                         new_boxes.remove([position[0]-1, position[1]])
                         return True
@@ -238,18 +237,33 @@ class Map():
                     return True
             else:
                 return False
-
-        if direction == 'down':
-            if [position[0] + 1, position[1]] not in self.walls:
-                if [position[0] + 1, position[1]] in boxes:
-                    if self.can_move_box('down', [position[0] + 1, position[1]], boxes, new_boxes):
-                        # if existe una caja en la lista con esas coordenadas
-                        new_boxes.remove([position[0] + 1, position[1]])
-                        return True
+            if direction == 'down':
+                if self.coordinates[position[0] + 1][position[1]].element != 'wall':
+                    if self.coordinates[position[0] + 1][position[1]].element == 'box':
+                        if self.can_move_box('down', [position[0] + 1, position[1]], boxes, new_boxes):
+                            # if existe una caja en la lista con esas coordenadas
+                            new_boxes.remove([position[0] + 1, position[1]])
+                            return True
                 else:
-                    return True
-            else:
-                return False
+                    return False
+                if direction == 'left':
+                    if self.coordinates[position[0]][position[1] + 1].element != 'wall':
+                        if self.coordinates[position[0]][position[1] + 1].element == 'box':
+                            if self.can_move_box('left', [position[0], position[1] + 1], boxes, new_boxes):
+                                # if existe una caja en la lista con esas coordenadas
+                                new_boxes.remove([position[0], position[1] + 1])
+                                return True
+                    else:
+                        return False
+                    if direction == 'right':
+                        if self.coordinates[position[0]][position[1] - 1].element != 'wall':
+                            if self.coordinates[position[0]][position[1] - 1].element == 'box':
+                                if self.can_move_box('right', [position[0], position[1] - 1], boxes, new_boxes):
+                                    # if existe una caja en la lista con esas coordenadas
+                                    new_boxes.remove([position[0], position[1] - 1])
+                                    return True
+                        else:
+                            return False
 
         if direction == 'left':
             if [position[0], position[1] + 1] not in self.walls:
@@ -288,10 +302,11 @@ class Map():
             node_list.append(Node([previous_node.player[0], previous_node.player[1] - 1], previous_node, 'left', aux_boxes))
         return node_list
 
-    def check_if_win(self):
-        for objective in self.objectives:
-            if self.coordinates[objective[0]][objective[1]].element == 'box':
-                return True
+    def check_if_win(self, node):
+        for box in node.boxes:
+            if box not in self.objectives:
+                return False
+        return True
 
 '''
             case 'down':
