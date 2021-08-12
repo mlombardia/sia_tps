@@ -25,4 +25,5 @@ class DFS(SearchMethod):
                 for move in new_moves:                                                  #sino, chequeo que movs disponibles
                     if move not in visited_nodes:                                       #y los agrego al stack si no fue visitado
                         node_stack.append(move)
+
         return []

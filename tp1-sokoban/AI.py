@@ -2,7 +2,7 @@ import copy
 from Map import Map
 from cells import Cell
 
-'''
+
 class AI:
     stateList = []
     hashList = []
@@ -21,24 +21,6 @@ class AI:
         self.hashList.append(auxState.hash)
         auxState.printState()
         print("end initial---------------")
-
-    def moveUp(self):
-        if self.mentalMap.movePlayer("up"):
-            self.stateList.append(State(self.mentalMap))
-
-    def moveDown(self):
-        if self.mentalMap.movePlayer("down"):
-            self.stateList.append(State(self.mentalMap))
-
-    def moveLeft(self):
-        if self.mentalMap.movePlayer("left"):
-            self.stateList.append(State(self.mentalMap))
-
-    def moveRight(self):
-        if self.mentalMap.movePlayer("right"):
-            auxState = State(self.mentalMap)
-            self.stateList.append(auxState)
-            self.hashList.append(auxState.hash)
 
     def move(self, direction):
         if (direction == "up"):
@@ -61,41 +43,30 @@ class AI:
                 auxState = State(self.mentalMap)
                 self.stateList.append(auxState)
                 self.hashList.append(auxState.hash)
-'''
-'''
-    def DFS(self):
-        #dfs recursivo abandonado:
-        
-        for move in self.moves:
-            print(move)
-            if self.auxMap.movePlayer(move):
-                if State(self.auxMap) in self.stateList: #if self.stateList.contains(State(self.mentalMap))
-                    print("oops")
-                    return
-                else:
-                    self.mentalMap.movePlayer(move)
-                    print("going in")
-                    self.DFS()
-                    print("coming out")
-'''
-'''
-        #evidencia de que el copy es una garcha:
-        testMap = copy.deepcopy(self.mentalMap)
 
-        self.mentalMap.printBoard()
-        testMap.printBoard()
-        testMap.movePlayer("up")
-        testMap.printBoard()
-        self.mentalMap.printBoard()
 
-        self.mentalMap.movePlayer("up")
-        testMap.printBoard()
-        self.mentalMap.printBoard()
-            
-        '''
+    def search(self, start_node):
+        visited_nodes = set([])
+        node_stack = [start_node]
+
+        while len(node_stack) > 0:
+            current = node_stack.pop()
+            visited_nodes.add(current.hash)
+
+            #si este es el nodo ganador (el mapa corrobora que el jugador gano), CONGRATULATIONS
+
+            #chequear moves
+
+            #en cada move, fijarse si esta en visited_nodes; si no esta lo agregamos en node_stack
+
+
+        # no se llego a solucion, jode
+
+
+
+    def DFS(self, map):
 
 #dfs iterativo WIP
-'''
         for i in range(1):          #la idea es que sea while not self.mentalMap.checkIfWin():
             for move in self.movesCustom:
                 self.mentalMap = copy.deepcopy(self.auxMap)
@@ -120,9 +91,9 @@ class AI:
                         print(State(self.auxMap).hash)
                 else:
                     print("cant go", move)
-                    '''
 
-'''
+
+
 class State:
     playerRow = 0
     playerCol = 0
@@ -154,7 +125,7 @@ class State:
 
         print("\n")
         
-'''
+
 
 # hasta aca ^ lo de Uri
 
@@ -163,7 +134,7 @@ class State:
 from Map import Map
 from cells import Cell
 
-
+'''
 class AI:
     stateList = []
     hashList = []
@@ -276,7 +247,4 @@ class State:
         print(self.playerRow, self.playerCol)
         print("box")
         print(self.boxRow, self.boxCol)
-
-
-
-
+'''
