@@ -10,7 +10,7 @@ class DFS(SearchMethod):
     def search(self, game_map):
         visited_nodes = set([])
 
-        node_stack = [Node([game_map.playerFila, game_map.playerColumna], None, None)] #arranco algoritmo con la posicion
+        node_stack = [Node([game_map.playerFila, game_map.playerColumna], None, None, game_map.boxes)] #arranco algoritmo con la posicion
                                                                                         # inicial del player, no tiene
                                                                                         #previos ni ninguna direccion asociada
 
@@ -18,7 +18,7 @@ class DFS(SearchMethod):
             current = node_stack.pop()                                                  #agarro un nodo, lo agrego a visitados
             visited_nodes.add(current)
             print(current.direction)
-            if game_map.checkIfWin():
+            if game_map.check_if_win():
                 return Sequence(current)                                                #si en este nodo encuentro que gane,
             else:                                                                       #devuelvo la secuencia de nodos
                 new_moves = game_map.check_adjacent_moves(current)

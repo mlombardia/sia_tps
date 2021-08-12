@@ -1,6 +1,7 @@
 from cells import Wall, ObjectiveCell, Cell
 from tokens import Box, Player, Token
 from node import Node
+from quadrant import Quadrant
 
 
 class Map():
@@ -12,36 +13,49 @@ class Map():
     objectiveList = []
     caja = Box()
     pared = Wall()
-
+    coordinates = []
 
     def __init__(self, asciiMap, cantFilas, cantColumnas):
         self.cantColumnas = cantColumnas
         self.cantFilas = cantFilas
+        self.objectives = []
+        self.boxes = []
+        self.walls = []
         # for x in range(cantFilas):
         x = 0
         for j in asciiMap:
             y = 0
             aux = []
+            aux_coordinates = []
             for k in j:
                 auxCell = Cell()
-                if (k == "#"):
+                if k == "#":
+                    aux_coordinates.append(Quadrant('wall', [x, y], True))
                     aux.append(Wall())
-                elif (k == " "):
+                    self.walls.append([x, y])
+                elif k == " ":
+                    aux_coordinates.append(Quadrant('blank', [x, y]))
                     aux.append(auxCell)
-                elif (k == "$"):
+                elif k == "$":
+                    self.boxes.append([x, y])
+                    aux_coordinates.append(Quadrant('box', [x, y]))
                     auxCell.update(Box())
                     aux.append(auxCell)
-                elif (k == "@"):
+                elif k == "@":
+                    aux_coordinates.append(Quadrant('player', [x, y]))
                     auxCell.update(Player())
                     aux.append(auxCell)
                     self.playerFila = x
                     self.playerColumna = y
-                elif (k == "."):
+                elif k == ".":
+                    self.objectives.append([x, y])
+                    aux_coordinates.append(Quadrant('objective', [x, y], True))
                     auxObj = ObjectiveCell()
                     aux.append(auxObj)
                     self.objectiveList.append(auxObj)
                 y += 1
             x += 1
+            self.coordinates.append(aux_coordinates)
             self.cellMap.append(aux)
 
     '''
@@ -183,88 +197,89 @@ class Map():
         self.checkIfWin()
         self.checkIfLoose()
 
-    def can_move(self, direction, position): #chequeo todo el tema de instancias para ver si se puede mover 
+    def can_move_box(self, direction, position, boxes, new_boxes):
         if direction == 'up':
-            if isinstance((self.cellMap[position[0]])[position[1]], Player):
-                if not isinstance((self.cellMap[position[0]-1])[position[1]], Wall):
-                    if isinstance((self.cellMap[position[0]-1])[position[1]], Box):
-                        return self.can_move('up', [position[0]-1, position[1]])
-                    else:
-                        return True
-                else:
-                    return False
-            elif isinstance((self.cellMap[position[0]])[position[1]], Box):
-                if not isinstance((self.cellMap[position[0]-1])[position[1]], Wall):
-                    if isinstance((self.cellMap[position[0]-1])[position[1]], Box):
-                        return False
-                    else:
-                        return True
-                else:
-                    return False
+            if (self.coordinates[position[0]-1][position[1]].element != 'wall') and (self.coordinates[position[0]-1][position[1]].element != 'box'):
+                new_boxes.append([position[0]-1, position[1]])
+                return True
+            else:
+                return False
         elif direction == 'down':
-            if isinstance((self.cellMap[position[0]])[position[1]], Player):
-                if not isinstance((self.cellMap[position[0] + 1])[position[1]], Wall):
-                    if isinstance((self.cellMap[position[0] + 1])[position[1]], Box):
-                        return self.can_move('down', [position[0] + 1, position[1]])
-                    else:
-                        return True
-                else:
-                    return False
-            elif isinstance((self.cellMap[position[0]])[position[1]], Box):
-                if not isinstance((self.cellMap[position[0] + 1])[position[1]], Wall):
-                    if isinstance((self.cellMap[position[0] + 1])[position[1]], Box):
-                        return False
-                    else:
-                        return True
-                else:
-                    return False
-        elif direction == 'left':
-            if isinstance((self.cellMap[position[0]])[position[1]], Player):
-                if not isinstance((self.cellMap[position[0]])[position[1]+1], Wall):
-                    if isinstance((self.cellMap[position[0]])[position[1]+1], Box):
-                        return self.can_move('left', [position[0], position[1]+1])
-                    else:
-                        return True
-                else:
-                    return False
-            elif isinstance((self.cellMap[position[0]])[position[1]], Box):
-                if not isinstance((self.cellMap[position[0]])[position[1]+1], Wall):
-                    if isinstance((self.cellMap[position[0]])[position[1]+1], Box):
-                        return False
-                    else:
-                        return True
-                else:
-                    return False
-        else:
-            if isinstance((self.cellMap[position[0]])[position[1]], Player):
-                if not isinstance((self.cellMap[position[0]])[position[1] - 1], Wall):
-                    if isinstance((self.cellMap[position[0]])[position[1] - 1], Box):
-                        return self.can_move('left', [position[0], position[1] - 1])
-                    else:
-                        return True
-                else:
-                    return False
-            elif isinstance((self.cellMap[position[0]])[position[1]], Box):
-                if not isinstance((self.cellMap[position[0]])[position[1]-1], Wall):
-                    if isinstance((self.cellMap[position[0]])[position[1]-1], Box):
-                        return False
-                    else:
-                        return True
-                else:
-                    return False
+            if (self.coordinates[position[0]+1][position[1]].element != 'wall') and (self.coordinates[position[0]+1][position[1]].element != 'box'):
+                new_boxes.append([position[0]+1, position[1]])
+                return True
+            else:
+                return False
+        elif direction =='left':
+            if(self.coordinates[position[0]][position[1] - 1].element != 'wall') and (self.coordinates[position[0]][position[1] - 1].element != 'box'):
+                new_boxes.append([position[0], position[1]+1])
+                return True
+            else:
+                return False
+        elif direction == 'right':
+            if (self.coordinates[position[0]][position[1] + 1].element != 'wall') and (self.coordinates[position[0]][position[1] + 1].element != 'box'):
+                new_boxes.append([position[0], position[1]-1])
+                return True
+            else:
+                return False
 
-    def check_adjacent_moves(self, previous_node): #version reducida de todo lo de arriba
+    def can_move(self, direction, position, boxes, new_boxes):  # chequeo todo el tema de instancias para ver si se puede mover
+        if direction == 'up':
+            if [position[0] - 1, position[1]] not in self.walls:
+                if [position[0] - 1, position[1]] in boxes:
+                    if self.can_move_box([position[0]-1, position[1]], 'up', boxes, new_boxes):
+                        #if existe una caja en la lista con esas coordenadas
+                        new_boxes.remove([position[0]-1, position[1]])
+                        return True
+                else:
+                    return True
+            else:
+                return False
+            if direction == 'down':
+                if self.coordinates[position[0] + 1][position[1]].element != 'wall':
+                    if self.coordinates[position[0] + 1][position[1]].element == 'box':
+                        if self.can_move_box([position[0] + 1, position[1]], 'down', boxes, new_boxes):
+                            # if existe una caja en la lista con esas coordenadas
+                            new_boxes.remove([position[0] + 1, position[1]])
+                            return True
+                else:
+                    return False
+                if direction == 'left':
+                    if self.coordinates[position[0]][position[1] + 1].element != 'wall':
+                        if self.coordinates[position[0]][position[1] + 1].element == 'box':
+                            if self.can_move_box([position[0], position[1] + 1], 'left', boxes, new_boxes):
+                                # if existe una caja en la lista con esas coordenadas
+                                new_boxes.remove([position[0], position[1] + 1])
+                                return True
+                    else:
+                        return False
+                    if direction == 'right':
+                        if self.coordinates[position[0]][position[1] - 1].element != 'wall':
+                            if self.coordinates[position[0]][position[1] - 1].element == 'box':
+                                if self.can_move_box([position[0], position[1] - 1], 'right', boxes, new_boxes):
+                                    # if existe una caja en la lista con esas coordenadas
+                                    new_boxes.remove([position[0], position[1] - 1])
+                                    return True
+                        else:
+                            return False
+
+    def check_adjacent_moves(self, previous_node):  # version reducida de todo lo de arriba
         node_list = []
-        if self.can_move('up', previous_node.player):
-            node_list.append(Node([previous_node.player[0]-1, previous_node.player[1]], previous_node, 'up'))
-        if self.can_move('down', previous_node.player):
-            node_list.append(Node([previous_node.player[0]+1, previous_node.player[1]], previous_node, 'down'))
-        if self.can_move('right', previous_node.player):
-            node_list.append(Node([previous_node.player[0], previous_node.player[1]+1], previous_node, 'right'))
-        if self.can_move('left', previous_node.player):
-            node_list.append(Node([previous_node.player[0], previous_node.player[1]-1], previous_node, 'left'))
+        aux_boxes = previous_node.boxes.copy()
+        if self.can_move('up', previous_node.player, previous_node.boxes, aux_boxes):
+            node_list.append(Node([previous_node.player[0] - 1, previous_node.player[1]], previous_node, 'up', aux_boxes))
+        if self.can_move('down', previous_node.player, previous_node.boxes, aux_boxes):
+            node_list.append(Node([previous_node.player[0] + 1, previous_node.player[1]], previous_node, 'down', aux_boxes))
+        if self.can_move('right', previous_node.player, previous_node.boxes, aux_boxes):
+            node_list.append(Node([previous_node.player[0], previous_node.player[1] + 1], previous_node, 'right', aux_boxes))
+        if self.can_move('left', previous_node.player, previous_node.boxes, aux_boxes):
+            node_list.append(Node([previous_node.player[0], previous_node.player[1] - 1], previous_node, 'left', aux_boxes))
         return node_list
 
+    def check_if_win(self):
+        for objective in self.objectives:
+            if self.coordinates[objective[0]][objective[1]].element == 'box':
+                return True
 
 '''
             case 'down':

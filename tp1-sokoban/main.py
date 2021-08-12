@@ -71,7 +71,11 @@ map.printBoard()
 
 #ai = AI(map)
 #ai.DFS()
-
+#map.printBoard()
+# for i in map.coordinates:
+#     print()
+#     for j in i:
+#         print(j.element, end=" ")
 dfs = DFS()
 seq = dfs.search(map)
 print(seq)
