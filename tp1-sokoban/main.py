@@ -6,7 +6,7 @@
 from Map import Map
 from AI import AI
 from dfs import DFS
-
+from time import perf_counter
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -28,22 +28,43 @@ if __name__ == '__main__':
 #   @ es el player
 #     es blanco
 
-asciiMap = [["#", "#", "#", "#", "#"],
-            ["#", ".", " ", " ", "#"],
-            ["#", " ", "$", " ", "#"],
-            ["#", " ", " ", " ", "#"],
-            ["#", "@", " ", " ", "#"],
-            ["#", " ", " ", " ", "#"],
-            ["#", "#", "#", "#", "#"]]
+asciiMap = [[" "," "," "," "," "," ","#","#","#"," "," "," "," "," "," "],
+            [" "," "," "," "," "," ","#",".","#"," "," "," "," "," "," "],
+            [" "," ","#","#","#","#","#",".","#","#","#","#","#"," "," "],
+            [" ","#","#"," "," "," "," "," "," "," "," "," ","#","#"," "],
+            ["#","#"," "," ","#"," ","#"," ","#"," ","#"," "," ","#","#"],
+            ["#"," "," ","#","#"," "," "," "," "," ","#","#"," "," ","#"],
+            ["#"," ","#","#"," "," ","#"," ","#"," "," ","#","#"," ","#"],
+            ["#"," "," "," "," "," ","$","@","$"," "," "," "," "," ","#"],
+            ["#","#","#","#"," "," ","#","#","#"," "," ","#","#","#","#"],
+            ["#","#","#","#","#","#","#","#","#","#","#","#","#","#","#"]]
 
-'''
-for i in asciiMap:
+asciiMap1 = [["#","#","#"],
+             ["#",".","#"],
+             ["#"," ","#"],
+             ["#","$","#"],
+             ["#","@","#"],
+             ["#","#","#"]]
+
+file = open("maps/map3.txt", "r")
+lines = []
+for line in file:
+    lines.append(line[:-1])
+
+asciiMap2 = []
+for line in lines:
+    aux = []
+    for character in line:
+        aux.append(character)
+    asciiMap2.append(aux)
+
+for i in asciiMap2:
     print()
     for j in i:
         print(j, end="")
-        '''
 
-map = Map(asciiMap, 6, 3)
+
+map = Map(asciiMap2, 6, 3)
 
 '''
 map.printBoard()
@@ -75,9 +96,12 @@ map.printBoard()
 #     for j in i:
 #         print(j.element, end=" ")
 dfs = DFS()
+t1_start = perf_counter()
 seq = dfs.search(map)
+t1_stop = perf_counter()
 if seq is not None:
     print(seq.directions)
     print(len(seq.directions))
+    print((t1_stop-t1_start)*1000)
 else:
     print("No path was found")
