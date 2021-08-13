@@ -25,16 +25,16 @@ class IDDFS(SearchMethod):
                 if game_map.check_if_win(current):
                     print("Solution found! Calculating...")
                     return Sequence(current)                                                # si en este nodo encuentro que gane, devuelvo la secuencia de nodos
-                elif startDepth == self.maxDepth:                                           #no hay solucion en este nivel de profundidad
-                    return None
                 else:
                     new_moves = game_map.check_adjacent_moves(current)
                     for move in new_moves:                                                  # sino, chequeo que movs disponibles
                         if move not in visited_nodes:                                       # y los agrego al stack si no fue visitado
                             startDepth += 1                                                 # le sumo 1 a la profundidad
                             node_stack.append(move)
-            startDepth = self.maxDepth                                                      #busco "un nivel" mas abajo
-            self.maxDepth += BLOCK
+
+            #si sale del while es porque no encontro en esa profundidad, entonces busco "un nivel" mas abajo
+            startDepth = self.maxDepth          #hago que empiece donde dejo
+            self.maxDepth += BLOCK              #hasta BLOCK mas de profundidad
         return None
 
 

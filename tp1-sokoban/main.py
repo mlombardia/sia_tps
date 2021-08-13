@@ -39,7 +39,7 @@ asciiMap1 = [["#","#","#"],
              ["#","@","#"],
              ["#","#","#"]]
 
-file = open("maps/map1.txt", "r")
+file = open("maps/map3.txt", "r")
 lines = []
 for line in file:
     lines.append(line[:-1])
@@ -62,7 +62,7 @@ for i in asciiMap2:
 
 map = Map(asciiMap2, 6, 9)
 
-
+'''
 iddfs = IDDFS(15)
 t1_start = perf_counter()
 seq = iddfs.search(map)
@@ -73,7 +73,7 @@ if seq is not None:
     print((t1_stop-t1_start)*1000)
 else:
     print("No path was found")
-
+'''
 '''
 dfs = DFS()
 t1_start = perf_counter()
