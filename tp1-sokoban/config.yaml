@@ -1,0 +1,7 @@
+maps_folder: maps
+map: map4.txt
+
+#options are: IDDFS, BFS, DFS
+algorithm: DFS
+alg_params:
+  IDDFS_depth: 10
