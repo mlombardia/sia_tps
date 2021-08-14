@@ -96,15 +96,6 @@ class Map():
         #print("error in isThing")
     '''
 
-    '''
-    def checkIfWin(self):
-        for cell in self.objectiveList:
-            if not cell.isCompleted():
-                return False
-        print("\nsos un capo de la vida")
-        exit()
-        return True
-
     def checkIfLoose(self):
         row = 0
         for x in self.cellMap:
@@ -121,6 +112,7 @@ class Map():
                             (isinstance((self.cellMap[row + 1])[col], Wall) and isinstance((self.cellMap[row])[col + 1],
                                                                                            Wall))):
                         print("perdiste")
+                        exit()
                         return True
                 col += 1
             row += 1
@@ -197,8 +189,7 @@ class Map():
 
         self.checkIfWin()
         self.checkIfLoose()
-        
-    '''
+
 
 
     def can_move_box(self, direction, position, boxes, new_boxes):
@@ -309,6 +300,4 @@ class Map():
             if box not in self.objectives:
                 return False
         return True
-
-
 

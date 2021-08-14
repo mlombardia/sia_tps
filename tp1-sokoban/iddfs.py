@@ -41,18 +41,20 @@ class IDDFS(SearchMethod):
                     print(self.front_nodes)
                     print("\nsequence and sequence length")
                     return Sequence(current)  # si en este nodo encuentro que gane, devuelvo la secuencia de nodos
-                else:                                                                       # sino, chequeo que movs disponibles y los agrego al stack si no fue visitado
+                else:  # sino, chequeo que movs disponibles y los agrego al stack si no fue visitado
                     new_moves = game_map.check_adjacent_moves(current)
                     aux = len(new_moves)
                     if aux != 0:  # si es distinto de cero es porque se expandio el nodo
                         self.depth += 1  # entonces aumenta la profundidad
                         self.cost += 1  # y el costo (que es igual a la profundidad
                         self.exp_nodes += 1  # aumenta en 1 el numero de nodos expandidos
-                        self.front_nodes += aux  # y hay tantos nuevos nodos frontera como posibles movimientos
+                        # y hay tantos nuevos nodos frontera como posibles movimientos
                     for move in new_moves:
                         if move not in visited_nodes:
-                            startDepth += 1                                                 # le sumo 1 a la profundidad
                             node_stack.append(move)
+                        self.front_nodes += 1
+                        self.total_nodes += 1
+                    self.front_nodes -= 1
 
             #si sale del while es porque no encontro en esa profundidad, entonces busco "un nivel" mas abajo
             startDepth = self.maxDepth          #hago que empiece donde dejo

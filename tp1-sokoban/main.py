@@ -65,7 +65,10 @@ t1_stop = perf_counter()
 if seq is not None:
     print(seq.directions)
     print(len(seq.directions))
+    print("\ntime (in ms)")
     print((t1_stop-t1_start)*1000)
+
+
 else:
     print("No path was found")
 

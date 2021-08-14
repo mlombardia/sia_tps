@@ -5,6 +5,9 @@ class Node:
         self.direction = direction
         self.boxes = boxes
 
+    def get_direction(self):
+        return self.direction
+
     def __eq__(self, other):
         return isinstance(other, self.__class__) and other.player == self.player and other.boxes == self.boxes
 
