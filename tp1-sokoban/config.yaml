@@ -1,7 +1,10 @@
 maps_folder: maps
 map: map7.txt
 
-#options are: IDDFS, BFS, DFS
-algorithm: BFS
+#options are: IDDFS, BFS, DFS, IDA*, A*, Greedy
+algorithm: A*
 alg_params:
   IDDFS_depth: 10
+  heuristic: h1
+
+

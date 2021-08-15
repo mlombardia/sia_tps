@@ -50,7 +50,7 @@ class Map():
                 elif k == ".":
                     self.objectives.append((x, y))
                     aux_coordinates.append(Quadrant('objective', [x, y], True))
-                    auxObj = ObjectiveCell()
+                    auxObj = ObjectiveCell(x, y)
                     aux.append(auxObj)
                     self.objectiveList.append(auxObj)
                 y += 1

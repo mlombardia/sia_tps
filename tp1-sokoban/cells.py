@@ -12,9 +12,11 @@ class Cell():
         self.symbol = inserted.symbol
 
 class ObjectiveCell(Cell):
-    def __init__(self):
+    def __init__(self, x, y):
         super().__init__()
         self.symbol = "."
+        self.x=x
+        self.y=y
 
     def isCompleted(self):
         return isinstance(self.token, Box)

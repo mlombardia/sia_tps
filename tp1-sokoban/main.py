@@ -1,3 +1,4 @@
+from Astar import Astar
 from Map import Map
 from AI import AI
 from dfs import DFS
@@ -6,6 +7,7 @@ from time import perf_counter
 from iddfs import IDDFS
 import yaml
 import os
+from heuristics import heuristic1, heuristic2, heuristic3
 
 config_filename = 'config.yaml'
 
@@ -52,10 +54,19 @@ print('\n')
 
 map = Map(asciiMap, len(lines), cols)
 
+heuristic_switcher={
+    "h1": heuristic1,
+    "h2": heuristic2,
+    "h3": heuristic3,
+}
+
 switcher={
     "DFS": lambda : DFS(),
     "BFS": lambda : BFS(),
     "IDDFS": lambda : IDDFS(alg_params["IDDFS_depth"]),
+    "A*": lambda : Astar(heuristic_switcher[alg_params["heuristic"]]),
+    "IDA*": lambda : IDDFS(alg_params["heuristic"]),
+    "greedy": lambda : IDDFS(alg_params["heuristic"]),
 }
 
 alg = switcher[algorithm]()
