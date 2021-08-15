@@ -13,7 +13,7 @@ class Astar:
 
     def search(self, game_map): #la power mega
         openSet = [Node((game_map.playerFila, game_map.playerColumna), None, None, game_map.boxes)] #estado inicial
-        closedSet = []
+        closedSet = set()
 
         while(len(openSet) > 0):
             winner = openSet[0]
@@ -32,7 +32,7 @@ class Astar:
                 return Sequence(winner)
 
             openSet.remove(openSet[id])
-            closedSet.append(winner)
+            closedSet.add(winner)
             #print(winner)
 
             new_moves = game_map.check_adjacent_moves(winner)
