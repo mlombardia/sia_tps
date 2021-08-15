@@ -25,6 +25,7 @@ class Astar:
                 if openSet[i].f() < winner.f():
                     winner=openSet[i]
                     id = i
+                break
 
             if(game_map.check_if_win(winner)):
                 print("Solution found! Calculating...")

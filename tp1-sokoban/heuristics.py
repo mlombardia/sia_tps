@@ -19,12 +19,12 @@ def heuristic2(node, objectives):
     curr_heuristic = 0
     for box in node.boxes:
         closest_box = math.inf
+        closest_obj = math.inf
         current_distance_to_box = abs(box[0] - node.player[0])
         current_distance_to_box += abs(box[1] - node.player[1])
         if current_distance_to_box < closest_box:
             closest_box = current_distance_to_box
         for objective in objectives:
-            closest_obj = math.inf
             current_distance_to_obj = abs(objective.x - box[0])
             current_distance_to_obj += abs(objective.y - box[1])
             if current_distance_to_obj < closest_obj:
