@@ -47,6 +47,7 @@ class Astar:
             for move in new_moves:
                 if move not in closedSet:
                     self.heuristic(move, game_map.objectiveList)
+
                     if(openSet.__contains__(move)):
                         if(winner.depth+1 < move.depth):
                             move.depth = winner.depth + 1

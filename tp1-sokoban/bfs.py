@@ -24,6 +24,7 @@ class BFS(SearchMethod):
         while len(node_queue) > 0:
             current = node_queue.pop(0)                                                 #popeo el primer elemento porque es una cola
             visited_nodes.add(current)                                                  #agarro un nodo, lo agrego a visitados
+            print(current.depth)
             if game_map.check_if_win(current):
                 print("Solution found! Calculating...")
                 self.solution = True
