@@ -39,6 +39,7 @@ class IDAstar(SearchMethod):
         known_nodes.add(first_node)
 
         nodes_processed = 0
+        total_nodes = 0
 
         won = False
 
@@ -64,11 +65,12 @@ class IDAstar(SearchMethod):
                 new_moves = game_map.check_adjacent_moves(node)
 
                 for move in new_moves:
+                    total_nodes += 1
                     self.heuristic(move, game_map.objectiveList)
                     proc_node = None
                     if move in known_nodes:
                         proc_node = move
- 
+
                     if proc_node and node.depth + 1 >= proc_node.depth:
                         continue
 
@@ -83,6 +85,24 @@ class IDAstar(SearchMethod):
                     else:
                         q1.append(move)
         if won:
+            print("Solution found! Calculating...")
+            self.solution = True
+            print("\nDepth:")
+            print(node.depth)
+
+            print("\nCost:")
+            print(node.depth)
+
+            print("\nExpanded nodes:")
+            print(nodes_processed)
+
+            print("\nTotal nodes:")
+            print(total_nodes)
+
+            print("\nFrontier nodes:")
+            print(total_nodes - nodes_processed)
+
+            print("\nsequence and sequence length (in reverse)")
             return Sequence(node)
         else:
             print("perdiste")
