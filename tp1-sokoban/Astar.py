@@ -37,7 +37,7 @@ class Astar:
                 print("\nFrontier nodes:")
                 print(len(openSet))
 
-                print("\nsequence and sequence length (in reverse)")
+                print("\nsequence and sequence length")
                 return Sequence(winner)
 
             #openSet.remove(winner) #

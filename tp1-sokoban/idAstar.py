@@ -102,7 +102,7 @@ class IDAstar(SearchMethod):
             print("\nFrontier nodes:")
             print(total_nodes - nodes_processed)
 
-            print("\nsequence and sequence length (in reverse)")
+            print("\nsequence and sequence length")
             return Sequence(node)
         else:
             print("perdiste")

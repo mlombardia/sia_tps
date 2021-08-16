@@ -43,7 +43,7 @@ class BFS(SearchMethod):
                 print("\nFrontier nodes:")
                 print(self.front_nodes)
 
-                print("\nsequence and sequence length (in reverse)")
+                print("\nsequence and sequence length")
                 return Sequence(current)                                              #si en este nodo encuentro que gane, devuelvo la secuencia de nodos
             else:                                                                       #sino, chequeo que movs disponibles y los agrego al stack si no fue visitado
                 new_moves = game_map.check_adjacent_moves(current)

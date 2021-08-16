@@ -4,7 +4,7 @@ from AI import AI
 from dfs import DFS
 from bfs import BFS
 from time import perf_counter
-
+from greedy import Greedy
 from idAstar import IDAstar
 from iddfs import IDDFS
 import yaml
@@ -68,15 +68,16 @@ switcher={
     "IDDFS": lambda : IDDFS(alg_params["IDDFS_depth"]),
     "A*": lambda : Astar(heuristic_switcher[alg_params["heuristic"]]),
     "IDA*": lambda : IDAstar(heuristic_switcher[alg_params["heuristic"]]),
-    "greedy": lambda : IDDFS(heuristic_switcher[alg_params["heuristic"]]),
+    "Greedy": lambda : Greedy(heuristic_switcher[alg_params["heuristic"]]),
 }
 
 alg = switcher[algorithm]()
 t1_start = perf_counter()
 seq = alg.search(map)
 t1_stop = perf_counter()
+
 if seq is not None:
-    print(seq.directions)
+    print(seq.directions[::-1])
     print(len(seq.directions))
     print("\ntime (in ms)")
     print((t1_stop-t1_start)*1000)
