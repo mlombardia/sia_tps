@@ -28,7 +28,7 @@ class DFS(SearchMethod):
                 print("Solution found! Calculating...")
                 self.solution=True
                 print("\nDepth:")
-                print(self.depth)
+                print(current.depth)
 
                 print("\nCost:")
                 print(self.cost)

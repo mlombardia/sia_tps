@@ -4,6 +4,8 @@ from AI import AI
 from dfs import DFS
 from bfs import BFS
 from time import perf_counter
+
+from idAstar import IDAstar
 from iddfs import IDDFS
 import yaml
 import os
@@ -65,8 +67,8 @@ switcher={
     "BFS": lambda : BFS(),
     "IDDFS": lambda : IDDFS(alg_params["IDDFS_depth"]),
     "A*": lambda : Astar(heuristic_switcher[alg_params["heuristic"]]),
-    "IDA*": lambda : IDDFS(alg_params["heuristic"]),
-    "greedy": lambda : IDDFS(alg_params["heuristic"]),
+    "IDA*": lambda : IDAstar(heuristic_switcher[alg_params["heuristic"]]),
+    "greedy": lambda : IDDFS(heuristic_switcher[alg_params["heuristic"]]),
 }
 
 alg = switcher[algorithm]()

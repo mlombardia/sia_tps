@@ -2,6 +2,7 @@ from node import Node
 from searchMethod import SearchMethod
 from sequence import Sequence
 from heuristics import *
+import bisect
 
 
 class Astar:
@@ -16,24 +17,31 @@ class Astar:
         closedSet = set()
 
         while(len(openSet) > 0):
-            winner = openSet[0]
-            id = 0
-            #for node in openSet:
-            #    if(node.f() < winner.f()):
-            #        winner = node
-            for i in range(len(openSet)):
-                if openSet[i].f() < winner.f():
-                    winner=openSet[i]
-                    id = i
-                break
+            winner = openSet.pop(0)
 
-            if(game_map.check_if_win(winner)):
+            if (game_map.check_if_win(winner)):
                 print("Solution found! Calculating...")
+                self.solution = True
+                print("\nDepth:")
+                print(winner.depth)
+
+                print("\nCost:")
+                # print(self.cost)
+
+                print("\nExpanded nodes:")
+                print(len(closedSet))
+
+                print("\nTotal nodes:")
+                print(len(closedSet) + len(openSet))
+
+                print("\nFrontier nodes:")
+                print(len(openSet))
+
+                print("\nsequence and sequence length (in reverse)")
                 return Sequence(winner)
 
-            openSet.remove(openSet[id])
+            #openSet.remove(winner) #
             closedSet.add(winner)
-            #print(winner)
 
             new_moves = game_map.check_adjacent_moves(winner)
             for move in new_moves:
@@ -43,4 +51,4 @@ class Astar:
                         if(winner.depth+1 < move.depth):
                             move.depth = winner.depth + 1
                     else:
-                        openSet.append(move)
+                        bisect.insort(openSet, move) #openSet.append(move)

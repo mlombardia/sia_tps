@@ -13,6 +13,8 @@ class IDDFS(SearchMethod):
     cost = 0
     exp_nodes = 0
     front_nodes = 0
+    total_nodes = 0
+    summed = 0
 
     def __init__(self, maxDepth):
         self.maxDepth = maxDepth       #profundidad maxima
@@ -32,13 +34,14 @@ class IDDFS(SearchMethod):
                     print("Solution found! Calculating...")
                     self.solution = True
                     print("\nDepth:")
-                    print(self.depth)
+                    print(current.depth)
                     print("\nCost:")
                     print(self.cost)
                     print("\nExpanded nodes:")
                     print(self.exp_nodes)
                     print("\nFrontier nodes:")
                     print(self.front_nodes)
+                    print("summed: ", self.summed)
                     print("\nsequence and sequence length")
                     return Sequence(current)  # si en este nodo encuentro que gane, devuelvo la secuencia de nodos
                 else:  # sino, chequeo que movs disponibles y los agrego al stack si no fue visitado
@@ -48,17 +51,19 @@ class IDDFS(SearchMethod):
                         self.depth += 1  # entonces aumenta la profundidad
                         self.cost += 1  # y el costo (que es igual a la profundidad
                         self.exp_nodes += 1  # aumenta en 1 el numero de nodos expandidos
-                        # y hay tantos nuevos nodos frontera como posibles movimientos
+
                     for move in new_moves:
                         if move not in visited_nodes:
                             node_stack.append(move)
                         self.front_nodes += 1
                         self.total_nodes += 1
                     self.front_nodes -= 1
+                    startDepth += 1
 
             #si sale del while es porque no encontro en esa profundidad, entonces busco "un nivel" mas abajo
             startDepth = self.maxDepth          #hago que empiece donde dejo
             self.maxDepth += BLOCK              #hasta BLOCK mas de profundidad
+            self.summed += 1
         return None
 
 

@@ -17,6 +17,16 @@ class Node:
     def get_direction(self):
         return self.direction
 
+    def __lt__(self, other):
+        if not isinstance(other, Node):
+            return self.f() < other
+
+        f1 = self.f()
+        f2 = other.f()
+        if f1 == f2:
+            return self.heuristic < other.heuristic
+        return f1 < f2
+
     def __eq__(self, other):
         return isinstance(other, self.__class__) and other.player == self.player and other.boxes == self.boxes
 
