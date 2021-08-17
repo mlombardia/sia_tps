@@ -36,7 +36,7 @@ class Greedy(SearchMethod):
                 print(current.depth)
 
                 print("\nCost:")
-                print(self.cost)
+                print(current.depth)
 
                 print("\nExpanded nodes:")
                 print(self.exp_nodes)
@@ -52,8 +52,6 @@ class Greedy(SearchMethod):
             else:
                 new_moves = game_map.check_adjacent_moves(current)          # sino, fijate los movs que podes hacer
                 if len(new_moves) != 0:                                     # desde aca
-                    self.depth += 1
-                    self.cost += 1
                     self.exp_nodes += 1
                 for move in new_moves:
                     if move not in visited_nodes:                           # si estos nodos no fueron visitados,
