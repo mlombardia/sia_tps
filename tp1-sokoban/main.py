@@ -10,7 +10,7 @@ from iddfs import IDDFS
 import yaml
 import os
 import math
-from heuristics import heuristic1, heuristic2, heuristic3, heuristic4, heuristic5
+from heuristics import heuristic1, heuristic2, heuristic3, heuristic4, heuristic5, heuristic6
 
 config_filename = 'config.yaml'
 
@@ -63,6 +63,7 @@ heuristic_switcher={
     "h3": heuristic3,
     "h4": heuristic4,
     "h5": heuristic5,
+    "h6": heuristic6,
 }
 
 switcher={
