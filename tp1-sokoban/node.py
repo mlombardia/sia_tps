@@ -32,3 +32,10 @@ class Node:
 
     def __hash__(self):
         return hash((self.player, frozenset(self.boxes)))
+
+    def __str__(self):
+        return f'<Player: {self.player}, Boxes: {self.boxes}>'
+
+    def __repr__(self):
+        return f'<Player: {self.player}, Boxes: {self.boxes}>'
+

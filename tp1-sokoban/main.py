@@ -1,6 +1,5 @@
 from Astar import Astar
 from Map import Map
-from AI import AI
 from dfs import DFS
 from bfs import BFS
 from time import perf_counter
@@ -9,6 +8,7 @@ from idAstar import IDAstar
 from iddfs import IDDFS
 import yaml
 import os
+import visual
 import math
 from heuristics import heuristic1, heuristic2, heuristic3, heuristic4, heuristic5, heuristic6
 
@@ -32,6 +32,8 @@ alg_params = config['alg_params']
 file = open(os.path.join(maps_folder, chosen_map), "r")
 lines = []
 cols = 0
+summedCols = False
+
 for line in file:
     lines.append(line[:-1])
 
@@ -40,10 +42,13 @@ for line in lines:
     aux = []
     for character in line:
         aux.append(character)
-        cols+=1
+    if len(aux) > cols:
+        cols=len(aux)
     asciiMap.append(aux)
 
-cols//=len(lines)
+
+print(len(lines))
+print(cols)
 
 print("el mapa seleccionado es:")
 
@@ -85,10 +90,12 @@ if seq is not None:
     print(len(seq.directions))
     print("\ntime (in ms)")
     print((t1_stop-t1_start)*1000)
-
+    visual.visual_play(map, seq.nodes[::-1])
 
 else:
     print("No path was found")
+
+
 
 
 
