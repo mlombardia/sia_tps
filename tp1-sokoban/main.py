@@ -9,7 +9,8 @@ from idAstar import IDAstar
 from iddfs import IDDFS
 import yaml
 import os
-from heuristics import heuristic1, heuristic2, heuristic3
+import math
+from heuristics import heuristic1, heuristic2, heuristic3, heuristic4, heuristic5
 
 config_filename = 'config.yaml'
 
@@ -60,6 +61,8 @@ heuristic_switcher={
     "h1": heuristic1,
     "h2": heuristic2,
     "h3": heuristic3,
+    "h4": heuristic4,
+    "h5": heuristic5,
 }
 
 switcher={
