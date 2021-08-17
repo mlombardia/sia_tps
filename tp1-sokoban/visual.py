@@ -29,6 +29,7 @@ def draw_wall(d, x, y, block_size, size, color):
 def draw_objective(d, x, y, block_size, size, color):
     pygame.draw.rect(d, color, (x * block_size, y * block_size, size, size))
 
+
 def draw_player(d, x, y, block_size, size, color):
     pygame.draw.rect(d, color, (x * block_size, y * block_size, size, size))
 
@@ -86,7 +87,7 @@ def draw_scene(d, block_size, a_map, scene):
 
     # Draw player
     (x, y) = scene.player
-    draw_wall(d, y, x, block_size, block_size, PLAYER_COLOR)
+    draw_player(d, y, x, block_size, block_size, PLAYER_COLOR)
 
 
 def visual_play(game_map, nodes):

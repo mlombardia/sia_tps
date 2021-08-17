@@ -47,9 +47,6 @@ for line in lines:
     asciiMap.append(aux)
 
 
-print(len(lines))
-print(cols)
-
 print("el mapa seleccionado es:")
 
 for i in asciiMap:
