@@ -26,7 +26,7 @@ class Astar:
                 print(winner.depth)
 
                 print("\nCost:")
-                # print(self.cost)
+                print(winner.depth)
 
                 print("\nExpanded nodes:")
                 print(len(closedSet))
