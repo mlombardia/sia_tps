@@ -62,6 +62,7 @@ def draw_player(d, x, y, block_size, size, direction):
     d.blit(player_pic, (x * block_size + margin, y * block_size + margin))
 '''
 
+
 def draw_box(d, x, y, block_size, size, color):
     margin = (block_size - size) / 2
     pygame.draw.rect(d, color, (x * block_size + margin, y * block_size + margin, size, size))
@@ -88,6 +89,7 @@ def draw_scene(d, block_size, a_map, scene):
     # Draw player
     (x, y) = scene.player
     draw_player(d, y, x, block_size, block_size, PLAYER_COLOR)
+    #draw_player(d, x, y, block_size, int(block_size / BOX_SIZE_RATIO), scene.direction)
 
 
 def visual_play(game_map, nodes):

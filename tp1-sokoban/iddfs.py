@@ -36,7 +36,7 @@ class IDDFS(SearchMethod):
                     print("\nDepth:")
                     print(current.depth)
                     print("\nCost:")
-                    print(self.cost)
+                    print(current.depth)
                     print("\nExpanded nodes:")
                     print(self.exp_nodes)
                     print("\nFrontier nodes:")

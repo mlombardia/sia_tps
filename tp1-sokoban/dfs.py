@@ -31,7 +31,7 @@ class DFS(SearchMethod):
                 print(current.depth)
 
                 print("\nCost:")
-                print(self.cost)
+                print(current.depth)
 
                 print("\nExpanded nodes:")
                 print(self.exp_nodes)
@@ -48,8 +48,6 @@ class DFS(SearchMethod):
                 new_moves = game_map.check_adjacent_moves(current)                      #sino, chequeo que movs disponibles y los agrego al stack si no fue visitado
                 aux = len(new_moves)
                 if aux != 0:                                                            #si es distinto de cero es porque se expandio el nodo
-                    self.depth += 1                                                     #entonces aumenta la profundidad
-                    self.cost += 1                                                      #y el costo (que es igual a la profundidad
                     self.exp_nodes += 1                                                 #aumenta en 1 el numero de nodos expandidos
                                                             #y hay tantos nuevos nodos frontera como posibles movimientos
                 for move in new_moves:
