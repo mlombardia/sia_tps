@@ -25,4 +25,4 @@
 p : Activa o desactiva el autoplay, es decir el avance automático de estados
 r : Reinicia el nivel al estado inicial
 ```
-
+Tip: Recomendamos jugar los mapas con el autoplay activado, ya que contiene una animación especial al final.
