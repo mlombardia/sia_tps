@@ -12,11 +12,13 @@ TARGET_COLOR = (64, 201, 255)
 PLAYER_COLOR = (249, 64, 255)
 WALL_COLOR = (150, 5, 5)
 BACKGROUND_COLOR = BLACK
-PLAYER_IMAGE_PATH = "player.png"
+PLAYER_IMAGE_PATH = "player3.png"
 BOX_SIZE_RATIO = 1.5
 PLAYER_SIZE_RATIO = 1.1
 
 AUTO_PLAY_DELAY = 500
+
+last_direction = "left"
 
 
 def draw_square(d, x, y, block_size, color):
@@ -29,7 +31,7 @@ def draw_wall(d, x, y, block_size, size, color):
 def draw_objective(d, x, y, block_size, size, color):
     pygame.draw.rect(d, color, (x * block_size, y * block_size, size, size))
 
-
+'''
 def draw_player(d, x, y, block_size, size, color):
     pygame.draw.rect(d, color, (x * block_size, y * block_size, size, size))
 
@@ -53,14 +55,20 @@ def draw_player(d, x, y, block_size, size, direction):
     # Transformations
     player_pic = pygame.transform.scale(player_pic, (image_width, image_height))
 
-    if direction == 'right':
+    global last_direction
+
+    if direction == "right" or direction == "left":
+        last_direction = direction
+
+    if last_direction == 'right':
         player_pic = pygame.transform.flip(player_pic, True, False)
+
 
     # Drawing
     margin = (block_size - size) / 2
 
     d.blit(player_pic, (x * block_size + margin, y * block_size + margin))
-'''
+
 
 
 def draw_box(d, x, y, block_size, size, color):
@@ -88,8 +96,8 @@ def draw_scene(d, block_size, a_map, scene):
 
     # Draw player
     (x, y) = scene.player
-    draw_player(d, y, x, block_size, block_size, PLAYER_COLOR)
-    #draw_player(d, x, y, block_size, int(block_size / BOX_SIZE_RATIO), scene.direction)
+    #draw_player(d, y, x, block_size, block_size, PLAYER_COLOR)
+    draw_player(d, y, x, block_size, int(block_size / BOX_SIZE_RATIO), scene.direction)
 
 
 def visual_play(game_map, nodes):
