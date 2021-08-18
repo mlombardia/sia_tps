@@ -9,7 +9,6 @@ from iddfs import IDDFS
 import yaml
 import os
 import visual
-import math
 from heuristics import heuristic1, heuristic2, heuristic3, heuristic4, heuristic5, heuristic6
 
 config_filename = 'config.yaml'
@@ -21,13 +20,6 @@ maps_folder = config['maps_folder']
 chosen_map = config['map']
 algorithm = config['algorithm']
 alg_params = config['alg_params']
-
-
-#   # es pared
-#   . es objetivo
-#   $ es la caja
-#   @ es el player
-#     es blanco
 
 file = open(os.path.join(maps_folder, chosen_map), "r")
 lines = []
