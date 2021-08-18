@@ -17,6 +17,7 @@ BOX_SIZE_RATIO = 1.5
 PLAYER_SIZE_RATIO = 1.1
 
 AUTO_PLAY_DELAY = 500
+WINNING_FPS = 25
 
 last_direction = "left"
 
@@ -36,7 +37,7 @@ def draw_player(d, x, y, block_size, size, color):
     pygame.draw.rect(d, color, (x * block_size, y * block_size, size, size))
 
 '''
-def draw_player(d, x, y, block_size, size, direction):
+def draw_player(d, x, y, block_size, size, direction=None, degree=None):
     player_pic = pygame.image.load(PLAYER_IMAGE_PATH)
     (image_width, image_height) = player_pic.get_rect().size
 
@@ -63,13 +64,20 @@ def draw_player(d, x, y, block_size, size, direction):
     if last_direction == 'right':
         player_pic = pygame.transform.flip(player_pic, True, False)
 
+    if degree is None:
+        degree = 0
+
+        if (direction == "up" and last_direction == "right") or (direction == "down" and last_direction == "left"):
+            degree = 30
+        elif (direction == "up" and last_direction == "left") or (direction == "down" and last_direction == "right"):
+            degree = -30
+    
+    player_pic = pygame.transform.rotate(player_pic, degree)
 
     # Drawing
     margin = (block_size - size) / 2
 
     d.blit(player_pic, (x * block_size + margin, y * block_size + margin))
-
-
 
 def draw_box(d, x, y, block_size, size, color):
     margin = (block_size - size) / 2
@@ -99,6 +107,122 @@ def draw_scene(d, block_size, a_map, scene):
     #draw_player(d, y, x, block_size, block_size, PLAYER_COLOR)
     draw_player(d, y, x, block_size, int(block_size / BOX_SIZE_RATIO), scene.direction)
 
+WINNING_SCENE = [
+    {
+        'direction': 'right',
+        'degree': 0
+    },
+    {
+        'direction': 'right',
+        'degree': 10
+    },
+    {
+        'direction': 'right',
+        'degree': 20
+    },
+    {
+        'direction': 'right',
+        'degree': 30
+    },
+    {
+        'direction': 'right',
+        'degree': 50
+    },
+    {
+        'direction': 'right',
+        'degree': 70
+    },
+    {
+        'direction': 'right',
+        'degree': 80
+    },
+    {
+        'direction': 'right',
+        'degree': 90
+    },
+    {
+        'direction': 'right',
+        'degree': 110
+    },
+    {
+        'direction': 'right',
+        'degree': 130
+    },
+    {
+        'direction': 'right',
+        'degree': 150
+    },
+    {
+        'direction': 'right',
+        'degree': 170
+    },
+    {
+        'direction': 'right',
+        'degree': 180
+    },
+    {
+        'direction': 'right',
+        'degree': 180
+    },
+    {
+        'direction': 'right',
+        'degree': 180
+    },
+    {
+        'direction': 'right',
+        'degree': 200
+    },
+    {
+        'direction': 'right',
+        'degree': 230
+    },
+    {
+        'direction': 'right',
+        'degree': 250
+    },
+    {
+        'direction': 'right',
+        'degree': 270
+    },
+    {
+        'direction': 'right',
+        'degree': 300
+    },
+    {
+        'direction': 'right',
+        'degree': 330
+    },
+    {
+        'direction': 'right',
+        'degree': 350
+    },
+    {
+        'direction': 'right',
+        'degree': 360
+    },
+    {
+        'direction': 'right',
+        'degree': 360
+    },
+    {
+        'direction': 'right',
+        'degree': 360
+    },
+    {
+        'direction': 'right',
+        'degree': 360
+    }
+]
+
+def draw_winning(d, block_size, player, win_idx):
+    # Draw player
+    (x, y) = player
+    #draw_player(d, y, x, block_size, block_size, PLAYER_COLOR)
+    cfg = WINNING_SCENE[win_idx % len(WINNING_SCENE)]
+
+    draw_square(d, y, x, block_size, BACKGROUND_COLOR)
+    draw_player(d, y, x, block_size, int(block_size / BOX_SIZE_RATIO), cfg['direction'], cfg['degree'])
+
 
 def visual_play(game_map, nodes):
     pygame.init()
@@ -124,11 +248,10 @@ def visual_play(game_map, nodes):
 
     d = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
-
-
     current_scene_idx = 0
     auto_play = False
     last_time = None
+    winning_idx = 0
 
     draw_scene(d, block_size, a_map, nodes[current_scene_idx])
 
@@ -143,15 +266,20 @@ def visual_play(game_map, nodes):
             if event.type == pygame.KEYDOWN:
                 if event.key == K_LEFT:
                     auto_play = False
+                    winning_idx = 0
                     current_scene_idx = (current_scene_idx - 1) if (current_scene_idx > 0) else 0
                 elif event.key == K_RIGHT:
                     auto_play = False
-                    current_scene_idx = (current_scene_idx + 1) if (current_scene_idx < len(scenes) - 1) else (
-                                len(scenes) - 1)
+                    winning_idx = 0
+                    current_scene_idx = (current_scene_idx + 1) if (current_scene_idx < len(scenes) - 1) else (len(scenes) - 1)
                 elif event.key == K_p:
                     auto_play = not auto_play
                     if auto_play:
                         last_time = pygame.time.get_ticks()
+                elif event.key == K_r:
+                    auto_play = False
+                    winning_idx = 0
+                    current_scene_idx = 0
 
                 draw_scene(d, block_size, a_map, scenes[current_scene_idx])
 
@@ -162,5 +290,9 @@ def visual_play(game_map, nodes):
                             len(scenes) - 1)
                 draw_scene(d, block_size, a_map, scenes[current_scene_idx])
                 last_time = curr_time
+
+            if current_scene_idx == (len(scenes) - 1) and ((curr_time - last_time) % WINNING_FPS) == 0:
+                draw_winning(d, block_size, scenes[current_scene_idx].player, winning_idx)
+                winning_idx += 1
 
         pygame.display.update()
