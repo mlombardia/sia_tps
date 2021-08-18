@@ -62,5 +62,16 @@ class Greedy(SearchMethod):
                     self.front_nodes += 1
                 self.front_nodes -= 1
         return None
+        #mientras haya frontera
+            #saco el primero
+            #si en este el mapa esta completo
+                #ggwp y te paso la secuencia
+            #me fijo si hay movimientos posibles
+            #recorro los posibles movimientos
+                #si el movimiento no esta en visitados
+                    #le asigno valor de heuristica
+                    #lo agrego a visitados
+                    #me fijo de ordenar en base al valor de heuristica
+        #no encontro solucion entonces no devuelvo nada
 
 

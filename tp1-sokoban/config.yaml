@@ -1,5 +1,5 @@
 maps_folder: maps
-map: map1.txt
+map: map12.txt
 
 #options are: IDDFS, BFS, DFS, IDA*, A*, Greedy
 algorithm: A*
