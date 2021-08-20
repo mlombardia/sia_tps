@@ -2,12 +2,10 @@ from searchMethod import SearchMethod
 from node import Node
 from sequence import Sequence
 
-BLOCK = 5
+BLOCK = 2
+
 
 class IDDFS(SearchMethod):
-
-    maxDepth = 0
-
     solution = False
     depth = 0
     cost = 0
@@ -17,18 +15,19 @@ class IDDFS(SearchMethod):
     summed = 0
 
     def __init__(self, maxDepth):
-        self.maxDepth = maxDepth       #profundidad maxima
+        self.maxDepth = maxDepth  # profundidad maxima
         super().__init__()
 
     def search(self, game_map):
-        startDepth=0
+        startDepth = 0
         visited_nodes = set()
 
-        node_stack = [Node((game_map.playerFila, game_map.playerColumna), None, None, game_map.boxes)]  # arranco algoritmo con la posicion inicial del player, no tiene previos ni ninguna direccion asociada
+        node_stack = [Node((game_map.playerFila, game_map.playerColumna), None, None,
+                           game_map.boxes)]  # arranco algoritmo con la posicion inicial del player, no tiene previos ni ninguna direccion asociada
 
         while len(node_stack) > 0:
             while startDepth < self.maxDepth:
-                current = node_stack.pop()                                             # agarro un nodo, lo agrego a visitados
+                current = node_stack.pop()  # agarro un nodo, lo agrego a visitados
                 visited_nodes.add(current)
                 if game_map.check_if_win(current):
                     print("Solution found! Calculating...")
@@ -41,6 +40,8 @@ class IDDFS(SearchMethod):
                     print(self.exp_nodes)
                     print("\nFrontier nodes:")
                     print(self.front_nodes)
+                    print("\nTotal nodes:")
+                    print(self.total_nodes)
                     print("summed: ", self.summed)
                     print("\nsequence and sequence length")
                     return Sequence(current)  # si en este nodo encuentro que gane, devuelvo la secuencia de nodos
@@ -54,16 +55,17 @@ class IDDFS(SearchMethod):
 
                     for move in new_moves:
                         if move not in visited_nodes:
-                            node_stack.append(move)
+                            if (startDepth+1)%self.maxDepth == 0:
+                                node_stack.insert(0,move)
+                            else:
+                                node_stack.append(move)
                         self.front_nodes += 1
                         self.total_nodes += 1
                     self.front_nodes -= 1
                     startDepth += 1
 
-            #si sale del while es porque no encontro en esa profundidad, entonces busco "un nivel" mas abajo
-            startDepth = self.maxDepth          #hago que empiece donde dejo
-            self.maxDepth += BLOCK              #hasta BLOCK mas de profundidad
+            # si sale del while es porque no encontro en esa profundidad, entonces busco "un nivel" mas abajo
+            startDepth = self.maxDepth  # hago que empiece donde dejo
+            self.maxDepth += BLOCK  # hasta BLOCK mas de profundidad
             self.summed += 1
         return None
-
-
