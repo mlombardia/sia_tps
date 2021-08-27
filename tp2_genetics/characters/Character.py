@@ -14,7 +14,7 @@ class Character:
         self.DEFmod = None
 
     def Performance(self):
-        return (self.DEFcte * self.DEF) + (self.ATTcte * self.ATT)
+        return (self.DEFcte * self.DEF) + (self.ATTcte * self.ATT)  #fitness
 
     def calculateP(self):
         agilityP = 0
@@ -54,5 +54,6 @@ class Character:
 
     def calculateDEFmod(self):
         return 1.9 + (2.5*self.height - 4.16)**4 - (2.5*self.height-4.16)**2 - ((3*self.height)/10)
+
 
 
