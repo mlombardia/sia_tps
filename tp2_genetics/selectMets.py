@@ -1,6 +1,9 @@
 import math
 import random
-
+from characters.Warrior import Warrior
+from characters.Tank import Tank
+from characters.Archer import Archer
+from characters.Rogue import Rogue
 
 class SelectionMethod:
     def __init__(self):
@@ -88,6 +91,82 @@ class Elite(SelectionMethod):
                 N -= 1                                      # ahora hay uno menos en el conjunto a elegir
                 n -= 1
             i += 1
+
+class Ranking(SelectionMethod):
+
+    def selection(self, individualsList, K):
+        def compare(ind):
+            return ind.Performance()
+        individualsToRoulette = []
+        sortedInd = individualsList.sorted(individualsList, key=compare, reverse=True)  #ordeno los pjs en base a los
+        N = len(individualsList)                                                        #que tienen mejor aptitud
+        for i, character in enumerate(sortedInd):
+            pseudo_fitness = (N-i)/N                #se calcula la pseudo-aptitud
+            if isinstance(character, Warrior):
+                aux_character = Warrior(character.getHeight(), character.getItems())  # y armamos un pj aux
+                aux_character.performance = pseudo_fitness                            # con esa aptitud
+                individualsToRoulette.append(aux_character)
+            elif isinstance(character, Archer):
+                aux_character = Archer(character.getHeight(), character.getItems())
+                aux_character.performance = pseudo_fitness
+                individualsToRoulette.append(aux_character)
+            elif isinstance(character, Rogue):
+                aux_character = Rogue(character.getHeight(), character.getItems())
+                aux_character.performance = pseudo_fitness
+                individualsToRoulette.append(aux_character)
+            elif isinstance(character, Tank):
+                aux_character = Tank(character.getHeight(), character.getItems())
+                aux_character.performance = pseudo_fitness
+                individualsToRoulette.append(aux_character)
+            else:
+                print("Unexpected error")
+
+        roulette = Roulette()  # y despues aca se usa ruleta
+        roulette.selection(individualsToRoulette, K)
+
+        # habria que ver forma de devolver esto
+
+class Boltzmann(SelectionMethod):
+    def __init__(self, t0, tc, k, t):
+        super().__init__()
+        self.temperature = tc + (t0-tc) * math.exp(-k*t)    #formula de la temperatura, si vemos alguna
+                                                            #que converga mejor podemos usar esa
+    def selection(self, individualsList, K):
+        individualsToRoulette = []
+        population_average = self.calculateAverage(individualsList, self.temperature)   #se calcula la temp promedio
+        for i in individualsList:
+            pseudo_fitness = math.exp(i.Performance/self.temperature)/population_average    #se calcula la pseudo-aptitud
+            if isinstance(i, Warrior):
+                aux_character = Warrior(i.getHeight(), i.getItems())                        #y armamos un pj aux
+                aux_character.performance = pseudo_fitness                                  #con esa aptitud
+                individualsToRoulette.append(aux_character)
+            elif isinstance(i, Archer):
+                aux_character = Archer(i.getHeight(), i.getItems())
+                aux_character.performance = pseudo_fitness
+                individualsToRoulette.append(aux_character)
+            elif isinstance(i, Rogue):
+                aux_character = Rogue(i.getHeight(), i.getItems())
+                aux_character.performance = pseudo_fitness
+                individualsToRoulette.append(aux_character)
+            elif isinstance(i, Tank):
+                aux_character = Tank(i.getHeight(), i.getItems())
+                aux_character.performance = pseudo_fitness
+                individualsToRoulette.append(aux_character)
+            else:
+                print("Unexpected error")
+
+        roulette = Roulette()                               #y despues aca se usa ruleta
+        roulette.selection(individualsToRoulette, K)
+
+        #habria que ver forma de devolver esto
+
+    def calculateAverage(self, individualsList, temperature):
+        avg = 0
+        for i in individualsList:
+            avg += math.exp(i.Performance/temperature)
+        return avg/len(individualsList)
+
+
 
 
 

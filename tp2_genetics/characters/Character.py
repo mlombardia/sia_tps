@@ -55,5 +55,11 @@ class Character:
     def calculateDEFmod(self):
         return 1.9 + (2.5*self.height - 4.16)**4 - (2.5*self.height-4.16)**2 - ((3*self.height)/10)
 
+    def getHeight(self):
+        return self.height
+
+    def getItems(self):
+        return self.itemList
+
 
 
