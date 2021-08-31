@@ -4,7 +4,7 @@ from characters import *
 from mutation import *
 
 
-def Uniform(char1, char2, Type):
+def Uniform(char1, char2, Type, mutation, mutation_probability):
     itemlist1 = []
     itemlist2 = []
 
@@ -25,12 +25,19 @@ def Uniform(char1, char2, Type):
         offspring1 = Type(char2.height, itemlist1)
         offspring2 = Type(char1.height, itemlist2)
 
-    gen(0.5, 0, offspring1)
-    gen(0.9, 5, offspring2)
+    if mutation == 'gen':
+        gen(mutation_probability, 0, offspring1)
+    elif mutation == 'limited_multigen':
+        limited_multigen(mutation_probability, offspring1)
+    elif mutation == 'uniform_multigen':
+        uniform_multigen(mutation_probability, offspring1)
+    else:
+        complete_mutation(mutation_probability, offspring1)
 
     return [offspring1, offspring2]
 
-def Point(char1, char2, Type):
+
+def Point(char1, char2, Type, mutation, mutation_probability):
     itemList1 = []
     itemList2 = []
 
@@ -49,10 +56,20 @@ def Point(char1, char2, Type):
     #siempre swappea el ultimo ya que tiene que swappear desde tal punto en adelante
     offspring1 = Type(itemList1, char2.height)
     offspring2 = Type(itemList2, char1.height)
+
+    if mutation == 'gen':
+        gen(mutation_probability, 0, offspring1)
+    elif mutation == 'limited_multigen':
+        limited_multigen(mutation_probability, offspring1)
+    elif mutation == 'uniform_multigen':
+        uniform_multigen(mutation_probability, offspring1)
+    else:
+        complete_mutation(mutation_probability, offspring1)
+
     return [offspring1, offspring2]
 
 
-def TwoPoint(char1, char2, Type):
+def TwoPoint(char1, char2, Type, mutation, mutation_probability):
     p1 = random.randint(0, 5)
     p2 = random.randint(p1, 5)
     itemList1 = []
@@ -80,9 +97,18 @@ def TwoPoint(char1, char2, Type):
         offspring1 = Type(itemList1, char1.height)
         offspring2 = Type(itemList2, char2.height)
 
+    if mutation == 'gen':
+        gen(mutation_probability, 0, offspring1)
+    elif mutation == 'limited_multigen':
+        limited_multigen(mutation_probability, offspring1)
+    elif mutation == 'uniform_multigen':
+        uniform_multigen(mutation_probability, offspring1)
+    else:
+        complete_mutation(mutation_probability, offspring1)
+
     return [offspring1, offspring2]
 
-def Anular(char1, char2, Type):
+def Anular(char1, char2, Type, mutation, mutation_probability):
     p = random.randint(0,5)
     l = random.randint(0,5-p)
     itemList1 = []
@@ -109,6 +135,15 @@ def Anular(char1, char2, Type):
     else:
         offspring1 = Type(itemList1, char1.height)
         offspring2 = Type(itemList2, char2.height)
+
+    if mutation == 'gen':
+        gen(mutation_probability, 0, offspring1)
+    elif mutation == 'limited_multigen':
+        limited_multigen(mutation_probability, offspring1)
+    elif mutation == 'uniform_multigen':
+        uniform_multigen(mutation_probability, offspring1)
+    else:
+        complete_mutation(mutation_probability, offspring1)
 
     return [offspring1, offspring2]
 

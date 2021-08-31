@@ -1,0 +1,30 @@
+# people in a generation
+K: 10
+
+# warrior / archer / tank / rogue
+class: warrior
+
+# selection method: roulette / universal / elite / ranking / boltzmann / det_tourney / prob_tourney
+selection_method: roulette
+
+# crossover: uniform / point / two_point / anular
+crossover: uniform
+
+# mutation: gen / limited_multigen / uniform_multigen / complete_mutation
+mutation: gen
+probability: 10
+
+# implementation: fill_all / fill_parent
+implementation: fill_all
+
+# end by: time / number of generations / fitness / structure / content
+end_by: time
+params:
+  time: 5
+  gen_number: 3
+  fitness: 10
+
+
+
+
+
