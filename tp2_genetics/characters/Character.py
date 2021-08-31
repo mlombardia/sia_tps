@@ -21,7 +21,8 @@ class Character:
         for i in range(5):
             aux+=str(self.itemList[i])
             aux+="; "
-        return aux + " height:" + str(self.height)
+        return str(self.performance)
+        #return aux + " height:" + str(self.height)
 
     def calculatePerformance(self):
         perf = (self.DEFcte * self.DEF) + (self.ATTcte * self.ATT)
@@ -76,10 +77,6 @@ class Character:
 
     def getItems(self):
         return self.itemList
-
-def generateHeight():
-    r = random.uniform(1.2, 2.0)
-    return r
 
 
 ##  subclases:

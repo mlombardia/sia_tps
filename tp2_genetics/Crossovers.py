@@ -1,6 +1,7 @@
 import random
 from items import *
 from characters import *
+from mutation import *
 
 
 def Uniform(char1, char2, Type):
@@ -23,6 +24,9 @@ def Uniform(char1, char2, Type):
     else:
         offspring1 = Type(char2.height, itemlist1)
         offspring2 = Type(char1.height, itemlist2)
+
+    gen(0.5, 0, offspring1)
+    gen(0.9, 5, offspring2)
 
     return [offspring1, offspring2]
 

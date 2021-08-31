@@ -1,58 +1,94 @@
+import linecache
 import random
 
+#arma, bota, casco, guantes, pechera
+from tp2_genetics.items.Item import Item
 
 
-def gen(probability, parents_genes, items):
-    for genes in parents_genes:                             # agarro a los padres
-        mutation_probability = random.uniform(0,1)          # elijo una probabilidad
-        if mutation_probability <= probability:
-            gen_to_mutate = random.randint(0, len(genes)-1)     # elijo un gen al azar
-            genes[gen_to_mutate] = mutate(gen_to_mutate, items) # lo muto
-    return parents_genes
+def gen(probability, gene, child): #le edito a child tal gen con tanta probabilidad de mutacion
+    mutation_probability = random.uniform(0,1)          # elijo una probabilidad
+    if mutation_probability <= probability:
+        if gene == 0:
+            child.itemList[gene] = get_random_weapon()
+        elif gene == 1:
+            child.itemList[gene] = get_random_boots()
+        elif gene == 2:
+            child.itemList[gene] = get_random_helmet()
+        elif gene == 3:
+            child.itemList[gene] = get_random_gloves()
+        elif gene == 4:
+            child.itemList[gene] = get_random_chest_plate()
+        elif gene == 5:
+            child.height = get_random_height()
+        else:
+            print("no existe el gen ", gene)
+            exit()
+
+        return child
 
 
-def limited_multigen(probability, parents_genes, items):
-    for genes in parents_genes:                            # agarro a los padres
-        mutation_probability = random.uniform(0, 1)        # elijo una probabilidad
-        if mutation_probability <= probability:
-            mutation_qty = random.randint(1, len(genes))    #elijo random cantidad de genes a mutar
-            mutation_indexes = [random.randint(0, len(genes) - 1) for a in range(0, mutation_qty)]
-            for i in mutation_indexes:
-                genes[i] = mutate(i, items)                 #los muto
-    return parents_genes
+def limited_multigen(probability, child):
+    genesToEdit = random.randint(1,6)
+    edited = []
+    n = 0
+    rand = random.uniform(1, 0)
+    if rand <= probability:
+        while n < genesToEdit:
+            gene = random.randint(0, 5)
+            if gene in edited:
+                continue
+            edited.append(gene)
 
-def mutate(index, items):
-    randomizer = {
-        0: get_random_height,
-        1: get_random_weapon,
-        2: get_random_boots,
-        3: get_random_helmet,
-        4: get_random_gloves,
-        5: get_random_chest_plate
-    }
+            gen(1, gene, child)
+            n += 1
 
-    func = randomizer.get(index, None)
+    return child
 
-    if func is None:
-        print("Unexpected error")
-        exit(1)
-    else:
-        return func(items)
 
-def get_random_height(items):
+def uniform_multigen(probability, child):
+    for gene in range(6):
+        gen(probability, gene, child)
+    return child
+
+
+def complete_mutation(probability, child):
+    rand = random.uniform(0, 1)
+    if rand <= probability:
+        for gene in range(6):
+            gen(1, gene, child)
+
+    return child
+
+
+def get_random_height():
     return random.uniform(1.3,2)
 
-def get_random_weapon(items):
-    return get_item(items.weapons) # esto cuando este ready lo de leer el archivo
+def get_random_weapon():
+    rand = random.randint(2, 12)
+    item = linecache.getline('armasTest.txt', rand)
+    newItem = Item("item", item.split("\t")[0], item.split("\t")[1], item.split("\t")[2], item.split("\t")[3], item.split("\t")[4], item.split("\t")[5])
+    return newItem
 
-def get_random_boots(items):
-    return get_item(items.boots)
+def get_random_boots():
+    rand = random.randint(2, 12)
+    item = linecache.getline('botasTest', rand)
+    newItem = Item("item", item.split("\t")[0], item.split("\t")[1], item.split("\t")[2], item.split("\t")[3], item.split("\t")[4], item.split("\t")[5])
+    return newItem
 
-def get_random_helmet(items):
-    return get_item(items.helmets)
+def get_random_helmet():
+    rand = random.randint(2, 12)
+    item = linecache.getline('cascosTest', rand)
+    newItem = Item("item", item.split("\t")[0], item.split("\t")[1], item.split("\t")[2], item.split("\t")[3], item.split("\t")[4], item.split("\t")[5])
+    return newItem
 
-def get_random_gloves(items):
-    return get_item(items.gloves)
+def get_random_gloves():
+    rand = random.randint(2, 12)
+    item = linecache.getline('guantesTest', rand)
+    newItem = Item("item", item.split("\t")[0], item.split("\t")[1], item.split("\t")[2], item.split("\t")[3], item.split("\t")[4], item.split("\t")[5])
+    return newItem
 
-def get_random_chest_plate(items):
-    return get_item(items.get_random_chest_plate)
+def get_random_chest_plate():
+    rand = random.randint(2, 12)
+    item = linecache.getline('pecherasTest', rand)
+    newItem = Item("item", item.split("\t")[0], item.split("\t")[1], item.split("\t")[2], item.split("\t")[3], item.split("\t")[4], item.split("\t")[5])
+    return newItem

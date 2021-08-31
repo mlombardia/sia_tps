@@ -8,24 +8,28 @@ def Roulette(individualsList, K):
     totalFitness = 0  # fitness total
     acumRelFitness = 0  # fitness relativo acumulado
     individualsData = []  # para guardar los datos de cada individuo
+
     for i in individualsList:
-        totalFitness += i.Performance()
-        relativeFitness = (i.Performance() / totalFitness)  # fitness relativo para ese individuo
+        totalFitness += i.performance
+
+    for i in individualsList:
+        relativeFitness = (i.performance / totalFitness)  # fitness relativo para ese individuo
         acumRelFitness += relativeFitness  # fitness relativo acumulado
-        individualsData.append((i, relativeFitness, acumRelFitness))
+        individualsData.append([i, relativeFitness, acumRelFitness])
 
     selectedIndividuals = []
     randomNumbers = []
 
-    for i in range(0, K):
-        randomNumbers[i] = random.uniform(0, 1)  # genero K numeros random
+    for i in range(K):
+        randomNumbers.append(random.uniform(0, 1))  # genero K numeros random
 
     # tengo que ver si: racumRelFitness-1 < numero random <= acumRelFitness
     for n in randomNumbers:
-        for k in range(0, len(individualsData)):
-            if (individualsData[k][2] - 1 < n) and (n <= individualsData[k][2]):
-                selectedIndividuals.append(
-                    individualsData[k][0])  # si cumple agrego al individuo a los seleccionados
+        if n <= individualsData[0][2]:
+            selectedIndividuals.append(individualsData[0][0])  # si cumple agrego al individuo a los seleccionados
+        for k in range(1, len(individualsData)):
+            if (individualsData[k-1][2] < n) and (n <= individualsData[k][2]): #   rand < fitness < rand+1
+                selectedIndividuals.append(individualsData[k][0])  # si cumple agrego al individuo a los seleccionados
 
     return selectedIndividuals
 
@@ -36,9 +40,12 @@ def Universal(individualsList, K):
     totalFitness = 0  # fitness total
     acumRelFitness = 0  # fitness relativo acumulado
     individualsData = []  # para guardar los datos de cada individuo
+
     for i in individualsList:
-        totalFitness += i.Performance()
-        relativeFitness = (i.Performance() / totalFitness)  # fitness relativo para ese individuo
+        totalFitness += i.performance
+
+    for i in individualsList:
+        relativeFitness = (i.performance / totalFitness)  # fitness relativo para ese individuo
         acumRelFitness += relativeFitness  # fitness relativo acumulado
         individualsData.append((i, relativeFitness, acumRelFitness))
 
@@ -47,15 +54,16 @@ def Universal(individualsList, K):
 
     r = random.uniform(0, 1)
 
-    for i in range(0, K):
-        randomNumbers[i] = (r + i) / K  # genero K numeros random
+    for i in range(K):
+        randomNumbers.append((r + i) / K)  # genero K numeros random
 
     # tengo que ver si: racumRelFitness-1 < numero random <= acumRelFitness
     for n in randomNumbers:
-        for k in range(0, len(individualsData)):
-            if (individualsData[k][2] - 1 < n) and (n <= individualsData[k][2]):
-                selectedIndividuals.append(
-                    individualsData[k][0])  # si cumple agrego al individuo a los seleccionados
+        if n <= individualsData[0][2]:
+            selectedIndividuals.append(individualsData[0][0])  # si cumple agrego al individuo a los seleccionados
+        for k in range(1, len(individualsData)):
+            if (individualsData[k-1][2] < n) and (n <= individualsData[k][2]): #   rand < fitness < rand+1
+                selectedIndividuals.append(individualsData[k][0])  # si cumple agrego al individuo a los seleccionados
 
     return selectedIndividuals
 
@@ -63,19 +71,19 @@ def Universal(individualsList, K):
 def Elite(individualsList, K):
 
     def compare(ind):
-        return ind.Performance()
+        return ind.performance
 
     # ordeno segun el fitness
-    sortedInd = individualsList.sorted(individualsList, key=compare, reverse=True)
+    sortedInd= sorted(individualsList, key=compare, reverse=True)
 
     # selecciono
     selectedIndividuals = []
     N = len(individualsList)  # ordeno de un conjunto de tamaño N
     i = 0
-    while N < K:
+    while i < K:
         n = math.ceil((K - i) / N)
         # ahora elijo n(i) veces
-        while (n > 0) and (N < K):
+        while (n > 0) and (n < K):
             selectedIndividuals.append(sortedInd[i])  # queda seleccionado
             N -= 1  # ahora hay uno menos en el conjunto a elegir
             n -= 1
@@ -83,13 +91,13 @@ def Elite(individualsList, K):
 
     return selectedIndividuals
 
-
-def Ranking(self, individualsList, K):
+'''
+def Ranking(individualsList, K):
     def compare(ind):
-        return ind.Performance()
+        return ind.performancesortedInd = []
 
     individualsToRoulette = []
-    sortedInd = individualsList.sorted(individualsList, key=compare, reverse=True)  # ordeno los pjs en base a los
+    sortedInd = sorted(individualsList, key=compare, reverse=True)  # ordeno los pjs en base a los
     N = len(individualsList)  # que tienen mejor aptitud
     for i, character in enumerate(sortedInd):
         pseudo_fitness = (N - i) / N  # se calcula la pseudo-aptitud
@@ -116,8 +124,9 @@ def Ranking(self, individualsList, K):
     roulette.selection(individualsToRoulette, K)
 
     # habria que ver forma de devolver esto
+    '''
 
-
+'''
 #a este lo dejé porque necesita un mini refactor antes de borrar la clase
 class Boltzmann(SelectionMethod):
     def __init__(self, t0, tc, k, t):
@@ -161,6 +170,7 @@ class Boltzmann(SelectionMethod):
             avg += math.exp(i.Performance / temperature)
         return avg / len(individualsList)
 
+'''
 
 
 def DetTourney(individualsList, K):
@@ -170,12 +180,12 @@ def DetTourney(individualsList, K):
     bestChar = None
 
     while len(championList) < K:
-        M = random.randint(0, len(individualsList))
+        M = random.randint(1, len(individualsList))
         best = 0
         bestChar = None
         for i in range(M):
-            if individualsList[i].Performance() > best:
-                best = individualsList[i].Performance()
+            if individualsList[i].performance > best:
+                best = individualsList[i].performance
                 bestChar = individualsList[i]
         championList.append(bestChar)
 
@@ -184,22 +194,22 @@ def DetTourney(individualsList, K):
 
 def ProbTourney(individualsList, K):
     championList = []
-    thresh = random.randrange(0.5, 1, 0.00001)
+    thresh = random.uniform(0.5, 1)
 
     while len(championList) < K:
         charA = random.choice(individualsList)
         charB = random.choice(individualsList)
 
         winner = None
-        r = random.randrange(0, 1, 0.00001)
+        r = random.uniform(0, 1)
 
         if r<thresh:
-            if charA.Performance() >= charB.Performance:
+            if charA.performance >= charB.performance:
                 winner = charA
             else:
                 winner = charB
         else:
-            if charA.Performance() >= charB.Performance:
+            if charA.performance >= charB.performance:
                 winner = charB
             else:
                 winner = charA
