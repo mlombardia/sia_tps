@@ -41,6 +41,8 @@ class Roulette(SelectionMethod):
                     selectedIndividuals.append(
                         individualsData[k][0])  # si cumple agrego al individuo a los seleccionados
 
+        return selectedIndividuals
+
 
 class Universal(SelectionMethod):
 
@@ -71,6 +73,8 @@ class Universal(SelectionMethod):
                     selectedIndividuals.append(
                         individualsData[k][0])  # si cumple agrego al individuo a los seleccionados
 
+        return selectedIndividuals
+
 
 class Elite(SelectionMethod):
 
@@ -94,6 +98,8 @@ class Elite(SelectionMethod):
                 N -= 1  # ahora hay uno menos en el conjunto a elegir
                 n -= 1
             i += 1
+
+        return selectedIndividuals
 
 
 class Ranking(SelectionMethod):
