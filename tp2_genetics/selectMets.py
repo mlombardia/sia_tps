@@ -91,11 +91,82 @@ def Elite(individualsList, K):
 
     return selectedIndividuals
 
+def Ranking(individualsList, K):
+    def compare(ind):
+        return ind.performance
+
+    sortedInd = []
+    individualsToRoulette = []
+    sortedInd = sorted(individualsList, key=compare, reverse=True)  # ordeno los pjs en base a los
+    N = len(individualsList)  # que tienen mejor aptitud
+    for i, character in enumerate(sortedInd):
+        pseudo_fitness = (N - i) / N  # se calcula la pseudo-aptitud
+        if isinstance(character, Warrior):
+            aux_character = Warrior(character.getHeight(), character.getItems())  # y armamos un pj aux
+            aux_character.performance = pseudo_fitness  # con esa aptitud
+            individualsToRoulette.append(aux_character)
+        elif isinstance(character, Archer):
+            aux_character = Archer(character.getHeight(), character.getItems())
+            aux_character.performance = pseudo_fitness
+            individualsToRoulette.append(aux_character)
+        elif isinstance(character, Rogue):
+            aux_character = Rogue(character.getHeight(), character.getItems())
+            aux_character.performance = pseudo_fitness
+            individualsToRoulette.append(aux_character)
+        elif isinstance(character, Tank):
+            aux_character = Tank(character.getHeight(), character.getItems())
+            aux_character.performance = pseudo_fitness
+            individualsToRoulette.append(aux_character)
+        else:
+            print("Unexpected error")
+
+    selectedIndividuals = Roulette(individualsToRoulette, K)
+
+    return selectedIndividuals
+
+def Boltzmann(individualsList, K, t0, tc, k, t):
+    temperature = tc + (t0 - tc) * math.exp(-k * t)
+
+    individualsToRoulette = []
+    population_average = calculateAverage(individualsList, temperature)  # se calcula la temp promedio
+
+    for i in individualsList:
+        pseudo_fitness = math.exp(i.performance / temperature) / population_average  # se calcula la pseudo-aptitud
+        if isinstance(i, Warrior):
+            aux_character = Warrior(i.getHeight(), i.getItems())  # y armamos un pj aux
+            aux_character.performance = pseudo_fitness  # con esa aptitud
+            individualsToRoulette.append(aux_character)
+        elif isinstance(i, Archer):
+            aux_character = Archer(i.getHeight(), i.getItems())
+            aux_character.performance = pseudo_fitness
+            individualsToRoulette.append(aux_character)
+        elif isinstance(i, Rogue):
+            aux_character = Rogue(i.getHeight(), i.getItems())
+            aux_character.performance = pseudo_fitness
+            individualsToRoulette.append(aux_character)
+        elif isinstance(i, Tank):
+            aux_character = Tank(i.getHeight(), i.getItems())
+            aux_character.performance = pseudo_fitness
+            individualsToRoulette.append(aux_character)
+        else:
+            print("Unexpected error")
+
+    selectedIndividuals = Roulette(individualsToRoulette, K)
+
+    return selectedIndividuals
+
+def calculateAverage(individualsList, temperature):
+    avg = 0
+    for i in individualsList:
+        avg += math.exp(i.performance / temperature)
+    return avg / len(individualsList)
+
 '''
 def Ranking(individualsList, K):
     def compare(ind):
-        return ind.performancesortedInd = []
-
+        return ind.performance
+        
+    sortedInd = []
     individualsToRoulette = []
     sortedInd = sorted(individualsList, key=compare, reverse=True)  # ordeno los pjs en base a los
     N = len(individualsList)  # que tienen mejor aptitud

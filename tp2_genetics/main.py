@@ -77,10 +77,10 @@ elif select_method == 'universal':
     people = Universal(people, K)
 elif select_method == 'elite':
     people = Elite(people, K)
-#elif select_method == 'ranking':
-#    people = Ranking(people, K)
-#elif select_method == 'boltzmann':
-#    people = Boltzmann(people, K)
+elif select_method == 'ranking':
+    people = Ranking(people, K)
+elif select_method == 'boltzmann':
+    people = Boltzmann(people, K, 50, 10, 2, 1)
 elif select_method == 'det_tourney':
     people = DetTourney(people, K)
 else:
