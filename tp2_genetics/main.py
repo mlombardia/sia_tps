@@ -11,6 +11,8 @@ from characters.Character import Tank
 from characters.Character import Rogue
 from Crossovers import *
 from selectMets import *
+from implementations import *
+from ends_by import *
 
 config_filename = 'config.yaml'
 
@@ -25,40 +27,76 @@ switcher_clase={
 }
 
 K = config['K']
-Clas = config['class']
-Clase = switcher_clase[Clas]
+Class = config['class']
+Clase = switcher_clase[Class]
 select_method = config['selection_method']
 crossover = config['crossover']
 mutation = config['mutation']
 mutation_probability = config['probability']
-
+implementation = config['implementation']
+end_by_type = config['end by']
+params = config['params']
+time = params['time']
+max_gens = params['gen_number']
 
 people = []
 
 
-for i in range(K):
-    people.append(Clase(get_random_height(), generateItems())) #first gen
+def get_first_gen():
 
-print("first gen:")
-print(people)
-print("\n")
+    for i in range(K):
+        people.append(Clase(get_random_height(), generateItems())) #first gen
 
-random.shuffle(people)
+    print("first gen:")
+    print(people)
+    print("\n")
 
-j = 0
-oldSize = len(people)
-while j < oldSize:
-    if crossover == 'uniform':
-        newChildren = Uniform(people[j], people[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
-    elif crossover == 'point':
-        newChildren = Point(people[j], people[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
-    elif crossover == 'two_point':
-        newChildren = TwoPoint(people[j], people[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
+    random.shuffle(people)
+    return people
+
+def run_through_generations():
+    parents = get_first_gen()
+    if end_by_type == "time":
+        while ends_by_specified_time(datetime.now(), time):
+            children = do_crossover()
+            do_selection(parents, children)
+            parents = children
+    elif end_by_type == "gen":
+        gen = 0
+        while ends_by_generations(gen, max_gens):
+            children = do_crossover()
+            do_selection(parents, children)
+            parents = children
+            gen += 1
+    #elif...
+
+def do_crossover():
+    j = 0
+    oldSize = len(people)
+    newChildren = []
+
+    while j < oldSize:
+        if crossover == 'uniform':
+            newChildren = Uniform(people[j], people[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
+        elif crossover == 'point':
+            newChildren = Point(people[j], people[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
+        elif crossover == 'two_point':
+            newChildren = TwoPoint(people[j], people[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
+        else:
+            newChildren = Anular(people[j], people[j + 1], Clase, mutation, mutation_probability)  # [hijo1, hijo2]
+        for child in newChildren:
+            people.append(child)
+        j += 2
+
+    return newChildren
+
+
+def do_selection(parents, newChildren):
+    # implementations
+    if implementation == 'fill_all':
+        fill_all(K, select_method, parents, newChildren)
     else:
-        newChildren = Anular(people[j], people[j + 1], Clase, mutation, mutation_probability)  # [hijo1, hijo2]
-    for child in newChildren:
-        people.append(child)
-    j += 2
+        fill_parent(K, select_method, parents, newChildren)
 
 '''
 if oldSize % 2 != 0:
@@ -70,21 +108,7 @@ print("intermedio:")
 print(people)
 print("\n")
 
-# selection method: roulette / universal / elite / ranking / boltzmann / det_tourney / prob_tourney
-if select_method == 'roulette':
-    people = Roulette(people, K)
-elif select_method == 'universal':
-    people = Universal(people, K)
-elif select_method == 'elite':
-    people = Elite(people, K)
-elif select_method == 'ranking':
-    people = Ranking(people, K)
-elif select_method == 'boltzmann':
-    people = Boltzmann(people, K, 50, 10, 2, 1)
-elif select_method == 'det_tourney':
-    people = DetTourney(people, K)
-else:
-    people = ProbTourney(people, K)
+
 
 #random.shuffle(gen2) ##people ahora es la generacion 2
 print("second gen:")

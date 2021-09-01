@@ -126,7 +126,6 @@ def Ranking(individualsList, K):
 
 def Boltzmann(individualsList, K, t0, tc, k, t):
     temperature = tc + (t0 - tc) * math.exp(-k * t)
-
     individualsToRoulette = []
     population_average = calculateAverage(individualsList, temperature)  # se calcula la temp promedio
 
