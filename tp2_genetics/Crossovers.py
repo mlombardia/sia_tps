@@ -108,6 +108,7 @@ def TwoPoint(char1, char2, Type, mutation, mutation_probability):
 
     return [offspring1, offspring2]
 
+
 def Anular(char1, char2, Type, mutation, mutation_probability):
     p = random.randint(0,5)
     l = random.randint(0,5-p)

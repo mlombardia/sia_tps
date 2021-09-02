@@ -1,27 +1,25 @@
 from selectMets import *
 
 
-def fill_all(K, select_method, parents, children):
-    total=len(parents+children)     #bien??????
+def fill_all(N, select_method, parents, children):
 
     if select_method == 'roulette':
-        return Roulette(parents+children, K)    #habria que seleccionar N? WTF
+        return Roulette(parents+children, N)
     elif select_method == 'universal':
-        return Universal(parents+children, K)
+        return Universal(parents+children, N)
     elif select_method == 'elite':
-        return Elite(parents+children, K)
+        return Elite(parents+children, N)
     elif select_method == 'ranking':
-        return Ranking(parents+children, K)
+        return Ranking(parents+children, N)
     elif select_method == 'boltzmann':
-        return Boltzmann(parents+children, K, 50, 10, 2, 1)
+        return Boltzmann(parents+children, N, 50, 10, 2, 1)
     elif select_method == 'det_tourney':
-        return DetTourney(parents+children, K)
+        return DetTourney(parents+children, N)
     else:
-        return ProbTourney(parents+children, K)
+        return ProbTourney(parents+children, N)
 
 
-def fill_parent(K, select_method, parents, children):
-    N = len(parents + children)     #bien??????
+def fill_parent(N, K, select_method, parents, children):
 
     if K <= N:
         if select_method == 'roulette':
@@ -54,3 +52,4 @@ def fill_parent(K, select_method, parents, children):
             return DetTourney(children, N)
         else:
             return ProbTourney(children, N)
+

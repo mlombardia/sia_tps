@@ -1,4 +1,7 @@
-# people in a generation
+#population size
+N: 25
+
+# people to select
 K: 10
 
 # warrior / archer / tank / rogue
@@ -17,11 +20,11 @@ probability: 10
 # implementation: fill_all / fill_parent
 implementation: fill_all
 
-# end by: time / number of generations / fitness / structure / content
-end_by: time
+# end by: time / max_gem / fitness / structure / content
+end_by: max_gen
 params:
   time: 5
-  gen_number: 3
+  gen_number: 5
   fitness: 10
 
 

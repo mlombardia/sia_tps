@@ -27,6 +27,7 @@ switcher_clase={
 }
 
 K = config['K']
+N = config['N']
 Class = config['class']
 Clase = switcher_clase[Class]
 select_method = config['selection_method']
@@ -34,7 +35,7 @@ crossover = config['crossover']
 mutation = config['mutation']
 mutation_probability = config['probability']
 implementation = config['implementation']
-end_by_type = config['end by']
+end_by_type = config['end_by']
 params = config['params']
 time = params['time']
 max_gens = params['gen_number']
@@ -42,48 +43,89 @@ max_gens = params['gen_number']
 people = []
 
 
+
 def get_first_gen():
 
-    for i in range(K):
+    for i in range(N):
         people.append(Clase(get_random_height(), generateItems())) #first gen
-
-    print("first gen:")
-    print(people)
-    print("\n")
 
     random.shuffle(people)
     return people
 
+
 def run_through_generations():
-    parents = get_first_gen()
+    parents = get_first_gen()   #tengo N
+
     if end_by_type == "time":
         while ends_by_specified_time(datetime.now(), time):
-            children = do_crossover()
-            do_selection(parents, children)
-            parents = children
-    elif end_by_type == "gen":
+            selected_parents = select_K_parents(parents)    # elijo K padres
+            children = do_crossover(selected_parents)       # genero K hijos
+            selected = do_selection(parents, children)      # elijo entre los N de la gen anterior y los K hijos. Tengo N elegidos
+            parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
+    elif end_by_type == "max_gen":
         gen = 0
         while ends_by_generations(gen, max_gens):
-            children = do_crossover()
-            do_selection(parents, children)
-            parents = children
+            print(gen)
+            selected_parents = select_K_parents(parents)    # elijo K padres
+            print("selected parents")
+            print(selected_parents)
+            print(len(selected_parents))
+            print("\n")
+            children = do_crossover(selected_parents)       # genero K hijos
+            print("children")
+            print(children)
+            print(len(children))
+            print("\n")
+            selected = do_selection(parents, children)      # elijo entre los N de la gen anterior y los K hijos. Tengo N elegidos
+            print("selected")
+            print(selected)
+            print(len(selected))
+            print("\n")
+            parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
             gen += 1
     #elif...
 
-def do_crossover():
+
+def select_K_parents(parents):
+    if select_method == 'roulette':  # elijo K padres de los N
+        selected_parents = Roulette(parents, K)
+    elif select_method == 'universal':
+        selected_parents = Universal(parents, K)
+    elif select_method == 'elite':
+        selected_parents = Elite(parents, K)
+    elif select_method == 'ranking':
+        selected_parents = Ranking(parents, K)
+    elif select_method == 'boltzmann':
+        selected_parents = Boltzmann(parents, K, 50, 10, 2, 1)
+    elif select_method == 'det_tourney':
+        selected_parents = DetTourney(parents, K)
+    else:
+        selected_parents = ProbTourney(parents, K)
+
+    return selected_parents
+
+
+def do_crossover(people_list):
     j = 0
-    oldSize = len(people)
     newChildren = []
 
-    while j < oldSize:
+    while j < K:
         if crossover == 'uniform':
-            newChildren = Uniform(people[j], people[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
+            aux = Uniform(people_list[j], people_list[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
+            newChildren.append(aux[0])
+            newChildren.append(aux[1])
         elif crossover == 'point':
-            newChildren = Point(people[j], people[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
+            aux = Point(people_list[j], people_list[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
+            newChildren.append(aux[0])
+            newChildren.append(aux[1])
         elif crossover == 'two_point':
-            newChildren = TwoPoint(people[j], people[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
+            aux = TwoPoint(people_list[j], people_list[j+1], Clase, mutation, mutation_probability) #[hijo1, hijo2]
+            newChildren.append(aux[0])
+            newChildren.append(aux[1])
         else:
-            newChildren = Anular(people[j], people[j + 1], Clase, mutation, mutation_probability)  # [hijo1, hijo2]
+            aux = Anular(people_list[j], people_list[j + 1], Clase, mutation, mutation_probability)  # [hijo1, hijo2]
+            newChildren.append(aux[0])
+            newChildren.append(aux[1])
         for child in newChildren:
             people.append(child)
         j += 2
@@ -94,16 +136,19 @@ def do_crossover():
 def do_selection(parents, newChildren):
     # implementations
     if implementation == 'fill_all':
-        fill_all(K, select_method, parents, newChildren)
+        return fill_all(N, select_method, parents, newChildren)
     else:
-        fill_parent(K, select_method, parents, newChildren)
+        return fill_parent(N, K, select_method, parents, newChildren)
+
+
+run_through_generations()
 
 '''
 if oldSize % 2 != 0:
     newChildren = Uniform(people[oldSize-1], people[0]) #[hijo1, hijo2]
     for child in newChildren:
         people.append(child)
-'''
+
 print("intermedio:")
 print(people)
 print("\n")
@@ -114,6 +159,8 @@ print("\n")
 print("second gen:")
 print(people)
 print("\n")
+
+'''
 
 
 
