@@ -39,6 +39,7 @@ end_by_type = config['end_by']
 params = config['params']
 time = params['time']
 max_gens = params['gen_number']
+obj_fitness = params['fitness']
 
 people = []
 
@@ -65,25 +66,39 @@ def run_through_generations():
     elif end_by_type == "max_gen":
         gen = 0
         while ends_by_generations(gen, max_gens):
-            print(gen)
+            # print(gen)
             selected_parents = select_K_parents(parents)    # elijo K padres
-            print("selected parents")
-            print(selected_parents)
-            print(len(selected_parents))
-            print("\n")
+            # print("selected parents")
+            # print(selected_parents)
+            # print(len(selected_parents))
+            # print("\n")
             children = do_crossover(selected_parents)       # genero K hijos
-            print("children")
-            print(children)
-            print(len(children))
-            print("\n")
+            # print("children")
+            # print(children)
+            # print(len(children))
+            # print("\n")
+            selected = do_selection(parents, children)      # elijo entre los N de la gen anterior y los K hijos. Tengo N elegidos
+            # print("selected")
+            # print(selected)
+            # print(len(selected))
+            # print("\n")
+            parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
+            gen += 1
+    elif end_by_type == "fitness":
+        curr_fitness=0
+        while ends_by_fitness(curr_fitness, obj_fitness):
+            print(curr_fitness)
+            selected_parents = select_K_parents(parents)    # elijo K padres
+            children = do_crossover(selected_parents)       # genero K hijos
             selected = do_selection(parents, children)      # elijo entre los N de la gen anterior y los K hijos. Tengo N elegidos
             print("selected")
             print(selected)
             print(len(selected))
             print("\n")
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
-            gen += 1
-    #elif...
+            for ind in selected:
+                if ind.performance > curr_fitness:
+                    curr_fitness = ind.performance
 
 
 def select_K_parents(parents):

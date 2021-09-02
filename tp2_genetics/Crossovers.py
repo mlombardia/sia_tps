@@ -26,7 +26,7 @@ def Uniform(char1, char2, Type, mutation, mutation_probability):
         offspring2 = Type(char1.height, itemlist2)
 
     if mutation == 'gen':
-        gen(mutation_probability, 0, offspring1)
+        gen(mutation_probability, random.randint(0,5), offspring1)
     elif mutation == 'limited_multigen':
         limited_multigen(mutation_probability, offspring1)
     elif mutation == 'uniform_multigen':

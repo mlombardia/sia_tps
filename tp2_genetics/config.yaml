@@ -8,24 +8,24 @@ K: 10
 class: warrior
 
 # selection method: roulette / universal / elite / ranking / boltzmann / det_tourney / prob_tourney
-selection_method: roulette
+selection_method: elite
 
 # crossover: uniform / point / two_point / anular
 crossover: uniform
 
 # mutation: gen / limited_multigen / uniform_multigen / complete_mutation
-mutation: gen
-probability: 10
+mutation: complete_multigen
+probability: 100
 
 # implementation: fill_all / fill_parent
 implementation: fill_all
 
 # end by: time / max_gem / fitness / structure / content
-end_by: max_gen
+end_by: fitness
 params:
   time: 5
   gen_number: 5
-  fitness: 10
+  fitness: 40
 
 
 
