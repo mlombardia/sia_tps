@@ -8,25 +8,48 @@ K: 10
 class: warrior
 
 # selection method: roulette / universal / elite / ranking / boltzmann / det_tourney / prob_tourney
-selection_method: elite
+selection_method_1: elite
+selection_method_2: ranking
+selection_method_3: det_tourney
+selection_method_4: prob_tourney
+
+# for selection methods
+A: 0.4 # parent selection
+B: 0.6 # individuals replacement
+
+select_params:
+  t0: 50
+  tc: 10
+  k: 2
 
 # crossover: uniform / point / two_point / anular
-crossover: uniform
+crossover: point
 
 # mutation: gen / limited_multigen / uniform_multigen / complete_mutation
-mutation: complete_multigen
-probability: 100
+mutation: complete_mutation
+probability: 10
 
 # implementation: fill_all / fill_parent
 implementation: fill_all
 
 # end by: time / max_gen / fitness / structure / content
-end_by: time
+end_by: structure
 params:
-  time: 5
-  gen_number: 5
+  # for time
+  time: 10
+
+  # for max_gen and structure
+  gen_number: 500
+
+  # for fitness
   fitness: 40
+
+  # for content
   content_gen: 10
+
+  #for structure
+  percent: 0.3
+  relevant: best #best or worst
 
 
 
