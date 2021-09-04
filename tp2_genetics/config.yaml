@@ -20,12 +20,13 @@ probability: 100
 # implementation: fill_all / fill_parent
 implementation: fill_all
 
-# end by: time / max_gem / fitness / structure / content
-end_by: fitness
+# end by: time / max_gen / fitness / structure / content
+end_by: time
 params:
   time: 5
   gen_number: 5
   fitness: 40
+  content_gen: 10
 
 
 

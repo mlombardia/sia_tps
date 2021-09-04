@@ -119,7 +119,10 @@ def Ranking(individualsList, K):
             individualsToRoulette.append(aux_character)
         else:
             print("Unexpected error")
-
+# [16,14,13]
+# [1, 0.66, 0.33]
+# [0.66]
+# [14] -> [0.66]
     selectedIndividuals = Roulette(individualsToRoulette, K)
 
     return selectedIndividuals

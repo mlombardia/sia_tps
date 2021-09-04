@@ -40,6 +40,7 @@ params = config['params']
 time = params['time']
 max_gens = params['gen_number']
 obj_fitness = params['fitness']
+content_max_gen = params['content_gen']
 
 people = []
 
@@ -58,30 +59,26 @@ def run_through_generations():
     parents = get_first_gen()   #tengo N
 
     if end_by_type == "time":
-        while ends_by_specified_time(datetime.now(), time):
+        start_time = datetime.now()
+        while ends_by_specified_time(start_time, time):
             selected_parents = select_K_parents(parents)    # elijo K padres
             children = do_crossover(selected_parents)       # genero K hijos
             selected = do_selection(parents, children)      # elijo entre los N de la gen anterior y los K hijos. Tengo N elegidos
+            print("selected")
+            print(selected)
+            print(len(selected))
+            print("\n")
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
     elif end_by_type == "max_gen":
         gen = 0
         while ends_by_generations(gen, max_gens):
-            # print(gen)
             selected_parents = select_K_parents(parents)    # elijo K padres
-            # print("selected parents")
-            # print(selected_parents)
-            # print(len(selected_parents))
-            # print("\n")
             children = do_crossover(selected_parents)       # genero K hijos
-            # print("children")
-            # print(children)
-            # print(len(children))
-            # print("\n")
             selected = do_selection(parents, children)      # elijo entre los N de la gen anterior y los K hijos. Tengo N elegidos
-            # print("selected")
-            # print(selected)
-            # print(len(selected))
-            # print("\n")
+            print("selected")
+            print(selected)
+            print(len(selected))
+            print("\n")
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
             gen += 1
     elif end_by_type == "fitness":
@@ -99,6 +96,31 @@ def run_through_generations():
             for ind in selected:
                 if ind.performance > curr_fitness:
                     curr_fitness = ind.performance
+    elif end_by_type == "content":
+        max_previous_local_fitness = 0
+        max_current_local_fitness = 0
+        gen = 0
+        while ends_by_generations(gen, content_max_gen):
+            selected_parents = select_K_parents(parents)  # elijo K padres
+            children = do_crossover(selected_parents)  # genero K hijos
+            selected = do_selection(parents, children)  # elijo entre los N de la gen anterior y los K hijos. Tengo N elegidos
+            print("selected")
+            print(selected)
+            print(len(selected))
+            print("\n")
+            parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
+            for ind in selected:
+                if ind.performance > max_current_local_fitness:
+                    max_current_local_fitness = ind.performance
+            if max_previous_local_fitness == max_current_local_fitness:
+                gen += 1
+            else:
+                gen=0
+            max_previous_local_fitness = max_current_local_fitness
+            print("gen: ")
+            print(gen)
+
+
 
 
 def select_K_parents(parents):
