@@ -100,7 +100,8 @@ def run_through_generations():
         if time < 0:
             print("el tiempo debe ser mayor que 0")
             exit()
-        fitness_queue.put([parents, gen])  # guardo la 1era generacion
+        fitness_queue.put(parents)
+        fitness_queue.put(gen)
         while ends_by_specified_time(start_time, time):
             print("gen:", gen, "\n", parents)
             a1 = math.ceil(A*K)
@@ -376,7 +377,7 @@ if __name__ == '__main__':
 
     run_through_generations()
 
-    fitness_queue.put([])
+    #fitness_queue.put([])
 
 
 

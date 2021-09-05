@@ -4,6 +4,8 @@ import matplotlib.animation
 
 
 def min_and_mean_fitness(queue):
+    global finished
+    finished = False
     generations = []
     min_fitness = []
     mean_fitness = []
@@ -12,8 +14,8 @@ def min_and_mean_fitness(queue):
     fig = matplotlib.pyplot.figure()
     aux = fig.add_subplot(1, 1, 1)
 
-    def animate():
-        finished = False
+    def animate(i):
+        global finished
 
         if finished:
             return
@@ -22,6 +24,7 @@ def min_and_mean_fitness(queue):
 
         if len(gen) == 0:
             finished = True
+            return
 
         generations.append(gen[1])  #el numero de generacion
         min_fitness.append(gen[2])
@@ -42,6 +45,5 @@ def min_and_mean_fitness(queue):
 
     ani = matplotlib.animation.FuncAnimation(fig, animate, interval=100)
     matplotlib.pyplot.show()
-
     return
 
