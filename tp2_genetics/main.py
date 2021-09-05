@@ -1,6 +1,9 @@
 import linecache
 import math
 import random
+import multiprocessing
+import signal
+import sys
 
 import yaml
 
@@ -14,6 +17,7 @@ from Crossovers import *
 from selectMets import *
 from implementations import *
 from ends_by import *
+from graphics import *
 
 config_filename = 'config.yaml'
 
@@ -58,6 +62,22 @@ B = config['B']
 people = []
 
 
+def sigint_handler(sig, frame):
+    print('Exiting')
+
+    global fitness_plotter, diversity_plotter, best_ind_stats_plotter
+
+    if not fitness_plotter is None:
+        fitness_plotter.terminate()
+
+    if not diversity_plotter is None:
+        diversity_plotter.terminate()
+
+    if not best_ind_stats_plotter is None:
+        best_ind_stats_plotter.terminate()
+
+    sys.exit(0)
+
 
 def get_first_gen():
 
@@ -73,10 +93,14 @@ def run_through_generations():
 
     if end_by_type == "time":
         gen=0
+        min_fitness = math.inf
         start_time = datetime.now()
+        mean_fitness = 0
+        curr_fitness = 0
         if time < 0:
             print("el tiempo debe ser mayor que 0")
             exit()
+        fitness_queue.put([parents, gen])  # guardo la 1era generacion
         while ends_by_specified_time(start_time, time):
             print("gen:", gen, "\n", parents)
             a1 = math.ceil(A*K)
@@ -98,8 +122,17 @@ def run_through_generations():
             print("gen++:\n", selected)
             print("\n")
             gen += 1
+            parents = selected  # los N elegidos pasan a ser los padres de la nueva generacion
+            for ind in selected:
+                if ind.performance < min_fitness:
+                    min_fitness = ind.performance
+                if ind.performance > curr_fitness:
+                    curr_fitness = ind.performance
+                mean_fitness += ind.performance
 
+            mean_fitness = mean_fitness/len(selected)
 
+            fitness_queue.put([selected, gen, min_fitness, curr_fitness, mean_fitness])     # armo una cola de generaciones
 
     elif end_by_type == "max_gen":
         gen = 0
@@ -327,7 +360,23 @@ def do_selection2(parents, newChildren, cant):
     else:
         return fill_parent(cant, K, select_method_2, parents, newChildren)
 
-run_through_generations()
+
+if __name__ == '__main__':
+    # sets SIGINT handler
+    signal.signal(signal.SIGINT, sigint_handler)
+
+    # sets process creation method
+    multiprocessing.set_start_method('spawn')
+
+    fitness_queue = multiprocessing.Queue()
+
+    fitness_graphic = multiprocessing.Process(target=min_and_mean_fitness, args=(fitness_queue,))
+    fitness_graphic.daemon = True
+    fitness_graphic.start()
+
+    run_through_generations()
+
+    fitness_queue.put([])
 
 
 

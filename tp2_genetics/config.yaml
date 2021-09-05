@@ -33,10 +33,10 @@ probability: 10
 implementation: fill_all
 
 # end by: time / max_gen / fitness / structure / content
-end_by: structure
+end_by: time
 params:
   # for time
-  time: 10
+  time: 5
 
   # for max_gen and structure
   gen_number: 500
