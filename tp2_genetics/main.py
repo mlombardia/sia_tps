@@ -63,6 +63,13 @@ B = config['B']
 
 people = []
 
+gloves_set = set()
+height_set = set()
+helmet_set = set()
+weapon_set = set()
+chestplate_set = set()
+boots_set = set()
+
 
 def sigint_handler(sig, frame):
     print('Exiting')
@@ -90,7 +97,7 @@ def get_first_gen():
     return people
 
 
-def run_through_generations(fitness_queue):
+def run_through_generations(fitness_queue, diversity_queue):
     parents = get_first_gen()   #tengo N
 
     if end_by_type == "time":
@@ -109,6 +116,7 @@ def run_through_generations(fitness_queue):
             if ind.performance > curr_fitness:
                 curr_fitness = ind.performance
             mean_fitness += ind.performance
+
 
         mean_fitness = mean_fitness / len(parents)
 
@@ -150,24 +158,54 @@ def run_through_generations(fitness_queue):
         gen = 0
         mean_fitness = 0
         curr_fitness = 0
-        print("en main")
-        print(len(parents))
-        print(parents)
+        diversity_gloves = 0
+        diversity_height = 0
+        diversity_helmet = 0
+        diversity_weapon = 0
+        diversity_chestplate = 0
+        diversity_boots = 0
+
         if max_gens < 0:
             print("el numero de generaciones debe ser mayor que 0")
             exit()
 
         min_fitness = parents[0].performance
+
+
         for ind in parents:
             if ind.performance < min_fitness:
                 min_fitness = ind.performance
             if ind.performance > curr_fitness:
                 curr_fitness = ind.performance
             mean_fitness += ind.performance
+            items = ind.getItems()
+            gloves_set.add(items[3])
+            height_set.add(ind.getHeight())
+            helmet_set.add(items[2])
+            weapon_set.add(items[0])
+            chestplate_set.add(items[4])
+            boots_set.add(items[1])
 
         mean_fitness = mean_fitness / len(parents)
+        diversity_gloves = len(gloves_set) / len(parents)
+        diversity_height = len(height_set) / len(parents)
+        diversity_helmet = len(helmet_set) / len(parents)
+        diversity_weapon = len(weapon_set) / len(parents)
+        diversity_chestplate = len(chestplate_set) / len(parents)
+        diversity_boots = len(boots_set) / len(parents)
 
         fitness_queue.put([parents, gen, min_fitness, curr_fitness, mean_fitness])
+        diversity_queue.put([parents, gen, diversity_weapon, diversity_boots, diversity_helmet, diversity_gloves,
+                             diversity_chestplate, diversity_height])
+
+        gloves_set.clear()
+        helmet_set.clear()
+        weapon_set.clear()
+        helmet_set.clear()
+        height_set.clear()
+        boots_set.clear()
+        chestplate_set.clear()
+
 
         while ends_by_generations(gen, max_gens):
             a1 = math.ceil(A*K)
@@ -185,6 +223,7 @@ def run_through_generations(fitness_queue):
             selected = selected_children1 + selected_children2
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
+
             gen += 1
             for ind in selected:
                 if ind.performance < min_fitness:
@@ -192,10 +231,32 @@ def run_through_generations(fitness_queue):
                 if ind.performance > curr_fitness:
                     curr_fitness = ind.performance
                 mean_fitness += ind.performance
+                items = ind.getItems()
+                gloves_set.add(items[3])
+                height_set.add(ind.getHeight())
+                helmet_set.add(items[2])
+                weapon_set.add(items[0])
+                chestplate_set.add(items[4])
+                boots_set.add(items[1])
 
             mean_fitness = mean_fitness/len(selected)
+            diversity_gloves = len(gloves_set) / len(selected)
+            diversity_height = len(height_set) / len(selected)
+            diversity_helmet = len(helmet_set) / len(selected)
+            diversity_weapon = len(weapon_set) / len(selected)
+            diversity_chestplate = len(chestplate_set) / len(selected)
+            diversity_boots = len(boots_set) / len(selected)
 
             fitness_queue.put([selected, gen, min_fitness, curr_fitness, mean_fitness])     # armo una cola de generaciones
+            diversity_queue.put([selected, gen, diversity_weapon, diversity_boots, diversity_helmet, diversity_gloves,
+                                 diversity_chestplate, diversity_height])
+            gloves_set.clear()
+            helmet_set.clear()
+            weapon_set.clear()
+            helmet_set.clear()
+            height_set.clear()
+            boots_set.clear()
+            chestplate_set.clear()
 
     elif end_by_type == "fitness":
         gen = 0
@@ -234,9 +295,6 @@ def run_through_generations(fitness_queue):
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
             gen += 1
 
-            print("desde main")
-            print(gen)
-
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
             for ind in selected:
                 if ind.performance > curr_fitness:
@@ -272,13 +330,11 @@ def run_through_generations(fitness_queue):
 
         fitness_queue.put([parents, gen, min_fitness, curr_fitness, mean_fitness])
         while ends_by_generations(genIter, content_max_gen):
-            print("gen:", gen, "\n", parents)
             a1 = math.ceil(A*K)
             selected_parents1 = select_K_parents1(parents, a1, gen)    # elijo K padres
             a2 = K-a1
             selected_parents2 = select_K_parents2(parents, a2, gen)
             selected_parents = selected_parents1 + selected_parents2
-            print("selected parents:\n", selected_parents)
 
             children = do_crossover(selected_parents)       # genero K hijos
 
@@ -289,8 +345,6 @@ def run_through_generations(fitness_queue):
             selected = selected_children1 + selected_children2
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
-            print("gen++:\n", selected)
-            print("\n")
             gen += 1
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
@@ -340,13 +394,11 @@ def run_through_generations(fitness_queue):
 
         fitness_queue.put([parents, gen, min_fitness, curr_fitness, mean_fitness])
         while not_ends:
-            print("gen:", gen, "\n", parents)
             a1 = math.ceil(A*K)
             selected_parents1 = select_K_parents1(parents, a1, gen)    # elijo K padres
             a2 = K-a1
             selected_parents2 = select_K_parents2(parents, a2, gen)
             selected_parents = selected_parents1 + selected_parents2
-            print("selected parents:\n", selected_parents)
 
             children = do_crossover(selected_parents)       # genero K hijos
 
@@ -356,8 +408,6 @@ def run_through_generations(fitness_queue):
             selected_children2 = do_selection2(selected_parents, children, b2, t0, tc, k, gen)
             selected = selected_children1 + selected_children2
 
-            print("gen++:\n", selected)
-            print("\n")
             gen += 1
 
             if not ends_by_structure(parents, selected, relevant, percent):
@@ -381,9 +431,6 @@ def run_through_generations(fitness_queue):
             mean_fitness = mean_fitness/len(selected)
 
             fitness_queue.put([selected, gen, min_fitness, curr_fitness, mean_fitness])     # armo una cola de generaciones
-
-
-
 
 
 def select_K_parents1(parents, num, gen):
@@ -477,14 +524,21 @@ if __name__ == '__main__':
     fitness_queue = multiprocessing.Queue()
     fitness_queue.cancel_join_thread()
 
+    diversity_queue = multiprocessing.Queue()
+    diversity_queue.cancel_join_thread()
+
     fitness_graphic = multiprocessing.Process(target=min_and_mean_fitness, args=(fitness_queue,))
     fitness_graphic.daemon = True
     fitness_graphic.start()
 
-    run_through_generations(fitness_queue)
+    fitness_graphic = multiprocessing.Process(target=diversity, args=(diversity_queue,))
+    fitness_graphic.daemon = True
+    fitness_graphic.start()
+
+    run_through_generations(fitness_queue, diversity_queue)
 
     fitness_queue.put([])
+    diversity_queue.put([])
 
     keyboard.wait("p")
-
 
