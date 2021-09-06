@@ -6,6 +6,7 @@ import signal
 import sys
 
 import yaml
+import keyboard
 
 from items.Item import generateItems
 from mutation import *
@@ -18,6 +19,7 @@ from selectMets import *
 from implementations import *
 from ends_by import *
 from graphics import *
+
 
 config_filename = 'config.yaml'
 
@@ -388,5 +390,6 @@ if __name__ == '__main__':
 
     fitness_queue.put([])
 
+    keyboard.wait("p")
 
 
