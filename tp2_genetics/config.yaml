@@ -8,8 +8,8 @@ K: 10
 class: warrior
 
 # selection method: roulette / universal / elite / ranking / boltzmann / det_tourney / prob_tourney
-selection_method_1: elite
-selection_method_2: ranking
+selection_method_1: roulette
+selection_method_2: universal
 selection_method_3: det_tourney
 selection_method_4: prob_tourney
 
@@ -33,16 +33,16 @@ probability: 10
 implementation: fill_all
 
 # end by: time / max_gen / fitness / structure / content
-end_by: time
+end_by: max_gen
 params:
   # for time
-  time: 5
+  time: 1
 
   # for max_gen and structure
-  gen_number: 500
+  gen_number: 5
 
   # for fitness
-  fitness: 40
+  fitness: 16
 
   # for content
   content_gen: 10

@@ -19,15 +19,15 @@ def min_and_mean_fitness(queue):
 
     def animate(i):
 
-
-
         gen = queue.get()
         #gen = [1,2,3,4,5]
-        print(gen[1], gen[2], gen[3], gen[4])
-        print(len(gen))
-        if len(gen) == 0:
-            finished = True
-            #return
+
+        print("desde graph")
+        print(gen[1])
+        print(len(gen[0]))
+
+        if len(gen[0]) == 0:
+            return
 
         generations.append(gen[1])  #el numero de generacion
         min_fitness.append(gen[2])

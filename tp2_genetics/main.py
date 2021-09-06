@@ -176,9 +176,13 @@ def run_through_generations(fitness_queue):
     elif end_by_type == "fitness":
         curr_fitness = 0
         gen = 0
+        mean_fitness = 0
+        curr_fitness = 0
+        min_fitness = math.inf
         if obj_fitness < 0:
             print("el fitness objetivo debe ser mayor que 0")
             exit()
+        fitness_queue.put([parents, gen, min_fitness, curr_fitness, mean_fitness])
         while ends_by_fitness(curr_fitness, obj_fitness):
             print("gen:", gen, "\n", parents)
             a1 = math.ceil(A*K)
@@ -198,19 +202,33 @@ def run_through_generations(fitness_queue):
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
             gen += 1
 
+            print("desde main")
+            print(gen)
+
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
             for ind in selected:
                 if ind.performance > curr_fitness:
                     curr_fitness = ind.performance
+                if ind.performance < min_fitness:
+                    min_fitness = ind.performance
+                mean_fitness += ind.performance
+
+            mean_fitness = mean_fitness/len(selected)
+
+            fitness_queue.put([selected, gen, min_fitness, curr_fitness, mean_fitness])     # armo una cola de generaciones
 
     elif end_by_type == "content":
         max_previous_local_fitness = 0
         max_current_local_fitness = 0
         genIter=0
         gen = 0
+        mean_fitness = 0
+        curr_fitness = 0
+        min_fitness = math.inf
         if content_max_gen < 1:
             print("la cantidad de generaciones debe ser mayor o igual que 1")
             exit()
+        fitness_queue.put([parents, gen, min_fitness, curr_fitness, mean_fitness])
         while ends_by_generations(genIter, content_max_gen):
             print("gen:", gen, "\n", parents)
             a1 = math.ceil(A*K)
@@ -237,6 +255,12 @@ def run_through_generations(fitness_queue):
             for ind in selected:
                 if ind.performance > max_current_local_fitness:
                     max_current_local_fitness = ind.performance
+                if ind.performance > curr_fitness:
+                    curr_fitness = ind.performance
+                if ind.performance < min_fitness:
+                    min_fitness = ind.performance
+                mean_fitness += ind.performance
+
             if max_previous_local_fitness == max_current_local_fitness:
                 genIter += 1
                 gen += 1
@@ -245,15 +269,24 @@ def run_through_generations(fitness_queue):
                 gen += 1
             max_previous_local_fitness = max_current_local_fitness
 
+            mean_fitness = mean_fitness/len(selected)
+
+            fitness_queue.put([selected, gen, min_fitness, curr_fitness, mean_fitness])     # armo una cola de generaciones
+
+
     elif end_by_type == "structure":
         not_ends = True
         genIter = 0
         gen = 0
+        mean_fitness = 0
+        curr_fitness = 0
+        min_fitness = math.inf
         #percent = numero de 0 a 1 #parametrizable
         #relevant = "best" o "worst" #parametrizable
         if percent > 1 or percent<0:
             print("genPercentage debe ser 0<percent<1")
             exit()
+        fitness_queue.put([parents, gen, min_fitness, curr_fitness, mean_fitness])
         while not_ends:
             print("gen:", gen, "\n", parents)
             a1 = math.ceil(A*K)
@@ -285,6 +318,17 @@ def run_through_generations(fitness_queue):
                 not_ends = False
 
             parents = selected
+
+            for ind in selected:
+                if ind.performance > curr_fitness:
+                    curr_fitness = ind.performance
+                if ind.performance < min_fitness:
+                    min_fitness = ind.performance
+                mean_fitness += ind.performance
+
+            mean_fitness = mean_fitness/len(selected)
+
+            fitness_queue.put([selected, gen, min_fitness, curr_fitness, mean_fitness])     # armo una cola de generaciones
     print(parents)
 
 
@@ -372,6 +416,7 @@ def do_selection2(parents, newChildren, cant):
 
 if __name__ == '__main__':
     # sets SIGINT handler
+
     signal.signal(signal.SIGINT, sigint_handler)
 
     # sets process creation method
@@ -385,8 +430,6 @@ if __name__ == '__main__':
     fitness_graphic.start()
 
     run_through_generations(fitness_queue)
-
-
 
     fitness_queue.put([])
 
