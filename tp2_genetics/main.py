@@ -125,9 +125,9 @@ def run_through_generations(fitness_queue):
             children = do_crossover(selected_parents)       # genero K hijos
 
             b1 = math.ceil(B*N)
-            selected_children1 = do_selection1(selected_parents, children, b1)
+            selected_children1 = do_selection1(selected_parents, children, b1, t0, tc, k, gen)
             b2 = N-b1
-            selected_children2 = do_selection2(selected_parents, children, b2)
+            selected_children2 = do_selection2(selected_parents, children, b2, t0, tc, k, gen)
             selected = selected_children1 + selected_children2
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
@@ -179,9 +179,9 @@ def run_through_generations(fitness_queue):
             children = do_crossover(selected_parents)       # genero K hijos
 
             b1 = math.ceil(B*N)
-            selected_children1 = do_selection1(selected_parents, children, b1)
+            selected_children1 = do_selection1(selected_parents, children, b1, t0, tc, k, gen)
             b2 = N-b1
-            selected_children2 = do_selection2(selected_parents, children, b2)
+            selected_children2 = do_selection2(selected_parents, children, b2, t0, tc, k, gen)
             selected = selected_children1 + selected_children2
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
@@ -226,9 +226,9 @@ def run_through_generations(fitness_queue):
             children = do_crossover(selected_parents)       # genero K hijos
 
             b1 = math.ceil(B*N)
-            selected_children1 = do_selection1(selected_parents, children, b1)
+            selected_children1 = do_selection1(selected_parents, children, b1, t0, tc, k, gen)
             b2 = N-b1
-            selected_children2 = do_selection2(selected_parents, children, b2)
+            selected_children2 = do_selection2(selected_parents, children, b2, t0, tc, k, gen)
             selected = selected_children1 + selected_children2
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
@@ -283,9 +283,9 @@ def run_through_generations(fitness_queue):
             children = do_crossover(selected_parents)       # genero K hijos
 
             b1 = math.ceil(B*N)
-            selected_children1 = do_selection1(selected_parents, children, b1)
+            selected_children1 = do_selection1(selected_parents, children, b1, t0, tc, k, gen)
             b2 = N-b1
-            selected_children2 = do_selection2(selected_parents, children, b2)
+            selected_children2 = do_selection2(selected_parents, children, b2, t0, tc, k, gen)
             selected = selected_children1 + selected_children2
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
@@ -351,9 +351,9 @@ def run_through_generations(fitness_queue):
             children = do_crossover(selected_parents)       # genero K hijos
 
             b1 = math.ceil(B*N)
-            selected_children1 = do_selection1(selected_parents, children, b1)
+            selected_children1 = do_selection1(selected_parents, children, b1, t0, tc, k, gen)
             b2 = N-b1
-            selected_children2 = do_selection2(selected_parents, children, b2)
+            selected_children2 = do_selection2(selected_parents, children, b2, t0, tc, k, gen)
             selected = selected_children1 + selected_children2
 
             print("gen++:\n", selected)
@@ -451,19 +451,19 @@ def do_crossover(people_list):
     return newChildren
 
 
-def do_selection1(parents, newChildren, cant):
+def do_selection1(parents, newChildren, cant, t0, tc, k, gen):
     # implementations
     if implementation == 'fill_all':
-        return fill_all(cant, select_method_1, parents, newChildren)
+        return fill_all(cant, select_method_1, parents, newChildren, t0, tc, k, gen)
     else:
-        return fill_parent(cant, K, select_method_1, parents, newChildren)
+        return fill_parent(cant, K, select_method_1, parents, newChildren, t0, tc, k, gen)
 
-def do_selection2(parents, newChildren, cant):
+def do_selection2(parents, newChildren, cant, t0, tc, k, gen):
     # implementations
     if implementation == 'fill_all':
-        return fill_all(cant, select_method_2, parents, newChildren)
+        return fill_all(cant, select_method_2, parents, newChildren, t0, tc, k, gen)
     else:
-        return fill_parent(cant, K, select_method_2, parents, newChildren)
+        return fill_parent(cant, K, select_method_2, parents, newChildren, t0, tc, k, gen)
 
 
 if __name__ == '__main__':

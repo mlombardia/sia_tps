@@ -1,7 +1,7 @@
 from selectMets import *
 
 
-def fill_all(N, select_method, parents, children):
+def fill_all(N, select_method, parents, children, t0, tc, k, gen):
 
     if select_method == 'roulette':
         return Roulette(parents+children, N)
@@ -12,14 +12,14 @@ def fill_all(N, select_method, parents, children):
     elif select_method == 'ranking':
         return Ranking(parents+children, N)
     elif select_method == 'boltzmann':
-        return Boltzmann(parents+children, N, 50, 10, 2, 1)
+        return Boltzmann(parents+children, N, t0, tc, k, gen)
     elif select_method == 'det_tourney':
         return DetTourney(parents+children, N)
     else:
         return ProbTourney(parents+children, N)
 
 
-def fill_parent(N, K, select_method, parents, children):
+def fill_parent(N, K, select_method, parents, children, t0, tc, k, gen):
 
     if K <= N:
         if select_method == 'roulette':
@@ -31,7 +31,7 @@ def fill_parent(N, K, select_method, parents, children):
         elif select_method == 'ranking':
             return children + Ranking(parents, N-K)
         elif select_method == 'boltzmann':
-            return children + Boltzmann(parents, N-K, 50, 10, 2, 1)
+            return children + Boltzmann(parents, N-K, t0, tc, k, gen)
         elif select_method == 'det_tourney':
             return children + DetTourney(parents, N-K)
         else:
