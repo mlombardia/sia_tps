@@ -2,9 +2,11 @@ import matplotlib.pyplot
 import matplotlib.gridspec
 import matplotlib.animation
 
+finished = False
 
 def min_and_mean_fitness(queue):
     global finished
+
     finished = False
     generations = []
     min_fitness = []
@@ -21,6 +23,7 @@ def min_and_mean_fitness(queue):
             return
 
         gen = queue.get()
+        print(gen[1], gen[2], gen[3], gen[4])
 
         if len(gen) == 0:
             finished = True

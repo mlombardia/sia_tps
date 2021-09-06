@@ -100,16 +100,15 @@ def run_through_generations():
         if time < 0:
             print("el tiempo debe ser mayor que 0")
             exit()
-        fitness_queue.put(parents)
-        fitness_queue.put(gen)
+        fitness_queue.put([parents, gen, min_fitness, curr_fitness, mean_fitness])
         while ends_by_specified_time(start_time, time):
-            print("gen:", gen, "\n", parents)
+            #print("gen:", gen, "\n", parents)
             a1 = math.ceil(A*K)
             selected_parents1 = select_K_parents1(parents, a1, gen)    # elijo K padres
             a2 = K-a1
             selected_parents2 = select_K_parents2(parents, a2, gen)
             selected_parents = selected_parents1 + selected_parents2
-            print("selected parents:\n", selected_parents)
+            #print("selected parents:\n", selected_parents)
 
             children = do_crossover(selected_parents)       # genero K hijos
 
@@ -120,8 +119,8 @@ def run_through_generations():
             selected = selected_children1 + selected_children2
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
-            print("gen++:\n", selected)
-            print("\n")
+            #print("gen++:\n", selected)
+            #print("\n")
             gen += 1
             parents = selected  # los N elegidos pasan a ser los padres de la nueva generacion
             for ind in selected:
@@ -370,6 +369,7 @@ if __name__ == '__main__':
     multiprocessing.set_start_method('spawn')
 
     fitness_queue = multiprocessing.Queue()
+    fitness_queue.cancel_join_thread()
 
     fitness_graphic = multiprocessing.Process(target=min_and_mean_fitness, args=(fitness_queue,))
     fitness_graphic.daemon = True
@@ -377,7 +377,7 @@ if __name__ == '__main__':
 
     run_through_generations()
 
-    #fitness_queue.put([])
+    fitness_queue.put([])
 
 
 
