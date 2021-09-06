@@ -2,8 +2,8 @@ import linecache
 import random
 
 #arma, bota, casco, guantes, pechera
-from tp2_genetics.items.Item import Item
-
+# from tp2_genetics.items.Item import Item
+from items.Item import Item
 
 def gen(probability, gene, child): #le edito a child tal gen con tanta probabilidad de mutacion
     mutation_probability = random.uniform(0,1)          # elijo una probabilidad

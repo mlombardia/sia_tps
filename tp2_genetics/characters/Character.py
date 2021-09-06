@@ -1,6 +1,6 @@
 import random
 
-from tp2_genetics.items.Item import Item
+
 import math
 
 class Character:

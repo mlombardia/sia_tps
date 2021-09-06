@@ -88,7 +88,7 @@ def get_first_gen():
     return people
 
 
-def run_through_generations():
+def run_through_generations(fitness_queue):
     parents = get_first_gen()   #tengo N
 
     if end_by_type == "time":
@@ -136,17 +136,19 @@ def run_through_generations():
 
     elif end_by_type == "max_gen":
         gen = 0
+        mean_fitness = 0
+        curr_fitness = 0
+        min_fitness = math.inf
         if max_gens < 0:
             print("el numero de generaciones debe ser mayor que 0")
             exit()
+        fitness_queue.put([parents, gen, min_fitness, curr_fitness, mean_fitness])
         while ends_by_generations(gen, max_gens):
-            print("gen:", gen, "\n", parents)
             a1 = math.ceil(A*K)
             selected_parents1 = select_K_parents1(parents, a1, gen)    # elijo K padres
             a2 = K-a1
             selected_parents2 = select_K_parents2(parents, a2, gen)
             selected_parents = selected_parents1 + selected_parents2
-            print("selected parents:\n", selected_parents)
 
             children = do_crossover(selected_parents)       # genero K hijos
 
@@ -157,9 +159,17 @@ def run_through_generations():
             selected = selected_children1 + selected_children2
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
-            print("gen++:\n", selected)
-            print("\n")
             gen += 1
+            for ind in selected:
+                if ind.performance < min_fitness:
+                    min_fitness = ind.performance
+                if ind.performance > curr_fitness:
+                    curr_fitness = ind.performance
+                mean_fitness += ind.performance
+
+            mean_fitness = mean_fitness/len(selected)
+
+            fitness_queue.put([selected, gen, min_fitness, curr_fitness, mean_fitness])     # armo una cola de generaciones
 
     elif end_by_type == "fitness":
         curr_fitness = 0
@@ -174,7 +184,6 @@ def run_through_generations():
             a2 = K-a1
             selected_parents2 = select_K_parents2(parents, a2, gen)
             selected_parents = selected_parents1 + selected_parents2
-            print("selected parents:\n", selected_parents)
 
             children = do_crossover(selected_parents)       # genero K hijos
 
@@ -185,8 +194,6 @@ def run_through_generations():
             selected = selected_children1 + selected_children2
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
-            print("gen++:\n", selected)
-            print("\n")
             gen += 1
 
             parents = selected                              # los N elegidos pasan a ser los padres de la nueva generacion
@@ -375,7 +382,9 @@ if __name__ == '__main__':
     fitness_graphic.daemon = True
     fitness_graphic.start()
 
-    run_through_generations()
+    run_through_generations(fitness_queue)
+
+
 
     fitness_queue.put([])
 
