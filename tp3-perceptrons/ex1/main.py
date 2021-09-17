@@ -2,10 +2,10 @@ from perceptron import SimplePerceptron
 import numpy
 
 train_data = numpy.array([
-        [-1, -1, -1],
-        [-1, 1, -1],
-        [1, -1, 1],
-        [1, 1, 1]
+        [-1, -1],
+        [-1, 1],
+        [1, -1],
+        [1, 1]
     ])
 
 and_expected_data = numpy.array([-1, -1, -1, 1])
@@ -20,7 +20,7 @@ while(i < len(and_expected_data)):
     print("guessed: ", perceptron.guess(train_data[i]))
     i += 1
 
-print(perceptron.guess([-1,-1,1]))
+print(perceptron.guess([-1,-1]))
 
 #or_train_data = numpy.array([
 #       [-1, 1],
@@ -28,11 +28,11 @@ print(perceptron.guess([-1,-1,1]))
 #        [-1, -1],
 #        [1, 1]
 #    ])
-or_expected_data = numpy.array([-1, 1, 1, 1])
+or_expected_data = numpy.array([-1, 1, 1, -1])
 
 second_perceptron = SimplePerceptron(train_data, or_expected_data)
 second_perceptron.train()
-print(second_perceptron.guess([-1, -1, 1]))
+print(second_perceptron.guess([-1, -1]))
 
 i = 0
 while(i < len(or_expected_data)):
