@@ -1,4 +1,5 @@
 import os
+import re
 
 import yaml
 
@@ -56,17 +57,55 @@ def ex1():
     print(second_perceptron.guess([-1, -1]))
 
 
-def parse_data():
-    pass
 
+def parse_data(path):
+    file = open(path, "r")
+    lines = file.readlines()
+
+    matrix = []
+    count = 0
+    for line in lines:
+        count += 1
+        aux = re.split("\s+", line)
+        if aux[0] == "":
+            aux.pop(0)
+        if aux[len(aux)-1] == "":
+            aux.pop()
+        matrix.append(stringToNum(aux))
+    return matrix
+
+def stringToNum(matrix):
+    aux = []
+    for string in matrix:
+        aux.append(float(string))
+    return aux
 
 def ex2():
     ex2_training = os.path.join(data_folder, config['ex2_training'])
     desired_training = os.path.join(data_folder, config['ex2_output'])
 
+    training_matrix = parse_data(ex2_training)
+    expected_matrix = parse_data(desired_training)
+
+    perceptron_lineal = SimplePerceptron(training_matrix, expected_matrix, lineal_act, der_lineal_act)
+    perceptron_nolineal = SimplePerceptron(training_matrix, expected_matrix, tanh_act, der_tanh_act)
+    perceptron_nolineal2 = SimplePerceptron(training_matrix, expected_matrix, sigmoid_act, der_sigmoid_act)
+
+    test = training_matrix[150:]
+    expected = expected_matrix[150:]
+    perceptron_lineal.train(test, expected)
+    perceptron_nolineal.train(test, expected)
+    perceptron_nolineal2.train(test, expected)
+
+
+
+
+
+
+
+
 
 if exercise == 1:
     ex1()
 if exercise == 2:
-    parse_data()
     ex2()
