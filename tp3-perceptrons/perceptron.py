@@ -63,7 +63,8 @@ class SimplePerceptron:
                 error = expected_row - predicted_value
                 if abs(error) < delta:
                     training_correct_cases += 1
-                self.weights = self.weights + (self.error_ponderation * error * self.der_activation_function(self.weights.T.dot(biased_input)) * biased_input.T)
+                self.weights = self.weights + (self.error_ponderation * error * self.der_activation_function(
+                    self.weights.T.dot(biased_input)) * biased_input.T)
 
             training_accuracy = training_correct_cases / len(self.expected_set)
             training_accuracies.append(training_accuracy)
@@ -85,3 +86,92 @@ class SimplePerceptron:
 
     def guess(self, a_input):
         return self.predict(np.insert(a_input, 0, 1))
+
+
+class NeuronLayer:
+    def __init__(self, neurons_qty, inputs_per_neuron_qty):
+        self.weights = 2 * np.random.random((inputs_per_neuron_qty, neurons_qty)) - 1
+
+
+class MultiLayerPerceptron:
+    # hago el init con el set de training, el de valores esperados, como pondero el error y la cantidad de iteraciones,
+    # y genero random los pesos
+    def __init__(self, training_set, expected_set, activation_function, der_activation_function, hidden_layers,
+                 output_layers, iterations_qty=1000):
+        self.training_set = np.array(training_set)
+        self.expected_set = expected_set
+        self.iterations_qty = iterations_qty
+        self.activation_function = activation_function
+        self.der_activation_function = der_activation_function
+        self.hidden_layers = hidden_layers
+        self.output_layers = output_layers
+
+    def train(self):
+        for _ in range(self.iterations_qty):
+            outputs = self.think(self.training_set)
+            errors, deltas = self.get_errors(self.expected_set, outputs)
+            adjustments = self.get_adjustments(self.training_set, deltas, outputs)
+            self.adjust_weights(adjustments)
+
+    def think(self, inputs):
+        outputs = []
+        input=inputs
+        input = self.activation_function(np.dot(input, self.hidden_layers[0].weights))
+        outputs.append(input)
+
+        i = 1
+        # product between hidden layers
+        while i < len(self.hidden_layers):
+            input = self.activation_function(np.dot(input, self.hidden_layers[i].weights))
+            outputs.append(input)
+            i += 1
+
+        outputs.append(self.activation_function(np.dot(input, self.output_layers.weights)))
+        return outputs
+
+    def get_errors(self, expected, outputs):
+        errors = []
+        deltas = []
+
+        output_error = expected - outputs[-1]
+        output_delta = output_error * self.der_activation_function(outputs[-1])
+        errors.append(output_error)
+        deltas.append(output_delta)
+
+        previous_error = output_error
+        previous_delta = output_delta
+        previous_weights = self.output_layers.weights.T
+        current_hidden_layer = len(self.hidden_layers) - 1
+        index = len(outputs) - 2
+
+        while index >= 0:
+            previous_error = previous_delta.dot(previous_weights)
+            errors.append(previous_error)
+            previous_delta = previous_error * self.der_activation_function(outputs[index])
+            deltas.append(previous_delta)
+
+            previous_weights = self.hidden_layers[current_hidden_layer].weights.T
+            current_hidden_layer -= 1
+
+            index -= 1
+        return errors, deltas
+
+    def get_adjustments(self, training_set, deltas, outputs):
+        adjustments = []
+        adjustments.append(training_set.T.dot(deltas[-1]))
+
+        outputs_index = len(outputs) -2
+        deltas_index = len(deltas) -2
+
+        while outputs_index >= 0:
+            adjustments.append(outputs[outputs_index].T.dot(deltas[deltas_index]))
+            outputs_index -= 1
+            deltas_index -= 1
+        return adjustments
+
+    def adjust_weights(self, adjustments):
+        idx = 0
+        while idx < len(self.hidden_layers):
+            self.hidden_layers[idx].weights += adjustments[idx]
+            idx += 1
+

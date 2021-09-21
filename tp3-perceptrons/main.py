@@ -4,7 +4,7 @@ import re
 import yaml
 
 from perceptron import *
-import numpy
+import numpy as np
 import yaml
 from activationFunctions import *
 import matplotlib.pyplot as plt
@@ -58,7 +58,6 @@ def ex1():
     print(second_perceptron.guess([-1, -1]))
 
 
-
 def parse_data(path):
     file = open(path, "r")
     lines = file.readlines()
@@ -75,11 +74,13 @@ def parse_data(path):
         matrix.append(stringToNum(aux))
     return matrix
 
+
 def stringToNum(matrix):
     aux = []
     for string in matrix:
         aux.append(float(string))
     return aux
+
 
 def ex2():
     ex2_training = os.path.join(data_folder, config['ex2_training'])
@@ -126,10 +127,70 @@ def ex2():
     plt.show()
 
 
+def ex3():
+    np.random.seed(1)
+    subitem = config['subitem']
+    if subitem == 1:
+        ex3_1()
+    elif subitem == 2:
+        ex3_2()
+    elif subitem == 3:
+        ex3_3()
+    elif subitem == 4:
+        ex3_4()
 
 
+def ex3_1():
+    hidden_layer_1 = NeuronLayer(5, 2)
+    hidden_layer_2 = NeuronLayer(5, 5)
+    output_layer = NeuronLayer(1, 5)
+    train_data = numpy.array([
+        [-1, 1],
+        [1, -1],
+        [-1, -1],
+        [1, 1]
+    ])
+    xor_expected_data = numpy.array([1, 1, -1, -1])
 
-if exercise == 1:
-    ex1()
-if exercise == 2:
-    ex2()
+    perceptron = MultiLayerPerceptron(train_data, xor_expected_data, sigmoid_act, der_sigmoid_act, [hidden_layer_1, hidden_layer_2], output_layer)
+    perceptron.train()
+
+    output = perceptron.think(np.array([-1, 1]))
+    print('[0 xor 1] is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([-1, -1]))
+    print('[0 xor 0] is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([1, -1]))
+    print('[1 xor 0] is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([1, 1]))
+    print('[1 xor 1] is ~', output[-1])
+    print('\n')
+
+
+def ex3_2():
+    pass
+
+
+def ex3_3():
+    pass
+
+
+def ex3_4():
+    pass
+
+
+def main():
+    if exercise == 1:
+        ex1()
+    if exercise == 2:
+        ex2()
+    if exercise == 3:
+        ex3()
+
+
+main()
