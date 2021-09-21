@@ -7,6 +7,7 @@ from perceptron import *
 import numpy
 import yaml
 from activationFunctions import *
+import matplotlib.pyplot as plt
 
 config_filename = 'config.yaml'
 
@@ -87,19 +88,42 @@ def ex2():
     training_matrix = parse_data(ex2_training)
     expected_matrix = parse_data(desired_training)
 
-    perceptron_lineal = SimplePerceptron(training_matrix, expected_matrix, lineal_act, der_lineal_act)
-    perceptron_nolineal = SimplePerceptron(training_matrix, expected_matrix, tanh_act, der_tanh_act)
-    perceptron_nolineal2 = SimplePerceptron(training_matrix, expected_matrix, sigmoid_act, der_sigmoid_act)
+    i = 0
+    max_value = numpy.max(expected_matrix)
+    min_value = numpy.min(expected_matrix)
+    expected_matrix_normalized = numpy.zeros(len(expected_matrix))
+    while (i < len(expected_matrix)):
+        expected_matrix_normalized[i] = (expected_matrix[i][0] - min_value) / (max_value - min_value)
+        i += 1
 
-    test = training_matrix[150:]
-    expected = expected_matrix[150:]
-    perceptron_lineal.train(test, expected)
-    perceptron_nolineal.train(test, expected)
-    perceptron_nolineal2.train(test, expected)
+    training_set = training_matrix[:50]
+    training_expected = expected_matrix_normalized[:50]
+    test_set = training_matrix[50:]
+    test_expected = expected_matrix_normalized[50:]
 
+    perceptron_lineal = SimplePerceptron(training_set, training_expected, lineal_act, der_lineal_act)
+    perceptron_nolineal = SimplePerceptron(training_set, training_expected, tanh_act, der_tanh_act)
+    perceptron_nolineal2 = SimplePerceptron(training_set, training_expected, sigmoid_act, der_sigmoid_act)
 
+    perceptron_lineal.train(test_set, test_expected)
+    tr1, t1, it1 = perceptron_nolineal.train(test_set, test_expected)
+    tr2, t2, it2 = perceptron_nolineal2.train(test_set, test_expected)
 
+    plt.plot(it1, tr1, label='train')
+    plt.plot(it1, t1, label='train')
 
+    plt.xlabel('Epoch', fontsize=16)
+    plt.ylabel('Accuracy', fontsize=16)
+    plt.legend(title='Accuracy vs Epochs')
+    plt.show()
+
+    plt.plot(it2, tr2, label='train')
+    plt.plot(it2, t2, label='train')
+
+    plt.xlabel('Epoch', fontsize=16)
+    plt.ylabel('Accuracy', fontsize=16)
+    plt.legend(title='Accuracy vs Epochs')
+    plt.show()
 
 
 

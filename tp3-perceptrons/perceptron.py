@@ -51,7 +51,7 @@ class SimplePerceptron:
     def calculate_square_error(self, expected_value, prediction):
         return 0.5 * ((expected_value - prediction) ** 2)
 
-    def train(self, test_input, test_expected_values, delta=0.0001, print_data=True):
+    def train(self, test_input, test_expected_values, delta=0.001, print_data=True):
         iters = []
         training_accuracies = []
         test_accuracies = []
@@ -61,11 +61,9 @@ class SimplePerceptron:
                 biased_input = np.insert(training_row, 0, 1)
                 predicted_value = self.predict(biased_input)
                 error = expected_row - predicted_value
-                self.weights = self.weights + (self.error_ponderation * error * self.der_activation_function(
-                    self.weights.T.dot(biased_input)) * biased_input.T)
-
                 if abs(error) < delta:
                     training_correct_cases += 1
+                self.weights = self.weights + (self.error_ponderation * error * self.der_activation_function(self.weights.T.dot(biased_input)) * biased_input.T)
 
             training_accuracy = training_correct_cases / len(self.expected_set)
             training_accuracies.append(training_accuracy)
