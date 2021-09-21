@@ -150,7 +150,7 @@ def ex3_1():
         [-1, -1],
         [1, 1]
     ])
-    xor_expected_data = numpy.array([1, 1, -1, -1])
+    xor_expected_data = numpy.array([[1], [1], [-1], [-1]])
 
     perceptron = MultiLayerPerceptron(train_data, xor_expected_data, sigmoid_act, der_sigmoid_act, [hidden_layer_1, hidden_layer_2], output_layer)
     perceptron.train()
