@@ -82,6 +82,32 @@ def stringToNum(matrix):
     return aux
 
 
+def parseNumbers(path):
+    file = open(path, "r")
+    lines = file.readlines()
+    length = len(lines)
+
+    numbers = []
+    auxMatrix = []
+    i = 0
+
+    while i < length:
+        for j in range(i, i+7):
+            for k in range(9):
+                if lines[i][k] == '0':
+                    auxMatrix.append(0)
+                if lines[i][k] == '1':
+                    auxMatrix.append(1)
+        numbers.append(auxMatrix)
+        auxMatrix = []
+        i += 7
+
+    for num in numbers:
+        print(num)
+
+    return numbers
+
+
 def ex2():
     ex2_training = os.path.join(data_folder, config['ex2_training'])
     desired_training = os.path.join(data_folder, config['ex2_output'])
@@ -173,7 +199,55 @@ def ex3_1():
 
 
 def ex3_2():
-    pass
+    ex3_training = os.path.join(data_folder, config['ex3_training'])
+    train_data = parseNumbers(ex3_training)
+    expected_data = [[1], [-1], [1], [-1], [1], [-1], [1], [-1], [1], [-1]]
+
+    hidden_layer_1 = NeuronLayer(5, 35)     # 5 neuronas y 7 inputs por cada una
+    output_layer = NeuronLayer(1, 5)       # una neurona y tantos inputs como numeros para entrenar
+
+    perceptron = MultiLayerPerceptron(train_data, expected_data, sigmoid_act, der_sigmoid_act, [hidden_layer_1], output_layer)
+    perceptron.train()
+
+    output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
+    print('0 is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0]))
+    print('1 is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
+    print('2 is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
+    print('3 is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0]))
+    print('4 is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]))
+    print('5 is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0]))
+    print('6 is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]))
+    print('7 is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
+    print('8 is ~', output[-1])
+    print('\n')
+
+    output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
+    print('9 is ~', output[-1])
+    print('\n')
 
 
 def ex3_3():
