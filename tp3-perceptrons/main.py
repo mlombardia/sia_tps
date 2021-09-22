@@ -1,5 +1,6 @@
 import os
 import re
+import random
 
 import yaml
 
@@ -102,8 +103,8 @@ def parseNumbers(path):
         auxMatrix = []
         i += 7
 
-    for num in numbers:
-        print(num)
+    #for num in numbers:
+    #    print(num)
 
     return numbers
 
@@ -200,8 +201,33 @@ def ex3_1():
 
 def ex3_2():
     ex3_training = os.path.join(data_folder, config['ex3_training'])
-    train_data = parseNumbers(ex3_training)
-    expected_data = [[1], [-1], [1], [-1], [1], [-1], [1], [-1], [1], [-1]]
+    numbers = parseNumbers(ex3_training)
+    q = 7   # entreno con q numeros y testeo con 10-q
+    to_train = random.sample(range(10), q)
+    train_data = []
+    expected_data = []
+    to_test = []
+    test_data = []
+    expected_test = []
+
+    for i in range(q):
+        train_data.append(numbers[to_train[i]])
+
+    for i in range(10):
+        if i not in to_train:
+            to_test.append(i)
+            test_data.append(numbers[i])
+
+    for n in to_train:
+        if n % 2 == 0:
+            expected_data.append([1])
+        else:
+            expected_data.append([-1])
+
+    print("to train:", to_train)
+    print("train data:", train_data)
+    print("expected data:", expected_data)
+    print()
 
     hidden_layer_1 = NeuronLayer(5, 35)     # 5 neuronas y 7 inputs por cada una
     output_layer = NeuronLayer(1, 5)       # una neurona y tantos inputs como numeros para entrenar
@@ -209,6 +235,27 @@ def ex3_2():
     perceptron = MultiLayerPerceptron(train_data, expected_data, tanh_act, der_tanh_act, [hidden_layer_1], output_layer)
     perceptron.train()
 
+    for i in range(len(train_data)):
+        output = perceptron.think(np.array(train_data[i]))
+        print(to_train[i], 'is ~', output[-1])
+
+    for n in to_test:
+        if n % 2 == 0:
+            expected_test.append([1])
+        else:
+            expected_test.append([-1])
+
+    print()
+    print("to test", to_test)
+    print("test", test_data)
+    print("expected test", expected_test)
+    print()
+
+    for i in range(len(test_data)):
+        output = perceptron.think(np.array(test_data[i]))
+        print(to_test[i], 'is ~', output[-1])
+
+    '''
     output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
     print('0 is ~', output[-1])
 
@@ -238,6 +285,7 @@ def ex3_2():
 
     output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
     print('9 is ~', output[-1])
+    '''
 
 
 def ex3_3():

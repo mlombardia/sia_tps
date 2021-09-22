@@ -97,7 +97,7 @@ class MultiLayerPerceptron:
     # hago el init con el set de training, el de valores esperados, como pondero el error y la cantidad de iteraciones,
     # y genero random los pesos
     def __init__(self, training_set, expected_set, activation_function, der_activation_function, hidden_layers,
-                 output_layers, iterations_qty=1000):
+                 output_layers, iterations_qty=50000):
         self.training_set = np.array(training_set)
         self.expected_set = expected_set
         self.iterations_qty = iterations_qty
