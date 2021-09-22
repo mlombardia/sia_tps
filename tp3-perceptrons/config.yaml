@@ -10,7 +10,7 @@ ex2_output: desired_output.txt
 
 # ex3
 ex3_training: ex3_traindata.txt
-subitem: 1  # 1 / 2 / 3 / 4
+subitem: 2  # 1 / 2 / 3 / 4
 
 
 
