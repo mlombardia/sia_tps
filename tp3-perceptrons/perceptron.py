@@ -182,12 +182,12 @@ class MultiLayerPerceptron:
 
     def train(self):
         for _ in range(self.iterations_qty):
-            outputs = self.think(self.training_set)
+            outputs = self.guess(self.training_set)
             errors, deltas = self.get_errors(self.expected_set, outputs)
             adjustments = self.get_adjustments(self.training_set, deltas, outputs)
             self.adjust_weights(adjustments)
 
-    def think(self, inputs):
+    def guess(self, inputs):
         outputs = []
         input=inputs
         input = self.activation_function(np.dot(input, self.hidden_layers[0].weights))
@@ -249,4 +249,3 @@ class MultiLayerPerceptron:
             self.hidden_layers[idx].weights += adjustments[idx]
             idx += 1
 
-# https://towardsdatascience.com/perceptron-and-its-implementation-in-python-f87d6c7aa428

@@ -171,19 +171,19 @@ def ex3_1():
     perceptron = MultiLayerPerceptron(train_data, xor_expected_data, sigmoid_act, der_sigmoid_act, [hidden_layer_1, hidden_layer_2], output_layer)
     perceptron.train()
 
-    output = perceptron.think(np.array([-1, 1]))
+    output = perceptron.guess(np.array([-1, 1]))
     print('[0 xor 1] is ~', output[-1])
     print('\n')
 
-    output = perceptron.think(np.array([-1, -1]))
+    output = perceptron.guess(np.array([-1, -1]))
     print('[0 xor 0] is ~', output[-1])
     print('\n')
 
-    output = perceptron.think(np.array([1, -1]))
+    output = perceptron.guess(np.array([1, -1]))
     print('[1 xor 0] is ~', output[-1])
     print('\n')
 
-    output = perceptron.think(np.array([1, 1]))
+    output = perceptron.guess(np.array([1, 1]))
     print('[1 xor 1] is ~', output[-1])
     print('\n')
 
@@ -225,7 +225,7 @@ def ex3_2():
     perceptron.train()
 
     for i in range(len(train_data)):
-        output = perceptron.think(np.array(train_data[i]))
+        output = perceptron.guess(np.array(train_data[i]))
         print(to_train[i], 'is ~', output[-1])
 
     for n in to_test:
@@ -241,7 +241,7 @@ def ex3_2():
     print()
 
     for i in range(len(test_data)):
-        output = perceptron.think(np.array(test_data[i]))
+        output = perceptron.guess(np.array(test_data[i]))
         print(to_test[i], 'is ~', output[-1])
 
 
@@ -249,13 +249,13 @@ def ex3_3():
     pass
 
 
-def main():
-    if exercise == 1:
-        ex1()
-    if exercise == 2:
-        ex2()
-    if exercise == 3:
-        ex3()
+
+if exercise == 1:
+    ex1()
+if exercise == 2:
+    ex2()
+if exercise == 3:
+    ex3()
 
 
-main()
+
