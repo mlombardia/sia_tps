@@ -30,8 +30,8 @@ def ex1():
     print("And")
     and_expected_data = numpy.array([-1, -1, -1, 1])
 
-    perceptron = StepPerceptron(train_data, and_expected_data, sign_act)
-    perceptron.train()
+    perceptron = SimplePerceptron(train_data, and_expected_data, sign_act, der_sign_act)
+    perceptron.train(train_data, and_expected_data)
 
     i = 0
     while(i < len(and_expected_data)):
@@ -46,8 +46,8 @@ def ex1():
     print("Xor")
     or_expected_data = numpy.array([-1, 1, 1, -1])
 
-    second_perceptron = StepPerceptron(train_data, or_expected_data, sign_act)
-    second_perceptron.train()
+    second_perceptron = SimplePerceptron(train_data, or_expected_data, sign_act, der_sign_act)
+    second_perceptron.train(train_data, and_expected_data)
 
     i = 0
     while(i < len(or_expected_data)):
@@ -120,7 +120,7 @@ def ex2():
     max_value = numpy.max(expected_matrix)
     min_value = numpy.min(expected_matrix)
     expected_matrix_normalized = numpy.zeros(len(expected_matrix))
-    while (i < len(expected_matrix)):
+    while i < len(expected_matrix):
         expected_matrix_normalized[i] = (expected_matrix[i][0] - min_value) / (max_value - min_value)
         i += 1
 
@@ -130,20 +130,11 @@ def ex2():
     test_expected = expected_matrix_normalized[50:]
 
     perceptron_lineal = SimplePerceptron(training_set, training_expected, lineal_act, der_lineal_act)
-    perceptron_nolineal = SimplePerceptron(training_set, training_expected, tanh_act, der_tanh_act)
     perceptron_nolineal2 = SimplePerceptron(training_set, training_expected, sigmoid_act, der_sigmoid_act)
 
     perceptron_lineal.train(test_set, test_expected)
-    tr1, t1, it1 = perceptron_nolineal.train(test_set, test_expected)
     tr2, t2, it2 = perceptron_nolineal2.train(test_set, test_expected)
 
-    plt.plot(it1, tr1, label='train')
-    plt.plot(it1, t1, label='train')
-
-    plt.xlabel('Epoch', fontsize=16)
-    plt.ylabel('Accuracy', fontsize=16)
-    plt.legend(title='Accuracy vs Epochs')
-    plt.show()
 
     plt.plot(it2, tr2, label='train')
     plt.plot(it2, t2, label='train')
@@ -163,8 +154,6 @@ def ex3():
         ex3_2()
     elif subitem == 3:
         ex3_3()
-    elif subitem == 4:
-        ex3_4()
 
 
 def ex3_1():
@@ -255,44 +244,8 @@ def ex3_2():
         output = perceptron.think(np.array(test_data[i]))
         print(to_test[i], 'is ~', output[-1])
 
-    '''
-    output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
-    print('0 is ~', output[-1])
-
-    output = perceptron.think(np.array([0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0]))
-    print('1 is ~', output[-1])
-
-    output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
-    print('2 is ~', output[-1])
-
-    output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
-    print('3 is ~', output[-1])
-
-    output = perceptron.think(np.array([0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0]))
-    print('4 is ~', output[-1])
-
-    output = perceptron.think(np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]))
-    print('5 is ~', output[-1])
-
-    output = perceptron.think(np.array([0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0]))
-    print('6 is ~', output[-1])
-
-    output = perceptron.think(np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]))
-    print('7 is ~', output[-1])
-
-    output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
-    print('8 is ~', output[-1])
-
-    output = perceptron.think(np.array([0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0]))
-    print('9 is ~', output[-1])
-    '''
-
 
 def ex3_3():
-    pass
-
-
-def ex3_4():
     pass
 
 

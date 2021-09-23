@@ -1,7 +1,9 @@
+import random
+
 import numpy as np
 from activationFunctions import *
 
-
+'''
 class StepPerceptron():
     # hago el init con el set de training, el de valores esperados, como pondero el error y la cantidad de iteraciones,
     # y genero random los pesos
@@ -86,6 +88,78 @@ class SimplePerceptron:
 
     def guess(self, a_input):
         return self.predict(np.insert(a_input, 0, 1))
+
+'''
+
+
+class SimplePerceptron:
+    # hago el init con el set de training, el de valores esperados, como pondero el error y la cantidad de iteraciones,
+    # y genero random los pesos
+    def __init__(self, training_set, expected_set, activation_function, der_activation_function, error_ponderation=0.25,
+                 iterations_qty=1000):
+        self.training_set = np.array(training_set)
+        self.expected_set = expected_set
+        self.error_ponderation = error_ponderation
+        self.iterations_qty = iterations_qty
+        self.activation_function = activation_function
+        self.weights = np.array(np.random.rand(len(training_set[0]) + 1))
+        self.der_activation_function = der_activation_function
+
+    def predict(self, a_input):
+        dot_product = self.weights.T.dot(a_input)
+        return self.activation_function(dot_product)
+
+    def calculate_square_error(self, expected_value, prediction):
+        return 0.5 * ((expected_value - prediction) ** 2)
+
+    def train(self, test_input, test_expected_values, delta=0.001, print_data=True):
+        iters = []
+        training_accuracies = []
+        test_accuracies = []
+        ii = 0
+        shuffled_list = [a for a in range(0, len(self.training_set))]
+        random.shuffle(shuffled_list)
+        p = len(self.training_set)
+        Error = 1
+        min_error = 2*p
+        while ii < self.iterations_qty and Error > 0:
+            training_correct_cases = 0
+            j = 0
+            while j < len(shuffled_list):
+                biased_input = np.insert(self.training_set[shuffled_list[j]], 0, 1)
+                predicted_value = self.predict(biased_input)
+                error = self.expected_set[shuffled_list[j]] - predicted_value
+                if abs(error) < delta:
+                    training_correct_cases += 1
+                self.weights = self.weights + (self.error_ponderation * error * self.der_activation_function(
+                    self.weights.T.dot(biased_input)) * biased_input.T)
+                Error = self.calculate_square_error(self.expected_set[shuffled_list[j]], predicted_value)
+                if Error < min_error:
+                    min_error = Error
+                j += 1
+
+            training_accuracy = training_correct_cases / len(self.expected_set)
+            training_accuracies.append(training_accuracy)
+            test_correct_cases = 0
+            i = 0
+            while i < len(test_expected_values):
+                if abs(test_expected_values[i] - self.guess(test_input[i])) < delta:
+                    test_correct_cases += 1
+                i += 1
+            test_accuracy = test_correct_cases / len(test_expected_values)
+            test_accuracies.append(test_accuracy)
+            iters.append(ii)
+            if print_data:
+                print("Epoch: ", ii)
+                print("Training accuracy: ", training_accuracy)
+                print("Test accuracy: ", test_accuracy)
+            print("weights: ", self.weights)
+            ii += 1
+        return training_accuracies, test_accuracies, iters
+
+    def guess(self, a_input):
+        return self.predict(np.insert(a_input, 0, 1))
+
 
 
 class NeuronLayer:
@@ -175,3 +249,4 @@ class MultiLayerPerceptron:
             self.hidden_layers[idx].weights += adjustments[idx]
             idx += 1
 
+# https://towardsdatascience.com/perceptron-and-its-implementation-in-python-f87d6c7aa428
