@@ -119,7 +119,7 @@ class SimplePerceptron:
             sum += aux
         return sum / len(training_set)
 
-    def train(self, training_set, expected_set, error_epsilon = 0, iterations_qty=500, print_data=True):
+    def train(self, training_set, expected_set, error_epsilon = 0, iterations_qty=1000, print_data=True):
         errors = []
         epochs = []
         training_set = np.array(training_set)

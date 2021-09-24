@@ -27,36 +27,47 @@ def ex1():
             [1, 1]
         ])
 
-    print("And")
-    and_expected_data = numpy.array([-1, -1, -1, 1])
+    if config['gate'] == 'and':
+        print("And")
+        and_expected_data = numpy.array([-1, -1, -1, 1])
 
-    perceptron = SimplePerceptron(train_data.shape[1], sign_act, der_sign_act)
-    perceptron.train(train_data, and_expected_data, iterations_qty=2)
+        perceptron = SimplePerceptron(train_data.shape[1], sign_act, der_sign_act)
+        min_err, epochs, error_list = perceptron.train(train_data, and_expected_data)
 
-    i = 0
-    while(i < len(and_expected_data)):
-        print("input: ", train_data[i])
-        print("expected: ", and_expected_data[i])
-        print("guessed: ", perceptron.predict(train_data[i]))
-        i += 1
+        i = 0
+        while i < len(and_expected_data):
+            print("input: ", train_data[i])
+            print("expected: ", and_expected_data[i])
+            print("guessed: ", perceptron.predict(train_data[i]))
+            i += 1
 
+        plt.plot(epochs, error_list, label='train')
 
-    '''
-    print("Xor")
-    or_expected_data = numpy.array([-1, 1, 1, -1])
+        plt.xlabel('Epoch', fontsize=16)
+        plt.ylabel('Mean square error', fontsize=16)
+        plt.legend(title='Mean square error vs Epochs')
+        plt.show()
 
-    second_perceptron = SimplePerceptron(train_data, or_expected_data, sign_act, der_sign_act)
-    second_perceptron.train(train_data, and_expected_data)
+    if config['gate'] == 'xor':
+        print("Xor")
+        xor_expected_data = numpy.array([-1, 1, 1, -1])
 
-    i = 0
-    while(i < len(or_expected_data)):
-        print("input: ", train_data[i])
-        print("expected: ", or_expected_data[i])
-        print("guessed: ", second_perceptron.guess(train_data[i]))
-        i += 1
+        perceptron = SimplePerceptron(train_data.shape[1], sign_act, der_sign_act)
+        min_err, epochs, error_list = perceptron.train(train_data, xor_expected_data)
 
-    print(second_perceptron.guess([-1, -1]))
-    '''
+        i = 0
+        while i < len(xor_expected_data):
+            print("input: ", train_data[i])
+            print("expected: ", xor_expected_data[i])
+            print("guessed: ", perceptron.predict(train_data[i]))
+            i += 1
+
+        plt.plot(epochs, error_list, label='train')
+
+        plt.xlabel('Epoch', fontsize=16)
+        plt.ylabel('Mean square error', fontsize=16)
+        plt.legend(title='Mean square error vs Epochs')
+        plt.show()
 
 
 def parse_data(path):
@@ -133,26 +144,55 @@ def ex2():
     test_expected = expected_matrix_normalized[50:]
     test_expected = np.array(test_expected)
 
-    # perceptron_lineal = SimplePerceptron(training_set.shape[1], lineal_act, der_lineal_act, eta=0.01)   # aprende poquito
-    # perceptron_lineal.train(training_set, training_expected)
+    if config['perceptron_type'] == 'linear':
+        perceptron_lineal = SimplePerceptron(training_set.shape[1], lineal_act, der_lineal_act, eta=0.01)   # aprende poquito
+        min_err, epochs, error_list = perceptron_lineal.train(training_set, training_expected)
+        min_err_test = perceptron_lineal.test(test_set, test_expected)
+        print()
+        print("training error", min_err)
+        print("testing error", min_err_test)
+        print()
 
-    perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], tanh_act, der_tanh_act)
-    min_err, epochs, error_list = perceptron_nolineal2.train(training_set, training_expected)
-    min_err_test = perceptron_nolineal2.test(test_set, test_expected)
+        plt.plot(epochs, error_list, label='train')
 
-    print()
-    print("testing error", min_err_test)
-    print()
+        plt.xlabel('Epoch', fontsize=16)
+        plt.ylabel('Mean square error', fontsize=16)
+        plt.legend(title='Mean square error vs Epochs')
+        plt.show()
 
-    print(len(epochs))
-    print(len(error_list))
+    elif config['perceptron_type'] == 'non_linear_tanh':
+        perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], tanh_act, der_tanh_act, eta=0.25)
+        min_err, epochs, error_list = perceptron_nolineal2.train(training_set, training_expected)
+        min_err_test = perceptron_nolineal2.test(test_set, test_expected)
 
-    plt.plot(epochs, error_list, label='train')
+        print()
+        print("training error", min_err)
+        print("testing error", min_err_test)
+        print()
 
-    plt.xlabel('Epoch', fontsize=16)
-    plt.ylabel('Mean square error', fontsize=16)
-    plt.legend(title='Mean square error vs Epochs')
-    plt.show()
+        plt.plot(epochs, error_list, label='train')
+
+        plt.xlabel('Epoch', fontsize=16)
+        plt.ylabel('Mean square error', fontsize=16)
+        plt.legend(title='Mean square error vs Epochs')
+        plt.show()
+
+    elif config['perceptron_type'] == 'non_linear_sigmoid':
+        perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], sigmoid_act, der_sigmoid_act, eta=0.25)
+        min_err, epochs, error_list = perceptron_nolineal2.train(training_set, training_expected)
+        min_err_test = perceptron_nolineal2.test(test_set, test_expected)
+
+        print()
+        print("training error", min_err)
+        print("testing error", min_err_test)
+        print()
+
+        plt.plot(epochs, error_list, label='train')
+
+        plt.xlabel('Epoch', fontsize=16)
+        plt.ylabel('Mean square error', fontsize=16)
+        plt.legend(title='Mean square error vs Epochs')
+        plt.show()
 
 
 
