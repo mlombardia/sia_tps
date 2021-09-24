@@ -119,8 +119,9 @@ class SimplePerceptron:
             sum += aux
         return sum / len(training_set)
 
-    def train(self, training_set, expected_set, error_epsilon = 0, iterations_qty=1000, print_data=True):
+    def train(self, training_set, expected_set, error_epsilon = 0, iterations_qty=500, print_data=True):
         errors = []
+        epochs = []
         training_set = np.array(training_set)
         expected_set = np.array(expected_set)
         ii = 0
@@ -136,18 +137,20 @@ class SimplePerceptron:
                 predicted_value = self.predict_with_biased(biased_input)
                 error = expected_set[shuffled_list[j]] - predicted_value
                 self.weights = self.weights + (self.eta * error * self.der_activation_function(self.weights.T.dot(biased_input)) * biased_input.T)
-                Error = self.calculate_mean_square_error(training_set, expected_set)
-                if Error < min_error:
-                    min_error = Error
-                errors.append(Error)
                 j += 1
+
+            Error = self.calculate_mean_square_error(training_set, expected_set)
+            if Error < min_error:
+                min_error = Error
+            errors.append(Error)
 
             if print_data:
                 print("Epoch: ", ii)
                 print("min error", min_error)
             print("weights: ", self.weights)
+            epochs.append(ii)
             ii += 1
-        return min_error, ii, errors
+        return min_error, epochs, errors
 
     def test(self, test_set, expected_test):
         return self.calculate_mean_square_error(test_set, expected_test)

@@ -133,22 +133,27 @@ def ex2():
     test_expected = expected_matrix_normalized[50:]
     test_expected = np.array(test_expected)
 
-    perceptron_lineal = SimplePerceptron(training_set.shape[1], lineal_act, der_lineal_act, eta=0.01)   # aprende poquito
-    perceptron_lineal.train(training_set, training_expected)
+    # perceptron_lineal = SimplePerceptron(training_set.shape[1], lineal_act, der_lineal_act, eta=0.01)   # aprende poquito
+    # perceptron_lineal.train(training_set, training_expected)
 
-    # perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], tanh_act, der_tanh_act)
-    # perceptron_nolineal2.train(training_set, training_expected)
-    # perceptron_nolineal2.test(test_set, test_expected)
+    perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], tanh_act, der_tanh_act)
+    min_err, epochs, error_list = perceptron_nolineal2.train(training_set, training_expected)
+    min_err_test = perceptron_nolineal2.test(test_set, test_expected)
 
-    '''
-    plt.plot(it2, tr2, label='train')
-    plt.plot(it2, t2, label='train')
+    print()
+    print("testing error", min_err_test)
+    print()
+
+    print(len(epochs))
+    print(len(error_list))
+
+    plt.plot(epochs, error_list, label='train')
 
     plt.xlabel('Epoch', fontsize=16)
-    plt.ylabel('Accuracy', fontsize=16)
-    plt.legend(title='Accuracy vs Epochs')
+    plt.ylabel('Mean square error', fontsize=16)
+    plt.legend(title='Mean square error vs Epochs')
     plt.show()
-    '''
+
 
 
 def ex3():
