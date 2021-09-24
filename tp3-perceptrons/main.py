@@ -30,19 +30,18 @@ def ex1():
     print("And")
     and_expected_data = numpy.array([-1, -1, -1, 1])
 
-    perceptron = SimplePerceptron(train_data, and_expected_data, sign_act, der_sign_act)
-    perceptron.train(train_data, and_expected_data)
+    perceptron = SimplePerceptron(train_data.shape[1], sign_act, der_sign_act)
+    perceptron.train(train_data, and_expected_data, iterations_qty=2)
 
     i = 0
     while(i < len(and_expected_data)):
         print("input: ", train_data[i])
         print("expected: ", and_expected_data[i])
-        print("guessed: ", perceptron.guess(train_data[i]))
+        print("guessed: ", perceptron.predict(train_data[i]))
         i += 1
 
-    print(perceptron.guess([-1,-1]))
-    print()
 
+    '''
     print("Xor")
     or_expected_data = numpy.array([-1, 1, 1, -1])
 
@@ -57,6 +56,7 @@ def ex1():
         i += 1
 
     print(second_perceptron.guess([-1, -1]))
+    '''
 
 
 def parse_data(path):
@@ -125,17 +125,22 @@ def ex2():
         i += 1
 
     training_set = training_matrix[:50]
+    training_set = np.array(training_set)
     training_expected = expected_matrix_normalized[:50]
+    training_expected = np.array(training_expected)
     test_set = training_matrix[50:]
+    test_set = np.array(test_set)
     test_expected = expected_matrix_normalized[50:]
+    test_expected = np.array(test_expected)
 
-    perceptron_lineal = SimplePerceptron(training_set, training_expected, lineal_act, der_lineal_act)
-    perceptron_nolineal2 = SimplePerceptron(training_set, training_expected, sigmoid_act, der_sigmoid_act)
+    perceptron_lineal = SimplePerceptron(training_set.shape[1], lineal_act, der_lineal_act, eta=0.01)   # aprende poquito
+    perceptron_lineal.train(training_set, training_expected)
 
-    perceptron_lineal.train(test_set, test_expected)
-    tr2, t2, it2 = perceptron_nolineal2.train(test_set, test_expected)
+    # perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], tanh_act, der_tanh_act)
+    # perceptron_nolineal2.train(training_set, training_expected)
+    # perceptron_nolineal2.test(test_set, test_expected)
 
-
+    '''
     plt.plot(it2, tr2, label='train')
     plt.plot(it2, t2, label='train')
 
@@ -143,6 +148,7 @@ def ex2():
     plt.ylabel('Accuracy', fontsize=16)
     plt.legend(title='Accuracy vs Epochs')
     plt.show()
+    '''
 
 
 def ex3():
