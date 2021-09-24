@@ -5,12 +5,12 @@ exercise: 2
 data_folder: data
 
 # ex1
-gate: 'xor' # and / xor
+gate: 'and' # and / xor
 
 # ex2
 ex2_training: ex2_traindata.txt
 ex2_output: desired_output.txt
-perceptron_type: 'non_linear_tanh' # linear / non_linear_tanh / non_linear_sigmoid
+perceptron_type: 'non_linear_sigmoid' # linear / non_linear_tanh / non_linear_sigmoid
 
 # ex3
 ex3_training: ex3_traindata.txt

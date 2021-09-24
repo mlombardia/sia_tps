@@ -4,6 +4,7 @@ from utils import *
 from perceptron import SimplePerceptron
 from activationFunctions import *
 
+
 def ex2(config):
     data_folder = config['data_folder']
     ex2_training = os.path.join(data_folder, config['ex2_training'])
@@ -37,23 +38,19 @@ def ex2(config):
     if config['perceptron_type'] == 'linear':
         perceptron_lineal = SimplePerceptron(training_set.shape[1], lineal_act, der_lineal_act,
                                              eta=0.01)  # aprende poquito
-        min_err, epochs, error_list = perceptron_lineal.train(training_set, training_expected)
+        min_err, epochs, error_list, training_accuracies = perceptron_lineal.train(training_set, training_expected)
         min_err_test = perceptron_lineal.test(test_set, test_expected)
         print()
         print("training error", min_err)
         print("testing error", min_err_test)
         print()
 
-        plt.plot(epochs, error_list, label='train')
-
-        plt.xlabel('Epoch', fontsize=16)
-        plt.ylabel('Mean square error', fontsize=16)
-        plt.legend(title='Mean square error vs Epochs - linear')
-        plt.show()
+        plot(epochs, training_accuracies, 'train acc', 'Epoch', 'Accuracies', 'Accuracies vs Epochs - linear')
+        plot(epochs, error_list, 'error', 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - linear')
 
     elif config['perceptron_type'] == 'non_linear_tanh':
         perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], tanh_act, der_tanh_act, eta=0.01)
-        min_err, epochs, error_list = perceptron_nolineal2.train(training_set, training_expected)
+        min_err, epochs, error_list, training_accuracies = perceptron_nolineal2.train(training_set, training_expected)
         min_err_test = perceptron_nolineal2.test(test_set, test_expected)
 
         print()
@@ -61,16 +58,12 @@ def ex2(config):
         print("testing error", min_err_test)
         print()
 
-        plt.plot(epochs, error_list, label='train')
-
-        plt.xlabel('Epoch', fontsize=16)
-        plt.ylabel('Mean square error', fontsize=16)
-        plt.legend(title='Mean square error vs Epochs - tanh')
-        plt.show()
+        plot(epochs, training_accuracies, 'train acc', 'Epoch', 'Accuracies', 'Accuracies vs Epochs - tanh')
+        plot(epochs, error_list, 'error', 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - tanh')
 
     elif config['perceptron_type'] == 'non_linear_sigmoid':
-        perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], sigmoid_act, der_sigmoid_act, eta=0.25)
-        min_err, epochs, error_list = perceptron_nolineal2.train(training_set, training_expected)
+        perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], sigmoid_act, der_sigmoid_act, eta=0.01)
+        min_err, epochs, error_list, training_accuracies = perceptron_nolineal2.train(training_set, training_expected)
         min_err_test = perceptron_nolineal2.test(test_set, test_expected)
 
         print()
@@ -78,9 +71,5 @@ def ex2(config):
         print("testing error", min_err_test)
         print()
 
-        plt.plot(epochs, error_list, label='train')
-
-        plt.xlabel('Epoch', fontsize=16)
-        plt.ylabel('Mean square error', fontsize=16)
-        plt.legend(title='Mean square error vs Epochs - sigmoid')
-        plt.show()
+        plot(epochs, training_accuracies, 'train acc', 'Epoch', 'Accuracies', 'Accuracies vs Epochs - sigmoid')
+        plot(epochs, error_list, 'error', 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - sigmoid')

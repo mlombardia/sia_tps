@@ -15,7 +15,7 @@ def ex1(config):
         and_expected_data = np.array([-1, -1, -1, 1])
 
         perceptron = SimplePerceptron(train_data.shape[1], sign_act, der_sign_act)
-        min_err, epochs, error_list = perceptron.train(train_data, and_expected_data)
+        min_err, epochs, error_list, training_accuracies = perceptron.train(train_data, and_expected_data)
 
         i = 0
         while i < len(and_expected_data):
