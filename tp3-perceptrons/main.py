@@ -45,7 +45,7 @@ def ex1():
 
         plt.xlabel('Epoch', fontsize=16)
         plt.ylabel('Mean square error', fontsize=16)
-        plt.legend(title='Mean square error vs Epochs')
+        plt.legend(title='Mean square error vs Epochs - step and')
         plt.show()
 
     if config['gate'] == 'xor':
@@ -66,7 +66,7 @@ def ex1():
 
         plt.xlabel('Epoch', fontsize=16)
         plt.ylabel('Mean square error', fontsize=16)
-        plt.legend(title='Mean square error vs Epochs')
+        plt.legend(title='Mean square error vs Epochs - step xor')
         plt.show()
 
 
@@ -131,9 +131,14 @@ def ex2():
     max_value = numpy.max(expected_matrix)
     min_value = numpy.min(expected_matrix)
     expected_matrix_normalized = numpy.zeros(len(expected_matrix))
-    while i < len(expected_matrix):
-        expected_matrix_normalized[i] = (expected_matrix[i][0] - min_value) / (max_value - min_value)
-        i += 1
+    if config['perceptron_type'] == 'tanh':
+        while i < len(expected_matrix):
+            expected_matrix_normalized[i] = 2*((expected_matrix[i][0] - min_value) / (max_value - min_value))-1
+            i += 1
+    else:
+        while i < len(expected_matrix):
+            expected_matrix_normalized[i] = (expected_matrix[i][0] - min_value) / (max_value - min_value)
+            i += 1
 
     training_set = training_matrix[:50]
     training_set = np.array(training_set)
@@ -157,11 +162,11 @@ def ex2():
 
         plt.xlabel('Epoch', fontsize=16)
         plt.ylabel('Mean square error', fontsize=16)
-        plt.legend(title='Mean square error vs Epochs')
+        plt.legend(title='Mean square error vs Epochs - linear')
         plt.show()
 
     elif config['perceptron_type'] == 'non_linear_tanh':
-        perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], tanh_act, der_tanh_act, eta=0.25)
+        perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], tanh_act, der_tanh_act, eta=0.01)
         min_err, epochs, error_list = perceptron_nolineal2.train(training_set, training_expected)
         min_err_test = perceptron_nolineal2.test(test_set, test_expected)
 
@@ -174,7 +179,7 @@ def ex2():
 
         plt.xlabel('Epoch', fontsize=16)
         plt.ylabel('Mean square error', fontsize=16)
-        plt.legend(title='Mean square error vs Epochs')
+        plt.legend(title='Mean square error vs Epochs - tanh')
         plt.show()
 
     elif config['perceptron_type'] == 'non_linear_sigmoid':
@@ -191,7 +196,7 @@ def ex2():
 
         plt.xlabel('Epoch', fontsize=16)
         plt.ylabel('Mean square error', fontsize=16)
-        plt.legend(title='Mean square error vs Epochs')
+        plt.legend(title='Mean square error vs Epochs - sigmoid')
         plt.show()
 
 
