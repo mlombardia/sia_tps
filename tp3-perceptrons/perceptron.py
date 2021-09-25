@@ -1,4 +1,7 @@
 import random
+
+import numpy as np
+
 from activationFunctions import *
 
 
@@ -80,6 +83,8 @@ class NeuronLayer:  # es una matriz
         self.f = f
         self.df = df
         self.weights = None
+        self.h = None
+        self.v = None
 
     def init_weights(self, inputs=None):
         self.inputs = inputs if inputs is not None else self.inputs
@@ -92,6 +97,9 @@ class NeuronLayer:  # es una matriz
         elif activation_function == "sigmoid":
             f = sigmoid_act
             df = der_sigmoid_act
+        elif activation_function == "linear":
+            f = lineal_act
+            df = der_lineal_act
         else:
             raise LookupError("falta funcion")
         return f, df
@@ -103,13 +111,24 @@ class NeuronLayer:  # es una matriz
         #                i1
         #                i2]
 
-        #         [w11, w12, B1] x [i0     = [o1    # salida de la primera neurona
-        #         [w21, w22, B2]    i1        o2]   # salida de la segunda neurona
+        #         [B1, w11, w12] x [i0     = [o1    # salida de la primera neurona
+        #         [B2, w21, w22]    i1        o2]   # salida de la segunda neurona
         #                           i2]
         a_input_biased = np.insert(a_input, 0, 1)
-        output = np.matmul(self.weights, np.transpose(a_input_biased))
+        output = np.matmul(self.weights, np.transpose(a_input_biased))  # h
         output = np.transpose(output)
+        self.h = output
+        output = self.f(output)
+        self.v = output
         return output
+
+    def back_propagate(self, dif, v, eta):
+        v = np.insert(v, 0, 1)
+        delta = np.multiply(self.df(self.h), dif)
+        aux = v.reshape((-1,1))
+        d_w = eta*v.reshape((-1,1))*delta
+        self.weights = self.weights + np.transpose(d_w)
+        return delta
 
 
 class MultiLayerPerceptron:
@@ -143,6 +162,33 @@ class MultiLayerPerceptron:
             sum += aux
         return sum / len(training_set)
 
+    def back_propagate(self, predicted, x, y):
+        delta = None
+        for i in reversed(range(len(self.neuron_layers))):
+            if i == 0:
+                v = x
+            else:
+                v = self.neuron_layers[i-1].v
+            if i != len(self.neuron_layers)-1:
+                dif = np.matmul(np.transpose(self.neuron_layers[i+1].weights[:, 1:]), np.transpose(delta))
+                dif = np.transpose(dif)
+                # dif = [0 for n in range(self.neuron_layers[i].neurons_qty)]
+                # for n in range(self.neuron_layers[i].neurons_qty):
+                #     d = 0
+                #     w = self.neuron_layers[i+1].weights[:, n+1]
+                #     d = np.dot(w, delta)
+                #     dif[n] = d
+                #     # for j in range(self.neuron_layers[i+1].neurons_qty):
+                #     #     w_jn = self.neuron_layers[i+1].weights[j, n+1]
+                #     #     aux2 = w_jn * delta[j]
+                #     #     dif[n] += aux2    #todas las filas y la columna n+1 porque la 0 es el biased para la neurona n
+                dif = np.array(dif)
+            else:
+                dif = y - predicted
+
+            delta = self.neuron_layers[i].back_propagate(dif, v, self.eta)
+
+
     def train(self, training_set, expected_set, error_epsilon=0, iterations_qty=1000, print_data=True):
         training_set = np.array(training_set)
         expected_set = np.array(expected_set)
@@ -153,6 +199,7 @@ class MultiLayerPerceptron:
         p = len(training_set)
         Error = 1
         min_error = 2 * p
+        errors = []
         while ii < iterations_qty and Error > error_epsilon:
             j = 0
             while j < len(training_set):
@@ -161,14 +208,14 @@ class MultiLayerPerceptron:
 
                 predicted_value = self.predict(x)  # forward propagation
 
-                print(predicted_value)
-
-                # self.back_propagate(predicted_value, x, y)
+                self.back_propagate(predicted_value, x, y)
                 j += 1
 
             Error = self.calculate_mean_square_error(training_set, expected_set)
             if Error < min_error:
                 min_error = Error
+            errors.append(Error)
             ii += 1
+        return min_error, errors, ii
 
 

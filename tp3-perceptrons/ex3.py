@@ -25,28 +25,14 @@ def ex3_1():
     xor_expected_data = np.array([[1], [1], [-1], [-1]])
 
     perceptron = MultiLayerPerceptron([
-        NeuronLayer(3, inputs=train_data.shape[1], activation="sigmoid"),
+        NeuronLayer(3, inputs=train_data.shape[1], activation="linear"),
         NeuronLayer(5),
         NeuronLayer(xor_expected_data.shape[1])
     ])
 
-    perceptron.train(train_data, xor_expected_data, iterations_qty=2)
+    min_error, errors, ii = perceptron.train(train_data, xor_expected_data, iterations_qty=10000)
 
-    # output = perceptron.guess(np.array([-1, 1]))
-    # print('[0 xor 1] is ~', output[-1])
-    # print('\n')
-    #
-    # output = perceptron.guess(np.array([-1, -1]))
-    # print('[0 xor 0] is ~', output[-1])
-    # print('\n')
-    #
-    # output = perceptron.guess(np.array([1, -1]))
-    # print('[1 xor 0] is ~', output[-1])
-    # print('\n')
-    #
-    # output = perceptron.guess(np.array([1, 1]))
-    # print('[1 xor 1] is ~', output[-1])
-    # print('\n')
+    print(min_error)
 
 
 def ex3_2(config):
