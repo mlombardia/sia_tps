@@ -127,3 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+*.xml
+tp3-perceptrons/.idea/tp3-perceptrons.iml

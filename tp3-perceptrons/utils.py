@@ -1,5 +1,8 @@
+import math
+import random
 import re
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def parse_data(path):
@@ -59,3 +62,23 @@ def plot(x_info, y_info, line_label, xlabel, ylabel, legend):
     plt.ylabel(ylabel, fontsize=16)
     plt.legend(title=legend)
     plt.show()
+
+def cross_validations(array, expected, K):
+    splitsA = np.array_split(array, K)
+    splitsE = np.array_split(expected, K)
+    testId = random.randint(0, K-1)
+    test = splitsA[testId]
+    testExp = splitsE[testId]
+
+    train = np.empty(K-1)
+    trainExp = np.empty(K-1)
+    for i in range(K-1):
+        if i != testId:
+            for num in splitsA[i]:
+                np.append(train, num)
+            for num in splitsE[i]:
+                np.append(trainExp, num)
+
+#toma todos los datos, los divide en k partes, devuelve k-1 como training y 1 como test
+#devuelve np.arrays
+    return train, trainExp, test, testExp
