@@ -1,5 +1,5 @@
 # exercise to run: 1 / 2 / 3
-exercise: 2
+exercise: 3
 
 # data folder
 data_folder: data
@@ -14,7 +14,7 @@ perceptron_type: 'non_linear_sigmoid' # linear / non_linear_tanh / non_linear_si
 
 # ex3
 ex3_training: ex3_traindata.txt
-subitem: 2  # 1 / 2 / 3
+subitem: 1  # 1 / 2 / 3
 
 
 

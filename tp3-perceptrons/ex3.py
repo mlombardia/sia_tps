@@ -16,9 +16,6 @@ def ex3(config):
 
 
 def ex3_1():
-    hidden_layer_1 = NeuronLayer(5, 2)
-    hidden_layer_2 = NeuronLayer(5, 5)
-    output_layer = NeuronLayer(1, 5)
     train_data = np.array([
         [-1, 1],
         [1, -1],
@@ -27,25 +24,29 @@ def ex3_1():
     ])
     xor_expected_data = np.array([[1], [1], [-1], [-1]])
 
-    perceptron = MultiLayerPerceptron(train_data, xor_expected_data, sigmoid_act, der_sigmoid_act,
-                                      [hidden_layer_1, hidden_layer_2], output_layer)
-    perceptron.train()
+    perceptron = MultiLayerPerceptron([
+        NeuronLayer(3, inputs=train_data.shape[1], activation="sigmoid"),
+        NeuronLayer(5),
+        NeuronLayer(xor_expected_data.shape[1])
+    ])
 
-    output = perceptron.guess(np.array([-1, 1]))
-    print('[0 xor 1] is ~', output[-1])
-    print('\n')
+    perceptron.train(train_data, xor_expected_data, iterations_qty=2)
 
-    output = perceptron.guess(np.array([-1, -1]))
-    print('[0 xor 0] is ~', output[-1])
-    print('\n')
-
-    output = perceptron.guess(np.array([1, -1]))
-    print('[1 xor 0] is ~', output[-1])
-    print('\n')
-
-    output = perceptron.guess(np.array([1, 1]))
-    print('[1 xor 1] is ~', output[-1])
-    print('\n')
+    # output = perceptron.guess(np.array([-1, 1]))
+    # print('[0 xor 1] is ~', output[-1])
+    # print('\n')
+    #
+    # output = perceptron.guess(np.array([-1, -1]))
+    # print('[0 xor 0] is ~', output[-1])
+    # print('\n')
+    #
+    # output = perceptron.guess(np.array([1, -1]))
+    # print('[1 xor 0] is ~', output[-1])
+    # print('\n')
+    #
+    # output = perceptron.guess(np.array([1, 1]))
+    # print('[1 xor 1] is ~', output[-1])
+    # print('\n')
 
 
 def ex3_2(config):
