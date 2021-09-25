@@ -72,7 +72,6 @@ def ex3_2(config):
     print("expected data:", expected_data)
     print()
 
-
     perceptron = MultiLayerPerceptron([
         NeuronLayer(3, inputs=train_data.shape[1], activation="linear"),
         NeuronLayer(5),
@@ -113,20 +112,24 @@ def ex3_3(config):
     ex3_training = os.path.join(data_folder, config['ex3_training'])
     numbers = parseNumbers(ex3_training)
     q = 7  # entreno con q numeros y testeo con 10-q
-    to_train = random.sample(range(10), q)
+    to_train = [] #random.sample(range(10), q)
     train_data = []
     expected_data = []
     to_test = []
     test_data = []
     expected_test = []
 
-    for i in range(q):
-        train_data.append(numbers[to_train[i]])
-
     for i in range(10):
-        if i not in to_train:
-            to_test.append(i)
-            test_data.append(numbers[i])
+        to_train.append(i)
+        train_data.append(numbers[to_train[i]])
+        to_test.append(i)
+        test_data.append(numbers[i])
+
+
+    # for i in range(10):
+    #     if i not in to_train:
+    #         to_test.append(i)
+    #         test_data.append(numbers[i])
 
     for n in to_train:
         if n == 0:
@@ -160,14 +163,13 @@ def ex3_3(config):
     train_data = np.array(train_data)
     expected_data = np.array(expected_data)
 
-    hidden_layer_1 = NeuronLayer(5, 35)  # 5 neuronas y 7 inputs por cada una
-    output_layer = NeuronLayer(10, 5)  # 10 neurona y tantos inputs como numeros para entrenar
-
     perceptron = MultiLayerPerceptron([
-        NeuronLayer(3, inputs=train_data.shape[1], activation="tanh"),
-        NeuronLayer(5),
+        NeuronLayer(3, inputs=train_data.shape[1], activation="sigmoid"),
+        NeuronLayer(50),
+        NeuronLayer(50),
+        NeuronLayer(50),
         NeuronLayer(expected_data.shape[1])
-    ])
+    ], eta=0.01)
 
     min_error, errors, ii = perceptron.train(train_data, expected_data, iterations_qty=10000)
 
@@ -175,7 +177,7 @@ def ex3_3(config):
 
     for i in range(len(train_data)):
         output = perceptron.predict(np.array(train_data[i]))
-        print(to_train[i], 'is ~', output[i])
+        print(to_train[i], 'is ~', to_num(output))
 
     for n in to_test:
         if n == 0:
@@ -209,4 +211,27 @@ def ex3_3(config):
 
     for i in range(len(test_data)):
         output = perceptron.predict(np.array(test_data[i]))
-        print(to_test[i], 'is ~', output[-1])
+
+        print(to_test[i], 'is ~', to_num(output))
+
+def to_num(array):
+    aux = -math.inf
+    num = 0
+    for i in range(len(array)):
+        if array[i] > aux:
+            aux = array[i]
+            num = i
+    return num
+
+def noise(array):
+    for i in range(len(array)):
+        rand = random.uniform(0, 1)
+        if rand <= 0.02:
+            if array[i] == 0:
+                array[i] = 1
+            elif array[i] == 1:
+                array[i] = 0
+            else:
+                exit("error adding noise")
+    return array
+

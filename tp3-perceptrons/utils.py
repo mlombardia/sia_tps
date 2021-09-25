@@ -31,28 +31,50 @@ def stringToNum(matrix):
 
 def parseNumbers(path):
     file = open(path, "r")
-    lines = file.readlines()
+    lines = file.read()
     length = len(lines)
-
     numbers = []
     auxMatrix = []
     i = 0
+    line = 0
+    print("length", length)
+
+    #print(lines)
 
     while i < length:
-        for j in range(i, i + 7):
-            for k in range(9):
-                if lines[i][k] == '0':
-                    auxMatrix.append(0)
-                if lines[i][k] == '1':
-                    auxMatrix.append(1)
-        numbers.append(auxMatrix)
-        auxMatrix = []
-        i += 7
+        if lines[i] == "0":
+            auxMatrix.append(0)
+        elif lines[i] == "1":
+            auxMatrix.append(1)
+        elif lines[i] == "\n":
+            if line == 6:
+                line = 0
+                numbers.append(auxMatrix)
+                auxMatrix = []
+            else:
+                line += 1
+        else: #es un " "
+            pass
+        i += 1
+    return numbers
+
+    #
+    #
+    # while i < length: #70 lineas
+    #     for j in range(i, i + 6): #las primeras 7 lineas
+    #         for k in range(5): #en una línea
+    #             if lines[j][k] == '0':
+    #                 auxMatrix.append(0)
+    #             elif lines[j][k] == '1':
+    #                 auxMatrix.append(1)
+    #     numbers.append(auxMatrix)
+    #     auxMatrix = []
+    #     i += 7
 
     # for num in numbers:
     #    print(num)
 
-    return numbers
+    #return numbers
 
 
 def plot(x_info, y_info, line_label, xlabel, ylabel, legend):
