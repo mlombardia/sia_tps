@@ -218,4 +218,7 @@ class MultiLayerPerceptron:
             ii += 1
         return min_error, errors, ii
 
+    def test(self, test_set, expected_test):
+        return self.calculate_mean_square_error(test_set, expected_test)
+
 

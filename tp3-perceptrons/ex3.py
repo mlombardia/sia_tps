@@ -1,4 +1,7 @@
 import os
+
+import numpy as np
+
 from perceptron import *
 from activationFunctions import *
 from utils import *
@@ -10,9 +13,9 @@ def ex3(config):
     if subitem == 1:
         ex3_1()
     elif subitem == 2:
-        ex3_2()
+        ex3_2(config)
     elif subitem == 3:
-        ex3_3()
+        ex3_3(config)
 
 
 def ex3_1():
@@ -61,19 +64,27 @@ def ex3_2(config):
         else:
             expected_data.append([-1])
 
+    train_data=np.array(train_data)
+    expected_data = np.array(expected_data)
+
     print("to train:", to_train)
     print("train data:", train_data)
     print("expected data:", expected_data)
     print()
 
-    hidden_layer_1 = NeuronLayer(5, 35)  # 5 neuronas y 7 inputs por cada una
-    output_layer = NeuronLayer(1, 5)  # una neurona y tantos inputs como numeros para entrenar
 
-    perceptron = MultiLayerPerceptron(train_data, expected_data, tanh_act, der_tanh_act, [hidden_layer_1], output_layer)
-    perceptron.train()
+    perceptron = MultiLayerPerceptron([
+        NeuronLayer(3, inputs=train_data.shape[1], activation="linear"),
+        NeuronLayer(5),
+        NeuronLayer(expected_data.shape[1])
+    ])
+
+    min_error, errors, ii = perceptron.train(train_data, expected_data)
+
+    print("min error", min_error)
 
     for i in range(len(train_data)):
-        output = perceptron.guess(np.array(train_data[i]))
+        output = perceptron.predict(np.array(train_data[i]))
         print(to_train[i], 'is ~', output[-1])
 
     for n in to_test:
@@ -82,18 +93,22 @@ def ex3_2(config):
         else:
             expected_test.append([-1])
 
+    test_data = np.array(test_data)
+    expected_test = np.array(expected_test)
+
     print()
+    print("TESTING")
     print("to test", to_test)
     print("test", test_data)
     print("expected test", expected_test)
     print()
 
     for i in range(len(test_data)):
-        output = perceptron.guess(np.array(test_data[i]))
+        output = perceptron.predict(np.array(test_data[i]))
         print(to_test[i], 'is ~', output[-1])
 
 
-def ex3_3():
+def ex3_3(config):
     data_folder = config['data_folder']
     ex3_training = os.path.join(data_folder, config['ex3_training'])
     numbers = parseNumbers(ex3_training)
@@ -142,15 +157,25 @@ def ex3_3():
     print("expected data:", expected_data)
     print()
 
+    train_data = np.array(train_data)
+    expected_data = np.array(expected_data)
+
     hidden_layer_1 = NeuronLayer(5, 35)  # 5 neuronas y 7 inputs por cada una
     output_layer = NeuronLayer(10, 5)  # 10 neurona y tantos inputs como numeros para entrenar
 
-    perceptron = MultiLayerPerceptron(train_data, expected_data, tanh_act, der_tanh_act, [hidden_layer_1], output_layer)
-    perceptron.train()
+    perceptron = MultiLayerPerceptron([
+        NeuronLayer(3, inputs=train_data.shape[1], activation="tanh"),
+        NeuronLayer(5),
+        NeuronLayer(expected_data.shape[1])
+    ])
+
+    min_error, errors, ii = perceptron.train(train_data, expected_data, iterations_qty=10000)
+
+    print(min_error)
 
     for i in range(len(train_data)):
-        output = perceptron.guess(np.array(train_data[i]))
-        print(to_train[i], 'is ~', output[-1])
+        output = perceptron.predict(np.array(train_data[i]))
+        print(to_train[i], 'is ~', output[i])
 
     for n in to_test:
         if n == 0:
@@ -183,5 +208,5 @@ def ex3_3():
     print()
 
     for i in range(len(test_data)):
-        output = perceptron.guess(np.array(test_data[i]))
+        output = perceptron.predict(np.array(test_data[i]))
         print(to_test[i], 'is ~', output[-1])
