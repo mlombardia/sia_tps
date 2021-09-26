@@ -49,7 +49,7 @@ def ex3_2(config):
     to_test = []
     test_data = []
     expected_test = []
-
+    training_accuracies = []
     for i in range(q):
         train_data.append(numbers[to_train[i]])
 
@@ -78,14 +78,6 @@ def ex3_2(config):
         NeuronLayer(expected_data.shape[1])
     ])
 
-    min_error, errors, ii = perceptron.train(train_data, expected_data)
-
-    print("min error", min_error)
-
-    for i in range(len(train_data)):
-        output = perceptron.predict(np.array(train_data[i]))
-        print(to_train[i], 'is ~', output[-1])
-
     for n in to_test:
         if n % 2 == 0:
             expected_test.append([1])
@@ -94,6 +86,16 @@ def ex3_2(config):
 
     test_data = np.array(test_data)
     expected_test = np.array(expected_test)
+
+    min_error, errors, ii, training_accuracies, test_accuracies = perceptron.train(train_data, expected_data, test_data, expected_test)
+
+    plot(ii, [training_accuracies, test_accuracies], ['train acc', 'test acc'], 'asd', 'asd', 'graphic')
+    plot(ii, [errors], ['errors'], 'asd', 'asd', 'graphic')
+    print("min error", min_error)
+
+    for i in range(len(train_data)):
+        output = perceptron.predict(np.array(train_data[i]))
+        print(to_train[i], 'is ~', output[-1])
 
     print()
     print("TESTING")

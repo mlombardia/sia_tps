@@ -4,6 +4,76 @@ import numpy as np
 
 from activationFunctions import *
 
+class StepPerceptron:
+    # hago el init con el set de training, el de valores esperados, como pondero el error y la cantidad de iteraciones,
+    # y genero random los pesos
+    def __init__(self, input_size, activation_function, der_activation_function, eta=0.001, delta=0.0049, iterations_qty=1000):
+        self.eta = eta
+        self.activation_function = activation_function
+        self.weights = np.array(np.random.rand(input_size + 1))
+        self.der_activation_function = der_activation_function
+        self.delta = delta
+        self.iterations_qty = iterations_qty
+
+
+    def predict_with_biased(self, a_input):
+        dot_product = self.weights.T.dot(a_input)
+        return self.activation_function(dot_product)
+
+    def predict(self, a_input):
+        return self.predict_with_biased(np.insert(a_input, 0, 1))
+
+    def calculate_mean_square_error(self, training_set, expected_set):
+        sum = 0
+        for i in range(len(training_set)):
+            x = training_set[i]
+            y = expected_set[i]
+
+            predicted = self.predict(x)
+            aux = (predicted - y) ** 2
+            sum += aux
+        return sum / len(training_set)
+
+    def train(self, training_set, expected_set, error_epsilon=0, print_data=True):
+        errors = []
+        epochs = []
+        training_accuracies = []
+        training_set = np.array(training_set)
+        expected_set = np.array(expected_set)
+        ii = 0
+        shuffled_list = [a for a in range(0, len(training_set))]
+        random.shuffle(shuffled_list)
+        p = len(training_set)
+        Error = 1
+        min_error = 2 * p
+        mean_square_error = 0
+        while ii < self.iterations_qty and Error > error_epsilon:
+            j = 0
+            training_correct_cases = 0
+            while j < len(shuffled_list):
+                biased_input = np.insert(training_set[shuffled_list[j]], 0, 1)
+                predicted_value = self.predict_with_biased(biased_input)
+                error = expected_set[shuffled_list[j]] - predicted_value
+                if error < self.delta:
+                    training_correct_cases += 1
+                self.weights = self.weights + (self.eta * error * self.der_activation_function(
+                    self.weights.T.dot(biased_input)) * biased_input.T)
+                j += 1
+
+            Error = self.calculate_mean_square_error(training_set, expected_set)
+            if Error < min_error:
+                min_error = Error
+            errors.append(Error)
+            training_accuracies.append(training_correct_cases / len(training_set))
+            if print_data:
+                print("Epoch: ", ii)
+                print("min error", min_error)
+                print("weights: ", self.weights)
+
+            epochs.append(ii)
+            ii += 1
+        return min_error, epochs, errors, training_accuracies, mean_square_error
+
 
 class SimplePerceptron:
     # hago el init con el set de training, el de valores esperados, como pondero el error y la cantidad de iteraciones,
@@ -81,7 +151,7 @@ class SimplePerceptron:
             if print_data:
                 print("Epoch: ", ii)
                 print("min error", min_error)
-            print("weights: ", self.weights)
+                print("weights: ", self.weights)
 
             mean_square_error = self.calculate_mean_square_error(test_set, test_expected_test)
             test_accuracies.append(self.calculate_local_accuracies(test_set, test_expected_test))
@@ -152,8 +222,9 @@ class NeuronLayer:  # es una matriz
 
 
 class MultiLayerPerceptron:
-    def __init__(self, neuron_layers, eta=0.01):
+    def __init__(self, neuron_layers, eta=0.01, delta=0.0049):
         self.eta = eta
+        self.delta = delta
         self.neuron_layers = neuron_layers
         self._init_layers()
 
@@ -182,6 +253,17 @@ class MultiLayerPerceptron:
             sum += aux
         return sum / len(training_set)
 
+    def calculate_local_accuracies(self, test_set, expected_set):
+        j = 0
+        test_correct_cases = 0
+        while j < len(test_set):
+            error = expected_set[j] - self.predict(test_set[j])
+            if error < self.delta:
+                test_correct_cases += 1
+            j += 1
+
+        return test_correct_cases/len(test_set)
+
     def back_propagate(self, predicted, x, y):
         delta = None
         for i in reversed(range(len(self.neuron_layers))):
@@ -207,9 +289,10 @@ class MultiLayerPerceptron:
                 dif = y - predicted
 
             delta = self.neuron_layers[i].back_propagate(dif, v, self.eta)
+            return delta
 
 
-    def train(self, training_set, expected_set, error_epsilon=0, iterations_qty=1000, print_data=True):
+    def train(self, training_set, expected_set,test_set, expected_test_set, error_epsilon=0, iterations_qty=1000, print_data=True):
         training_set = np.array(training_set)
         expected_set = np.array(expected_set)
         ii = 0
@@ -220,6 +303,12 @@ class MultiLayerPerceptron:
         Error = 1
         min_error = 2 * p
         errors = []
+        training_accuracies = []
+        epochs = []
+        training_correct_cases = 0
+        test_correct_cases = 0
+        mean_square_error = 0
+        test_accuracies = []
         while ii < iterations_qty and Error > error_epsilon:
             j = 0
             while j < len(training_set):
@@ -228,15 +317,29 @@ class MultiLayerPerceptron:
 
                 predicted_value = self.predict(x)  # forward propagation
 
-                self.back_propagate(predicted_value, x, y)
+                error = self.back_propagate(predicted_value, x, y)
+                if len(error) == 1:
+                    if error < self.delta:
+                        training_correct_cases += 1
                 j += 1
-
+            training_accuracies.append(training_correct_cases/len(training_set))
             Error = self.calculate_mean_square_error(training_set, expected_set)
             if Error < min_error:
                 min_error = Error
             errors.append(Error)
+
+            for i in range(len(test_set)):
+                res = self.predict(np.array(test_set[i]))
+                error = expected_set[i] - res
+                if len(error) == 1:
+                    if error < self.delta:
+                        test_correct_cases += 1
+            test_accuracies.append(test_correct_cases/len(test_set))
+            # mean_square_error = self.calculate_mean_square_error(test_set, test_expected_test)
+            # test_accuracies.append(self.calculate_local_accuracies(test_set, test_expected_test))
+            epochs.append(ii)
             ii += 1
-        return min_error, errors, ii
+        return min_error, errors, epochs, training_accuracies, test_accuracies #, mean_square_error, test_accuracies
 
     def test(self, test_set, expected_test):
         return self.calculate_mean_square_error(test_set, expected_test)
