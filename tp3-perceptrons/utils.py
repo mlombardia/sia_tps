@@ -78,7 +78,8 @@ def parseNumbers(path):
 
 
 def plot(x_info, y_info, line_label, xlabel, ylabel, legend):
-    plt.plot(x_info, y_info, label=line_label)
+    for i in range(len(y_info)):
+        plt.plot(x_info, y_info[i], label=line_label[i])
 
     plt.xlabel(xlabel, fontsize=16)
     plt.ylabel(ylabel, fontsize=16)

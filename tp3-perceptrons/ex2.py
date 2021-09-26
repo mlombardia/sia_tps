@@ -26,50 +26,50 @@ def ex2(config):
             expected_matrix_normalized[i] = (expected_matrix[i][0] - min_value) / (max_value - min_value)
             i += 1
 
-    training_set = training_matrix[:50]
+    training_set = training_matrix[:100]
     training_set = np.array(training_set)
-    training_expected = expected_matrix_normalized[:50]
+    training_expected = expected_matrix_normalized[:100]
     training_expected = np.array(training_expected)
-    test_set = training_matrix[50:]
+    test_set = training_matrix[100:]
     test_set = np.array(test_set)
-    test_expected = expected_matrix_normalized[50:]
+    test_expected = expected_matrix_normalized[100:]
     test_expected = np.array(test_expected)
 
     if config['perceptron_type'] == 'linear':
         perceptron_lineal = SimplePerceptron(training_set.shape[1], lineal_act, der_lineal_act,
                                              eta=0.01)  # aprende poquito
-        min_err, epochs, error_list, training_accuracies = perceptron_lineal.train(training_set, training_expected)
-        min_err_test = perceptron_lineal.test(test_set, test_expected)
+        min_err, epochs, error_list, training_accuracies, min_err_test, test_accuracies = perceptron_lineal.train(training_set, training_expected)
+        # min_err_test, test_accuracies = perceptron_lineal.test(test_set, test_expected)
         print()
         print("training error", min_err)
         print("testing error", min_err_test)
         print()
 
-        plot(epochs, training_accuracies, 'train acc', 'Epoch', 'Accuracies', 'Accuracies vs Epochs - linear')
+        plot(epochs, [training_accuracies, test_accuracies], ['train acc', 'test acc'], 'Epoch', 'Accuracies', 'Accuracies vs Epochs - linear')
         plot(epochs, error_list, 'error', 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - linear')
 
     elif config['perceptron_type'] == 'non_linear_tanh':
         perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], tanh_act, der_tanh_act, eta=0.01)
-        min_err, epochs, error_list, training_accuracies = perceptron_nolineal2.train(training_set, training_expected)
-        min_err_test = perceptron_nolineal2.test(test_set, test_expected)
+        min_err, epochs, error_list, training_accuracies, min_err_test, test_accuracies = perceptron_nolineal2.train(training_set, training_expected)
+        # min_err_test, test_accuracies = perceptron_nolineal2.test(test_set, test_expected)
 
         print()
         print("training error", min_err)
         print("testing error", min_err_test)
         print()
 
-        plot(epochs, training_accuracies, 'train acc', 'Epoch', 'Accuracies', 'Accuracies vs Epochs - tanh')
-        plot(epochs, error_list, 'error', 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - tanh')
+        plot(epochs, [training_accuracies, test_accuracies], ['train acc', 'test acc'], 'Epoch', 'Accuracies', 'Accuracies vs Epochs - tanh')
+        plot(epochs, [error_list], ['error'], 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - tanh')
 
     elif config['perceptron_type'] == 'non_linear_sigmoid':
         perceptron_nolineal2 = SimplePerceptron(training_set.shape[1], sigmoid_act, der_sigmoid_act, eta=0.01)
-        min_err, epochs, error_list, training_accuracies = perceptron_nolineal2.train(training_set, training_expected)
-        min_err_test = perceptron_nolineal2.test(test_set, test_expected)
+        min_err, epochs, error_list, training_accuracies, min_err_test, test_accuracies = perceptron_nolineal2.train(training_set, training_expected, test_set, test_expected)
+        # min_err_test, test_accuracies = perceptron_nolineal2.test(test_set, test_expected)
 
         print()
         print("training error", min_err)
         print("testing error", min_err_test)
         print()
 
-        plot(epochs, training_accuracies, 'train acc', 'Epoch', 'Accuracies', 'Accuracies vs Epochs - sigmoid')
-        plot(epochs, error_list, 'error', 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - sigmoid')
+        plot(epochs, [training_accuracies, test_accuracies], ['train acc', 'test acc'], 'Epoch', 'Accuracies', 'Accuracies vs Epochs - sigmoid')
+        plot(epochs, [error_list], ['error'], 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - sigmoid')

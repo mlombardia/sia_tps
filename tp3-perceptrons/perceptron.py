@@ -8,12 +8,14 @@ from activationFunctions import *
 class SimplePerceptron:
     # hago el init con el set de training, el de valores esperados, como pondero el error y la cantidad de iteraciones,
     # y genero random los pesos
-    def __init__(self, input_size, activation_function, der_activation_function, eta=0.25, delta=0.01):
+    def __init__(self, input_size, activation_function, der_activation_function, eta=0.001, delta=0.0049, iterations_qty=1000):
         self.eta = eta
         self.activation_function = activation_function
         self.weights = np.array(np.random.rand(input_size + 1))
         self.der_activation_function = der_activation_function
         self.delta = delta
+        self.iterations_qty = iterations_qty
+
 
     def predict_with_biased(self, a_input):
         dot_product = self.weights.T.dot(a_input)
@@ -33,7 +35,18 @@ class SimplePerceptron:
             sum += aux
         return sum / len(training_set)
 
-    def train(self, training_set, expected_set, error_epsilon=0, iterations_qty=1000, print_data=True):
+    def calculate_local_accuracies(self, test_set, expected_set):
+        j = 0
+        test_correct_cases = 0
+        while j < len(test_set):
+            error = expected_set[j] - self.predict(test_set[j])
+            if error < self.delta:
+                test_correct_cases += 1
+            j += 1
+
+        return test_correct_cases/len(test_set)
+
+    def train(self, training_set, expected_set, test_set, test_expected_test, error_epsilon=0, print_data=True):
         errors = []
         epochs = []
         training_accuracies = []
@@ -45,7 +58,9 @@ class SimplePerceptron:
         p = len(training_set)
         Error = 1
         min_error = 2 * p
-        while ii < iterations_qty and Error > error_epsilon:
+        mean_square_error = 0
+        test_accuracies = []
+        while ii < self.iterations_qty and Error > error_epsilon:
             j = 0
             training_correct_cases = 0
             while j < len(shuffled_list):
@@ -67,12 +82,17 @@ class SimplePerceptron:
                 print("Epoch: ", ii)
                 print("min error", min_error)
             print("weights: ", self.weights)
+
+            mean_square_error = self.calculate_mean_square_error(test_set, test_expected_test)
+            test_accuracies.append(self.calculate_local_accuracies(test_set, test_expected_test))
             epochs.append(ii)
             ii += 1
-        return min_error, epochs, errors, training_accuracies
+        return min_error, epochs, errors, training_accuracies, mean_square_error, test_accuracies
 
     def test(self, test_set, expected_test):
-        return self.calculate_mean_square_error(test_set, expected_test)
+        mean_square_error = self.calculate_mean_square_error(test_set, expected_test)
+        accuracies = self.calculate_local_accuracies(test_set, expected_test)
+        return mean_square_error, accuracies
 
 
 class NeuronLayer:  # es una matriz
