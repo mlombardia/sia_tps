@@ -311,6 +311,8 @@ class MultiLayerPerceptron:
         test_accuracies = []
         while ii < iterations_qty and Error > error_epsilon:
             j = 0
+            training_correct_cases = 0
+            test_correct_cases = 0
             while j < len(training_set):
                 x = training_set[shuffled_list[j]]
                 y = expected_set[shuffled_list[j]]
@@ -318,9 +320,12 @@ class MultiLayerPerceptron:
                 predicted_value = self.predict(x)  # forward propagation
 
                 error = self.back_propagate(predicted_value, x, y)
-                if len(error) == 1:
-                    if error < self.delta:
-                        training_correct_cases += 1
+                aux_training = 0
+                for i in range(len(error)):
+                    if error[i] < self.delta:
+                        aux_training += 1
+                if aux_training == len(error):
+                    training_correct_cases += 1
                 j += 1
             training_accuracies.append(training_correct_cases/len(training_set))
             Error = self.calculate_mean_square_error(training_set, expected_set)
@@ -328,12 +333,15 @@ class MultiLayerPerceptron:
                 min_error = Error
             errors.append(Error)
 
+            aux_test = 0
             for i in range(len(test_set)):
                 res = self.predict(np.array(test_set[i]))
-                error = expected_set[i] - res
-                if len(error) == 1:
-                    if error < self.delta:
-                        test_correct_cases += 1
+                error = expected_test_set[i] - res
+                for it in range(len(error)):
+                    if error[it] < self.delta:
+                        aux_test += 1
+                if aux_test == len(test_set):
+                    test_correct_cases += 1
             test_accuracies.append(test_correct_cases/len(test_set))
             # mean_square_error = self.calculate_mean_square_error(test_set, test_expected_test)
             # test_accuracies.append(self.calculate_local_accuracies(test_set, test_expected_test))

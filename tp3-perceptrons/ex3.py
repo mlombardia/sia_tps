@@ -171,14 +171,6 @@ def ex3_3(config):
         NeuronLayer(expected_data.shape[1])
     ], eta=0.01)
 
-    min_error, errors, ii = perceptron.train(train_data, expected_data, iterations_qty=10000)
-
-    print(min_error)
-
-    for i in range(len(train_data)):
-        output = perceptron.predict(np.array(train_data[i]))
-        print(to_train[i], 'is ~', to_num(output))
-
     for n in to_test:
         if n == 0:
             expected_test.append([1, -1, -1, -1, -1, -1, -1, -1, -1, -1])
@@ -204,6 +196,17 @@ def ex3_3(config):
             exit("error else ej 3")
 
     test_data = noise(test_data)
+
+    min_error, errors, ii, training_accuracies, test_accuracies = perceptron.train(train_data, expected_data, test_data, expected_test, iterations_qty=10000)
+
+    plot(ii, [training_accuracies, test_accuracies], ['train acc', 'test acc'], 'asd', 'asd', 'graphic')
+    plot(ii, [errors], ['errors'], 'asd', 'asd', 'graphic')
+    print(min_error)
+
+    for i in range(len(train_data)):
+        output = perceptron.predict(np.array(train_data[i]))
+        print(to_train[i], 'is ~', to_num(output))
+
     print()
     print("to test", to_test)
     print("test", test_data)
