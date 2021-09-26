@@ -116,7 +116,7 @@ class SimplePerceptron:
 
         return test_correct_cases/len(test_set)
 
-    def train(self, training_set, expected_set, test_set, test_expected_test, error_epsilon=0, print_data=True):
+    def train(self, training_set, expected_set, test_set, test_expected_test, error_epsilon=0, print_data=False):
         errors = []
         epochs = []
         training_accuracies = []
