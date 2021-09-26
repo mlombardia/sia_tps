@@ -166,8 +166,6 @@ def ex3_3(config):
     perceptron = MultiLayerPerceptron([
         NeuronLayer(3, inputs=train_data.shape[1], activation="sigmoid"),
         NeuronLayer(50),
-        NeuronLayer(50),
-        NeuronLayer(50),
         NeuronLayer(expected_data.shape[1])
     ], eta=0.01)
 
@@ -203,6 +201,7 @@ def ex3_3(config):
         else:
             exit("error else ej 3")
 
+    test_data = noise(test_data)
     print()
     print("to test", to_test)
     print("test", test_data)
@@ -223,15 +222,17 @@ def to_num(array):
             num = i
     return num
 
+
 def noise(array):
-    for i in range(len(array)):
-        rand = random.uniform(0, 1)
-        if rand <= 0.02:
-            if array[i] == 0:
-                array[i] = 1
-            elif array[i] == 1:
-                array[i] = 0
-            else:
-                exit("error adding noise")
+    for letter in array:
+        for i in range(len(letter)):
+            rand = random.uniform(0, 1)
+            if rand <= 0.02:
+                if letter[i] == 0:
+                    letter[i] = 1
+                elif letter[i] == 1:
+                    letter[i] = 0
+                else:
+                    exit("error adding noise")
     return array
 

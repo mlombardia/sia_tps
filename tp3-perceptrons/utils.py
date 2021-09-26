@@ -37,9 +37,6 @@ def parseNumbers(path):
     auxMatrix = []
     i = 0
     line = 0
-    print("length", length)
-
-    #print(lines)
 
     while i < length:
         if lines[i] == "0":
