@@ -292,7 +292,7 @@ class MultiLayerPerceptron:
             return delta
 
 
-    def train(self, training_set, expected_set,test_set, expected_test_set, error_epsilon=0, iterations_qty=1000, print_data=True):
+    def train(self, training_set, expected_set,test_set, expected_test_set, error_epsilon=0, iterations_qty=10000, print_data=True):
         training_set = np.array(training_set)
         expected_set = np.array(expected_set)
         ii = 0
@@ -342,7 +342,7 @@ class MultiLayerPerceptron:
                 for it in range(len(error)):
                     if error[it] < self.delta:
                         aux_test += 1
-                if aux_test == len(test_set):
+                if aux_test == len(error):
                     test_correct_cases += 1
             test_accuracies.append(test_correct_cases/len(test_set))
             mean_square_error = self.calculate_mean_square_error(test_set, expected_test_set)
