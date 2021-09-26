@@ -42,27 +42,42 @@ def ex3_2(config):
     data_folder = config['data_folder']
     ex3_training = os.path.join(data_folder, config['ex3_training'])
     numbers = parseNumbers(ex3_training)
-    q = 7  # entreno con q numeros y testeo con 10-q
-    to_train = random.sample(range(10), q)
-    train_data = []
-    expected_data = []
+    # q = 7  # entreno con q numeros y testeo con 10-q
+    # to_train = random.sample(range(10), q)
+    # train_data = []
+    # expected_data = []
+    # to_test = []
+    # test_data = []
+    # expected_test = []
+    # training_accuracies = []
+    k=3
+    train_data, expected_data, test_data, expected_test, testID = cross_validations(numbers, [1, -1, 1, -1, 1, -1, 1, -1, 1, -1], k)
+
     to_test = []
-    test_data = []
-    expected_test = []
-    training_accuracies = []
-    for i in range(q):
-        train_data.append(numbers[to_train[i]])
-
+    lenn = math.floor(10 / k)
+    for i in range(lenn):
+        to_test.append((lenn*(testID)) + i)
+    if testID == k-1:
+        to_test.append((lenn * (testID)) + lenn)
+    to_train = []
     for i in range(10):
-        if i not in to_train:
-            to_test.append(i)
-            test_data.append(numbers[i])
+        if i not in to_test:
+            to_train.append(i)
 
-    for n in to_train:
-        if n % 2 == 0:
-            expected_data.append([1])
-        else:
-            expected_data.append([-1])
+
+    # for i in range(q):
+    #     train_data.append(numbers[to_train[i]])
+
+    # for i in range(10):
+    #     if i not in to_train:
+    #         to_test.append(i)
+    #         test_data.append(numbers[i])
+
+    # for n in to_train:
+    #     if n % 2 == 0:
+    #         expected_data.append([1])
+    #     else:
+    #         expected_data.append([-1])
 
     train_data=np.array(train_data)
     expected_data = np.array(expected_data)
@@ -74,15 +89,15 @@ def ex3_2(config):
 
     perceptron = MultiLayerPerceptron([
         NeuronLayer(3, inputs=train_data.shape[1], activation="linear"),
-        NeuronLayer(5),
-        NeuronLayer(expected_data.shape[1])
+        NeuronLayer(25),
+        NeuronLayer(1)
     ])
 
-    for n in to_test:
-        if n % 2 == 0:
-            expected_test.append([1])
-        else:
-            expected_test.append([-1])
+    # for n in to_test:
+    #     if n % 2 == 0:
+    #         expected_test.append([1])
+    #     else:
+    #         expected_test.append([-1])
 
     test_data = np.array(test_data)
     expected_test = np.array(expected_test)
@@ -93,20 +108,22 @@ def ex3_2(config):
     plot(ii, [errors], ['errors'], 'asd', 'asd', 'graphic')
     print("min error", min_error)
 
-    for i in range(len(train_data)):
+    A = [0, 1, 2]
+
+    for i in range(len(to_train)):
         output = perceptron.predict(np.array(train_data[i]))
-        print(to_train[i], 'is ~', output[-1])
+        print(to_train[i], 'is ~', to_word(output[-1]))
 
     print()
     print("TESTING")
-    print("to test", to_test)
+    # print("to test", to_test)
     print("test", test_data)
     print("expected test", expected_test)
     print()
 
     for i in range(len(test_data)):
         output = perceptron.predict(np.array(test_data[i]))
-        print(to_test[i], 'is ~', output[-1])
+        print(to_test[i], 'is ~', to_word(output[-1]))
 
 
 def ex3_3(config):
@@ -226,6 +243,14 @@ def to_num(array):
             aux = array[i]
             num = i
     return num
+
+def to_word(num):
+    if num > 0:
+        return "par " + str(num*100) + " %"
+    elif num < 0:
+        return "impar " + str(num*-100) + " %"
+    else:
+        return "wtf this shouldn't be printed"
 
 
 def noise(array):

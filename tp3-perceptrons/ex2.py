@@ -13,6 +13,7 @@ def ex2(config):
     training_matrix = parse_data(ex2_training)
     expected_matrix = parse_data(desired_training)
 
+
     i = 0
     max_value = np.max(expected_matrix)
     min_value = np.min(expected_matrix)
@@ -26,13 +27,15 @@ def ex2(config):
             expected_matrix_normalized[i] = (expected_matrix[i][0] - min_value) / (max_value - min_value)
             i += 1
 
-    training_set = training_matrix[:100]
+    training_set, training_expected, test_set, test_expected, testID = cross_validations(training_matrix, expected_matrix_normalized, 3)
+    # print(training_set)
+    # training_set = training_matrix[:100]
     training_set = np.array(training_set)
-    training_expected = expected_matrix_normalized[:100]
+    # training_expected = expected_matrix_normalized[:100]
     training_expected = np.array(training_expected)
-    test_set = training_matrix[100:]
+    # test_set = training_matrix[100:]
     test_set = np.array(test_set)
-    test_expected = expected_matrix_normalized[100:]
+    # test_expected = expected_matrix_normalized[100:]
     test_expected = np.array(test_expected)
 
     if config['perceptron_type'] == 'linear':
