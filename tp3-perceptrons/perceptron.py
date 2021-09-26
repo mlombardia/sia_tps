@@ -300,8 +300,10 @@ class MultiLayerPerceptron:
         shuffled_list = [a for a in range(0, len(training_set))]
         random.shuffle(shuffled_list)
         p = len(training_set)
+        l = len(test_set)
         Error = 1
         min_error = 2 * p
+        min_error_test = 2*l
         errors = []
         training_accuracies = []
         epochs = []
@@ -343,11 +345,13 @@ class MultiLayerPerceptron:
                 if aux_test == len(test_set):
                     test_correct_cases += 1
             test_accuracies.append(test_correct_cases/len(test_set))
-            # mean_square_error = self.calculate_mean_square_error(test_set, test_expected_test)
+            mean_square_error = self.calculate_mean_square_error(test_set, expected_test_set)
+            if mean_square_error < min_error_test:
+                min_error_test = mean_square_error
             # test_accuracies.append(self.calculate_local_accuracies(test_set, test_expected_test))
             epochs.append(ii)
             ii += 1
-        return min_error, errors, epochs, training_accuracies, test_accuracies #, mean_square_error, test_accuracies
+        return min_error, errors, epochs, training_accuracies, test_accuracies, min_error_test
 
     def test(self, test_set, expected_test):
         return self.calculate_mean_square_error(test_set, expected_test)
