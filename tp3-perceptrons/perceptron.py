@@ -323,11 +323,14 @@ class MultiLayerPerceptron:
 
                 error = self.back_propagate(predicted_value, x, y)
                 aux_training = 0
-                for i in range(len(error)):
-                    if error[i] < self.delta:
-                        aux_training += 1
-                if aux_training == len(error):
+                max_index = np.where(predicted_value == np.amax(predicted_value))
+                if max_index[0] == shuffled_list[j]:
                     training_correct_cases += 1
+                # for i in range(len(error)):
+                #     if error[i] < self.delta:
+                #         aux_training += 1
+                # if aux_training == len(error):
+                #     training_correct_cases += 1
                 j += 1
             training_accuracies.append(training_correct_cases/len(training_set))
             Error = self.calculate_mean_square_error(training_set, expected_set)
@@ -338,12 +341,17 @@ class MultiLayerPerceptron:
             aux_test = 0
             for i in range(len(test_set)):
                 res = self.predict(np.array(test_set[i]))
-                error = expected_test_set[i] - res
-                for it in range(len(error)):
-                    if error[it] < self.delta:
-                        aux_test += 1
-                if aux_test == len(error):
+                max_index = np.where(res == np.amax(res))
+                if max_index[0] == i:
                     test_correct_cases += 1
+                # error = expected_test_set[i][i] - abs(max_val)
+                # if error < self.delta:
+                #     test_correct_cases += 1
+                # for it in range(len(error)):
+                #     if error[it] < self.delta:
+                #         aux_test += 1
+                # if aux_test == len(error):
+                #     test_correct_cases += 1
             test_accuracies.append(test_correct_cases/len(test_set))
             mean_square_error = self.calculate_mean_square_error(test_set, expected_test_set)
             if mean_square_error < min_error_test:
