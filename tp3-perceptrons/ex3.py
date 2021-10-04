@@ -44,14 +44,6 @@ def ex3_2(config):
     data_folder = config['data_folder']
     ex3_training = os.path.join(data_folder, config['ex3_training'])
     numbers = parseNumbers(ex3_training)
-    # q = 7  # entreno con q numeros y testeo con 10-q
-    # to_train = random.sample(range(10), q)
-    # train_data = []
-    # expected_data = []
-    # to_test = []
-    # test_data = []
-    # expected_test = []
-    # training_accuracies = []
     k=3
     train_data, expected_data, test_data, expected_test, testID = cross_validations(numbers, [1, -1, 1, -1, 1, -1, 1, -1, 1, -1], k)
 
@@ -67,20 +59,6 @@ def ex3_2(config):
             to_train.append(i)
 
 
-    # for i in range(q):
-    #     train_data.append(numbers[to_train[i]])
-
-    # for i in range(10):
-    #     if i not in to_train:
-    #         to_test.append(i)
-    #         test_data.append(numbers[i])
-
-    # for n in to_train:
-    #     if n % 2 == 0:
-    #         expected_data.append([1])
-    #     else:
-    #         expected_data.append([-1])
-
     train_data=np.array(train_data)
     expected_data = np.array(expected_data)
 
@@ -90,16 +68,10 @@ def ex3_2(config):
     print()
 
     perceptron = MultiLayerPerceptron([
-        NeuronLayer(3, inputs=train_data.shape[1], activation="linear"),
+        NeuronLayer(3, inputs=train_data.shape[1], activation="sigmoid"),
         NeuronLayer(25),
         NeuronLayer(1)
     ])
-
-    # for n in to_test:
-    #     if n % 2 == 0:
-    #         expected_test.append([1])
-    #     else:
-    #         expected_test.append([-1])
 
     test_data = np.array(test_data)
     expected_test = np.array(expected_test)
@@ -146,12 +118,6 @@ def ex3_3(config):
         train_data.append(numbers[to_train[i]])
         to_test.append(i)
         test_data.append(numbers[i])
-
-
-    # for i in range(10):
-    #     if i not in to_train:
-    #         to_test.append(i)
-    #         test_data.append(numbers[i])
 
     for n in to_train:
         if n == 0:
