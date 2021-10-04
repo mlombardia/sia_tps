@@ -344,16 +344,15 @@ class MultiLayerPerceptron:
                         error = expected_test_set[i] + self.predict(test_set[i])
                     if error < self.delta:
                         test_correct_cases += 1
-                    if ii == iterations_qty-1:
-                        print (expected_test_set[i], self.predict(test_set[i]), error)
-                        print(test_correct_cases)
 
             test_accuracies.append(test_correct_cases/len(test_set))
             mean_square_error = self.calculate_mean_square_error(test_set, expected_test_set)
             if mean_square_error < min_error_test:
                 min_error_test = mean_square_error
+
             epochs.append(ii)
             ii += 1
+
         return min_error, errors, epochs, training_accuracies, test_accuracies, min_error_test
 
     def test(self, test_set, expected_test):
