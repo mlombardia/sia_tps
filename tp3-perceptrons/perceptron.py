@@ -289,7 +289,7 @@ class MultiLayerPerceptron:
                 dif = y - predicted
 
             delta = self.neuron_layers[i].back_propagate(dif, v, self.eta)
-            return delta
+        return delta
 
 
     def train(self, training_set, expected_set,test_set, expected_test_set, error_epsilon=0, iterations_qty=10000, print_data=True):
