@@ -33,7 +33,7 @@ def ex3_1():
         NeuronLayer(xor_expected_data.shape[1])
     ])
 
-    min_error, errors, ii, training_accuracies, test_accuracies, min_error_test = perceptron.train(train_data, xor_expected_data, train_data, xor_expected_data, iterations_qty=10000)
+    min_error, errors, ii, training_accuracies, test_accuracies, min_error_test = perceptron.train(train_data, xor_expected_data, train_data, xor_expected_data, 1, iterations_qty=10000)
 
     plot(ii, [errors], ['errors'], 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - multilayer')
 
@@ -104,7 +104,7 @@ def ex3_2(config):
     test_data = np.array(test_data)
     expected_test = np.array(expected_test)
 
-    min_error, errors, ii, training_accuracies, test_accuracies, min_error_test = perceptron.train(train_data, expected_data, test_data, expected_test)
+    min_error, errors, ii, training_accuracies, test_accuracies, min_error_test = perceptron.train(train_data, expected_data, test_data, expected_test, 2)
 
     plot(ii, [training_accuracies, test_accuracies], ['train acc', 'test acc'], 'Epoch', 'Accuracies', 'Accuracies vs Epochs - multilayer')
     plot(ii, [errors], ['errors'], 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - multilayer')
@@ -217,7 +217,7 @@ def ex3_3(config):
 
     test_data = noise(test_data)
 
-    min_error, errors, ii, training_accuracies, test_accuracies, min_error_test  = perceptron.train(train_data, expected_data, test_data, expected_test, iterations_qty=10000)
+    min_error, errors, ii, training_accuracies, test_accuracies, min_error_test  = perceptron.train(train_data, expected_data, test_data, expected_test, 3, iterations_qty=10000)
 
     plot(ii, [training_accuracies, test_accuracies], ['train acc', 'test acc'], 'Epoch', 'Accuracies', 'Accuracies vs Epochs - multilayer')
     plot(ii, [errors], ['errors'], 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - multilayer')
