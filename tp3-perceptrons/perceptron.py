@@ -178,7 +178,17 @@ class NeuronLayer:  # es una matriz
 
     def init_weights(self, inputs=None):
         self.inputs = inputs if inputs is not None else self.inputs
-        self.weights = 2 * np.random.random((self.neurons_qty, self.inputs+1)) - 1  # esto ES una matriz
+        print()
+        if inputs is None:
+            print("inputs + 1 = ", self.inputs+1)
+        else:
+            print("inputs + 1 = ", inputs+1)
+        print("neurons qty = ", self.neurons_qty)
+        self.weights = 2 * np.random.random((self.neurons_qty, self.inputs+1)) - 1
+        # weights es una matriz de neurons_qty x inputs+1
+        # es inputs+1 por el biased
+        # los numeros de los inputs entre -1 y 1
+        print(self.weights)
 
     def get_functions(self, activation_function):
         if activation_function == "tanh":
@@ -222,7 +232,7 @@ class NeuronLayer:  # es una matriz
 
 
 class MultiLayerPerceptron:
-    def __init__(self, neuron_layers, eta=0.01, delta=0.0049):
+    def __init__(self, neuron_layers, eta=0.01, delta=0.049):
         self.eta = eta
         self.delta = delta
         self.neuron_layers = neuron_layers
@@ -230,11 +240,11 @@ class MultiLayerPerceptron:
 
     def _init_layers(self):
         for i in range(len(self.neuron_layers)):
-            if i != 0:  # la capa 0 no depende de nadie, depende de los inputs
+            if i != 0:  # las capas que no son la 0
                 self.neuron_layers[i].init_weights(inputs=self.neuron_layers[
-                    i - 1].neurons_qty)  # se fija cuantas salidas tiene la capa anterior y se lo pone a esta nueva capa
+                    i - 1].neurons_qty)  # se fija cuantas salidas (neuronas) tiene la capa anterior y se lo pone a esta nueva capa
             else:
-                self.neuron_layers[i].init_weights()  # no le paso nada porque ya lo tenia
+                self.neuron_layers[i].init_weights()  # no le paso nada porque ya lo tenia del main
 
     def predict(self, a_input):
         res = a_input

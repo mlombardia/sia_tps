@@ -48,17 +48,18 @@ def ex3_2(config):
 
     #Start Cross validations::
     k = 3
+    first_layer_size = math.floor(((k-1) * len(numbers)) / k)
 
     splitsA = chunkIt(numbers, k)
     splitsE = chunkIt(expected, k)
     train_data = []
     expected_data = []
 
-    perceptron = MultiLayerPerceptron([
-        NeuronLayer(3, inputs=35, activation="sigmoid"),
-        NeuronLayer(25),
-        NeuronLayer(1)
-    ])
+    # perceptron = MultiLayerPerceptron([
+    #     NeuronLayer(10, inputs=35, activation="sigmoid"),
+    #     NeuronLayer(10),
+    #     NeuronLayer(1)
+    # ])
 
     for i in range(k):
         testID = i
@@ -95,6 +96,12 @@ def ex3_2(config):
 
         test_data = np.array(test_data)
         expected_test = np.array(expected_test)
+
+        perceptron = MultiLayerPerceptron([
+            NeuronLayer(first_layer_size, inputs=35, activation="sigmoid"),
+            NeuronLayer(10),
+            NeuronLayer(1)
+        ])
 
         min_error, errors, ii, training_accuracies, test_accuracies, min_error_test = perceptron.train(train_data, expected_data, test_data, expected_test, 2)
         plot(ii, [training_accuracies, test_accuracies], ['train acc', 'test acc'], 'Epoch', 'Accuracies',
@@ -172,8 +179,8 @@ def ex3_3(config):
     expected_data = np.array(expected_data)
 
     perceptron = MultiLayerPerceptron([
-        NeuronLayer(3, inputs=train_data.shape[1], activation="sigmoid"),
-        NeuronLayer(50),
+        NeuronLayer(10, inputs=train_data.shape[1], activation="tanh"),
+        NeuronLayer(10),
         NeuronLayer(expected_data.shape[1])
     ])
 
@@ -203,7 +210,7 @@ def ex3_3(config):
 
     test_data = noise(test_data)
 
-    min_error, errors, ii, training_accuracies, test_accuracies, min_error_test  = perceptron.train(train_data, expected_data, test_data, expected_test, 3, iterations_qty=10000)
+    min_error, errors, ii, training_accuracies, test_accuracies, min_error_test  = perceptron.train(train_data, expected_data, test_data, expected_test, 3)
 
     plot(ii, [training_accuracies, test_accuracies], ['train acc', 'test acc'], 'Epoch', 'Accuracies', 'Accuracies vs Epochs - multilayer')
     plot(ii, [errors], ['errors'], 'Epoch', 'Errors', 'Mean Squared Error vs Epochs - multilayer')

@@ -14,7 +14,7 @@ perceptron_type: 'linear' # linear / non_linear_tanh / non_linear_sigmoid
 
 # ex3
 ex3_training: ex3_traindata.txt
-subitem: 1  # 1 / 2 / 3
+subitem: 3  # 1 / 2 / 3
 
 
 
