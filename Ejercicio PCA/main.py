@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA
 
+
 data = pd.read_csv('europe.csv')
 pd.set_option("display.max_columns", 8)
 dict_data = data.to_dict("list")
@@ -30,13 +31,13 @@ for key in dict_data.keys():
 
 print("std matrix", std_value_matrix)
 
-cov_matrix = np.cov(std_value_matrix_only_numbers)
-print()
-print("cov matrix: ", cov_matrix)
-print()
+# cov_matrix = np.cov(std_value_matrix_only_numbers)
+# print()
+# print("cov matrix: ", cov_matrix)
+# print()
 
-pca = PCA(n_components=7)
-test = pca.fit_transform(cov_matrix)
+pca = PCA(n_components=4)
+test = pca.fit_transform(np.array(std_value_matrix_only_numbers).T)
 
 print(test)
 # print()
