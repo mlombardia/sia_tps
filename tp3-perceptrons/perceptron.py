@@ -178,7 +178,17 @@ class NeuronLayer:  # es una matriz
 
     def init_weights(self, inputs=None):
         self.inputs = inputs if inputs is not None else self.inputs
-        self.weights = 2 * np.random.random((self.neurons_qty, self.inputs+1)) - 1  # esto ES una matriz
+        print()
+        if inputs is None:
+            print("inputs + 1 = ", self.inputs+1)
+        else:
+            print("inputs + 1 = ", inputs+1)
+        print("neurons qty = ", self.neurons_qty)
+        self.weights = 2 * np.random.random((self.neurons_qty, self.inputs+1)) - 1
+        # weights es una matriz de neurons_qty x inputs+1
+        # es inputs+1 por el biased
+        # los numeros de los inputs entre -1 y 1
+        print(self.weights)
 
     def get_functions(self, activation_function):
         if activation_function == "tanh":
@@ -222,7 +232,7 @@ class NeuronLayer:  # es una matriz
 
 
 class MultiLayerPerceptron:
-    def __init__(self, neuron_layers, eta=0.01, delta=0.0049):
+    def __init__(self, neuron_layers, eta=0.01, delta=0.049):
         self.eta = eta
         self.delta = delta
         self.neuron_layers = neuron_layers
@@ -230,11 +240,11 @@ class MultiLayerPerceptron:
 
     def _init_layers(self):
         for i in range(len(self.neuron_layers)):
-            if i != 0:  # la capa 0 no depende de nadie, depende de los inputs
+            if i != 0:  # las capas que no son la 0
                 self.neuron_layers[i].init_weights(inputs=self.neuron_layers[
-                    i - 1].neurons_qty)  # se fija cuantas salidas tiene la capa anterior y se lo pone a esta nueva capa
+                    i - 1].neurons_qty)  # se fija cuantas salidas (neuronas) tiene la capa anterior y se lo pone a esta nueva capa
             else:
-                self.neuron_layers[i].init_weights()  # no le paso nada porque ya lo tenia
+                self.neuron_layers[i].init_weights()  # no le paso nada porque ya lo tenia del main
 
     def predict(self, a_input):
         res = a_input
@@ -252,17 +262,6 @@ class MultiLayerPerceptron:
             aux = np.linalg.norm(predicted - y, ord=2) ** 2
             sum += aux
         return sum / len(training_set)
-
-    def calculate_local_accuracies(self, test_set, expected_set):
-        j = 0
-        test_correct_cases = 0
-        while j < len(test_set):
-            error = expected_set[j] - self.predict(test_set[j])
-            if error < self.delta:
-                test_correct_cases += 1
-            j += 1
-
-        return test_correct_cases/len(test_set)
 
     def back_propagate(self, predicted, x, y):
         delta = None
@@ -289,10 +288,10 @@ class MultiLayerPerceptron:
                 dif = y - predicted
 
             delta = self.neuron_layers[i].back_propagate(dif, v, self.eta)
-            return delta
+        return delta
 
 
-    def train(self, training_set, expected_set,test_set, expected_test_set, error_epsilon=0, iterations_qty=10000, print_data=True):
+    def train(self, training_set, expected_set,test_set, expected_test_set, subitem, error_epsilon=0, iterations_qty=10000, print_data=True):
         training_set = np.array(training_set)
         expected_set = np.array(expected_set)
         ii = 0
@@ -323,11 +322,17 @@ class MultiLayerPerceptron:
 
                 error = self.back_propagate(predicted_value, x, y)
                 aux_training = 0
-                for i in range(len(error)):
-                    if error[i] < self.delta:
-                        aux_training += 1
-                if aux_training == len(error):
-                    training_correct_cases += 1
+                if subitem == 3:
+                    max_index = np.where(predicted_value == np.amax(predicted_value))
+                    if max_index[0] == shuffled_list[j]:
+                        training_correct_cases += 1
+                else:
+                    for i in range(len(error)):
+                        if error[i] < self.delta:
+                            aux_training += 1
+                    if aux_training == len(error):
+                        training_correct_cases += 1
+
                 j += 1
             training_accuracies.append(training_correct_cases/len(training_set))
             Error = self.calculate_mean_square_error(training_set, expected_set)
@@ -337,20 +342,27 @@ class MultiLayerPerceptron:
 
             aux_test = 0
             for i in range(len(test_set)):
-                res = self.predict(np.array(test_set[i]))
-                error = expected_test_set[i] - res
-                for it in range(len(error)):
-                    if error[it] < self.delta:
-                        aux_test += 1
-                if aux_test == len(error):
-                    test_correct_cases += 1
+                if subitem == 3:
+                    res = self.predict(np.array(test_set[i]))
+                    max_index = np.where(res == np.amax(res))
+                    if max_index[0] == i:
+                        test_correct_cases += 1
+                else:
+                    if expected_test_set[i] == 1:
+                        error = expected_test_set[i] - self.predict(test_set[i])
+                    else:
+                        error = expected_test_set[i] + self.predict(test_set[i])
+                    if error < self.delta:
+                        test_correct_cases += 1
+
             test_accuracies.append(test_correct_cases/len(test_set))
             mean_square_error = self.calculate_mean_square_error(test_set, expected_test_set)
             if mean_square_error < min_error_test:
                 min_error_test = mean_square_error
-            # test_accuracies.append(self.calculate_local_accuracies(test_set, test_expected_test))
+
             epochs.append(ii)
             ii += 1
+
         return min_error, errors, epochs, training_accuracies, test_accuracies, min_error_test
 
     def test(self, test_set, expected_test):
