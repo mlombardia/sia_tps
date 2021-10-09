@@ -1,0 +1,11 @@
+# 1a / 1b / 2
+excercise: 2
+
+# data folder
+data_folder: data
+
+# ex2
+ex2_training: ex2_traindata.txt
+
+# ex1
+ex1_training: europe.csv

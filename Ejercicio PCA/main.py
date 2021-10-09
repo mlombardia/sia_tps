@@ -4,8 +4,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 
-
-
 data = pd.read_csv('europe.csv')
 pd.set_option("display.max_columns", 8)
 dict_data = data.to_dict("list")
@@ -15,6 +13,7 @@ print(dict_data)
 
 std_value_matrix = [dict_data.get("Country")]
 std_value_matrix_only_numbers = []
+labels = []
 
 for key in dict_data.keys():
 
@@ -22,6 +21,7 @@ for key in dict_data.keys():
         variable = dict_data.get(key)
         average = np.average(np.array(variable))
         std = np.std(np.array(variable))
+        labels.append(key)
 
         std_data = []
         for value in variable:
@@ -44,10 +44,6 @@ test = pca.fit_transform(np.array(std_value_matrix_only_numbers).T)
 variance = pca.explained_variance_  # the amount of variance explained by each of the selected components.
 # imprime [3.34669033 1.23109094 1.10256796 0.79888768 0.47480597 0.17492107 0.13029529]
 
-print(test)
-print()
-print(variance)
-
 def biplot(score, coeff, labels):
     xs = score[:, 0]                        # todas las filas, columna 0 de la matriz test
     ys = score[:, 1]                        # filas, columna 1 de la matriz test
@@ -63,13 +59,7 @@ def biplot(score, coeff, labels):
     plt.ylabel("PC{}".format(2))
     plt.grid()
 
-print()
-print("test")
-print(test[:, :])
-print()
-print("test t")
-print(np.transpose(test[:, :]))
-biplot(test[:, :], np.transpose(test[:, :]), list(std_value_matrix[0]))
+biplot(test[:, :], np.transpose(test[:, :]), labels)
 plt.show()
 
 
