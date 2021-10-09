@@ -4,42 +4,45 @@ import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 
-data = pd.read_csv('europe.csv')
-pd.set_option("display.max_columns", 8)
-dict_data = data.to_dict("list")
-print(dict_data)
+def standarize_data(path):
+    data = pd.read_csv(path)
+    pd.set_option("display.max_columns", 8)
+    dict_data = data.to_dict("list")
+
+    countries = list(dict_data.get("Country"))
+    #std_value_matrix = [dict_data.get("Country")]
+    std_value_matrix_only_numbers = []
+    labels = []
+
+    for key in dict_data.keys():
+
+        if key != 'Country':
+            variable = dict_data.get(key)
+            average = np.average(np.array(variable))
+            std = np.std(np.array(variable))
+            labels.append(key)
+
+            std_data = []
+            for value in variable:
+                std_data.append((value - average) / std)
+
+            #std_value_matrix.append(std_data)
+            std_value_matrix_only_numbers.append(std_data)
+
+    return countries, std_value_matrix_only_numbers, labels
 
 # estandarizaciones
 
-std_value_matrix = [dict_data.get("Country")]
-std_value_matrix_only_numbers = []
-labels = []
-
-for key in dict_data.keys():
-
-    if key != 'Country':
-        variable = dict_data.get(key)
-        average = np.average(np.array(variable))
-        std = np.std(np.array(variable))
-        labels.append(key)
-
-        std_data = []
-        for value in variable:
-            std_data.append((value - average) / std)
-
-        std_value_matrix.append(std_data)
-        std_value_matrix_only_numbers.append(std_data)
-
-
-print("std matrix", std_value_matrix)
 
 # cov_matrix = np.cov(std_value_matrix_only_numbers)
 # print()
 # print("cov matrix: ", cov_matrix)
 # print()
 
+countries, std_value_matrix, labels = standarize_data('europe.csv')
+
 pca = PCA(n_components=3)
-test = pca.fit_transform(np.array(std_value_matrix_only_numbers).T)
+test = pca.fit_transform(np.array(std_value_matrix).T)
 
 variance = pca.explained_variance_  # the amount of variance explained by each of the selected components.
 # imprime [3.34669033 1.23109094 1.10256796 0.79888768 0.47480597 0.17492107 0.13029529]
