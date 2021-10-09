@@ -1,7 +1,9 @@
 import sklearn as skl
 import pandas as pd
 import numpy as np
+from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
+
 
 
 data = pd.read_csv('europe.csv')
@@ -36,17 +38,39 @@ print("std matrix", std_value_matrix)
 # print("cov matrix: ", cov_matrix)
 # print()
 
-pca = PCA(n_components=4)
+pca = PCA(n_components=3)
 test = pca.fit_transform(np.array(std_value_matrix_only_numbers).T)
 
-print(test)
-# print()
-# print(pca.components_)
+variance = pca.explained_variance_  # the amount of variance explained by each of the selected components.
+# imprime [3.34669033 1.23109094 1.10256796 0.79888768 0.47480597 0.17492107 0.13029529]
 
-# eigenvals, eigenvecs = np.linalg.eig(cov_matrix)
-#
-# print()
-# print(eigenvals)
-# print()
-# print(eigenvecs)
+print(test)
+print()
+print(variance)
+
+def biplot(score, coeff, labels):
+    xs = score[:, 0]                        # todas las filas, columna 0 de la matriz test
+    ys = score[:, 1]                        # filas, columna 1 de la matriz test
+    n = coeff.shape[0]
+    scalex = 1.0 / (xs.max() - xs.min())
+    scaley = 1.0 / (ys.max() - ys.min())
+    plt.scatter(xs * scalex, ys * scaley, s=5)
+    for i in range(len(labels)):
+        plt.arrow(0, 0, coeff[0, i], coeff[1, i], color='r', alpha=0.5)
+        plt.text(coeff[0, i] * 1.15, coeff[1, i] * 1.15, labels[i], color='g', ha='center', va='center')
+
+    plt.xlabel("PC{}".format(1))
+    plt.ylabel("PC{}".format(2))
+    plt.grid()
+
+print()
+print("test")
+print(test[:, :])
+print()
+print("test t")
+print(np.transpose(test[:, :]))
+biplot(test[:, :], np.transpose(test[:, :]), list(std_value_matrix[0]))
+plt.show()
+
+
 
