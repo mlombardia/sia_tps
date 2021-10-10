@@ -47,23 +47,23 @@ test = pca.fit_transform(np.array(std_value_matrix).T)
 variance = pca.explained_variance_  # the amount of variance explained by each of the selected components.
 # imprime [3.34669033 1.23109094 1.10256796 0.79888768 0.47480597 0.17492107 0.13029529]
 
-def biplot(score, coeff, labels):
+def biplot(score, coeff, labels, countries_labels):
     xs = score[:, 0]                        # todas las filas, columna 0 de la matriz test
     ys = score[:, 1]                        # filas, columna 1 de la matriz test
     n = coeff.shape[0]
     scalex = 1.0 / (xs.max() - xs.min())
     scaley = 1.0 / (ys.max() - ys.min())
     plt.scatter(xs * scalex, ys * scaley, s=5)
-    for i in range(len(labels)):
-        plt.arrow(0, 0, coeff[0, i], coeff[1, i], color='r', alpha=0.5)
-        plt.text(coeff[0, i] * 1.15, coeff[1, i] * 1.15, labels[i], color='g', ha='center', va='center')
+    for i in range(n):
+        plt.arrow(0, 0, coeff[i, 0], coeff[i, 1], color='r', alpha=0.5)
+        plt.text(coeff[i, 0] * 1.15, coeff[i, 1] * 1.15, labels[i], color='g', ha='center', va='center')
+    for i in range(len(xs)):
+        plt.text(xs[i] * scalex, ys[i] * (scaley+0.015), countries_labels[i], color='b', ha='center', va='center')
 
     plt.xlabel("PC{}".format(1))
     plt.ylabel("PC{}".format(2))
     plt.grid()
 
-biplot(test[:, :], np.transpose(test[:, :]), labels)
+biplot(test[:, 0:2], np.transpose(pca.components_[0:2, :]), labels, countries)
 plt.show()
-
-
 
