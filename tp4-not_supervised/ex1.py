@@ -31,10 +31,7 @@ def ex1a(data):
     neurons = np.array(neurons)
 
     network = Kohonen(k, data, neurons, 1)
-    winner, row, neuron = network.find_winner_neuron()
-    print(winner.weights, row, neuron)
-    network.graphic_entries_per_node()
-    network.graphic_u_matrix()
+    network.do_kohonen()
 
 
 def ex1b(data):
