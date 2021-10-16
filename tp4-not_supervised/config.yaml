@@ -6,7 +6,7 @@ data_folder: data
 
 # ex1
 ex1_training: europe.csv
-subitem: a  # a / b
+subitem: b  # a / b
 
 # ex2
 ex2_training: ex2_traindata.txt

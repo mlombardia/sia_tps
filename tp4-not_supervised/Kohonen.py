@@ -61,6 +61,7 @@ class Kohonen:
         winner_column = 0
         ii = 0
         shuffled_list = [a for a in range(0, len(self.data))]
+        random.shuffle(shuffled_list)
         initial_eta = 0.95
         while ii < self.iter:
             for i in shuffled_list:

@@ -2,6 +2,8 @@ import os
 
 import pandas as pd
 from Kohonen import *
+from Oja import *
+
 
 def ex1(config):
     data_folder = config['data_folder']
@@ -35,4 +37,5 @@ def ex1a(data):
 
 
 def ex1b(data):
-    pass
+    oja = Oja(data.shape[1]-1)
+    oja.train(data)
