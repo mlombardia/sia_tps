@@ -25,7 +25,7 @@ class Oja:
                 past_w = self.weights
                 #OJA:
                 # y = np.dot(self.weights.T, np.transpose(training_set[j]).T)
-                y = np.inner(training_set[j], self.weights)
+                y = np.dot(training_set[j], self.weights)
                 self.weights += self.eta * y * (training_set[j]-y*past_w)
 
                 # self.weights += self.eta * (np.dot(y, np.transpose(training_set))- np.dot(y ** 2, self.weights))  # sanger y=Wtx
@@ -44,9 +44,10 @@ class Oja:
                 #     self.weights.T.dot(biased_input)) * biased_input.T)
                 j += 1
 
-                print("Epoch: ", ii)
-                print("weights: ", self.weights)
+
             ii += 1
+        print("Epoch: ", ii)
+        print("weights: ", self.weights)
         return
 
     def standarize(self, data):
