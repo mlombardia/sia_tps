@@ -1,5 +1,5 @@
 # 1 / 2
-exercise: 1
+exercise: 2
 
 # data folder
 data_folder: data
@@ -9,4 +9,4 @@ ex1_training: europe.csv
 subitem: b  # a / b
 
 # ex2
-ex2_training: ex2_traindata.txt
+letters: letters.txt
