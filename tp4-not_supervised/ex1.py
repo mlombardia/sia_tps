@@ -37,5 +37,7 @@ def ex1a(data):
 
 
 def ex1b(data):
-    oja = Oja(data.shape[1]-1)
-    oja.train(data)
+    oja = Oja(data.shape[1]-1, len(data))  # -1 por los paises
+    weights = oja.train(data)
+    print(weights)
+
