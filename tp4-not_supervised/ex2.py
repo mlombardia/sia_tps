@@ -18,10 +18,10 @@ def parse(config):
             i = 0
             while i < len(line):
                 if line[i] == "1":
-                    letter.append(1)
+                    letter.append(1.)
                     i += 1
                 elif line[i] == "-":
-                    letter.append(-1)
+                    letter.append(-1.)
                     i += 2
                 else:
                     i += 1
@@ -33,11 +33,18 @@ def reverse(letter):
         aux.append(c * -1)
     return aux
 
+def printLetter(letter):
+    for i in range(5):
+        print(letter[i*5], letter[(i*5)+1], letter[(i*5)+2], letter[(i*5)+3], letter[(i*5)+4])
+        # d += 1
+        # if d%5 == 0:
+        #     print("\n")
+
 def noise(letter, p):
     aux = []
     for c in letter:
-        num = random.uniform(0,1)
-        if p < num:
+        num = random.uniform(0, 1)
+        if p > num:
             aux.append(c * -1)
         else:
             aux.append(c)
@@ -47,10 +54,16 @@ def ex2(config):
     print("HELLO")
 
     letters = parse(config)
+    printLetter(letters[3])
+    print("Goodbye")
 
     hopfield = Hopfield(letters)
+    print(hopfield.weights)
 
-    print(hopfield.stimulus(noise(letters[0], 0)))
+    for i in range(len(letters)):
+        print("\nletter without noise being tested:")
+        printLetter(letters[i])
+        print(hopfield.stimulus(noise(letters[i], 0.1)))
 
 
 

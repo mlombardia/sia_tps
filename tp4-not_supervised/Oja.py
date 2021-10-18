@@ -4,8 +4,6 @@ import random
 from sklearn.preprocessing import StandardScaler
 
 class Oja:
-    # hago el init con el set de training, el de valores esperados, como pondero el error y la cantidad de iteraciones,
-    # y genero random los pesos
     def __init__(self, input_size, data_size, eta=0.00001):
         self.eta = eta
         self.weights = np.random.uniform(-1, 1, input_size)

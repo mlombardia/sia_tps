@@ -23,15 +23,14 @@ class Hopfield:
 
     def stimulus(self, unknown):
         S = []
-        S.append(unknown) #S[0]
+        S.append(np.array(unknown)) #S[0]
         S.append(np.sign(np.dot(self.weights, S[-1]))) #S[1]
-        S.append(np.sign(np.dot(self.weights, S[-1]))) #S[2]
-        i = 2
-        while S[i].all() != S[i - 1].all():
+        i = 1
+        while S[i].tolist() != S[i-1].tolist():
             S.append(np.sign(np.dot(self.weights, S[-1])))
             i += 1
         #se estancó
-        if S[-1] in self.patterns:
+        if S[-1].tolist() in self.patterns:
             return S[-1], True #el patrón
         else:
             return S[-1], False #estado espureo
