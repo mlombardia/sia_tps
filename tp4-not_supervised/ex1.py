@@ -22,7 +22,7 @@ def ex1(config):
 
 
 def ex1a(data):
-    k = 4
+    k = 12
     neurons = []
     for i in range(k):
         neuron_row = []

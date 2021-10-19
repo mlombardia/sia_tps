@@ -4,7 +4,7 @@ import random
 from sklearn.preprocessing import StandardScaler
 
 class Oja:
-    def __init__(self, input_size, data_size, eta=0.00001):
+    def __init__(self, input_size, data_size, eta=0.0001):
         self.eta = eta
         self.weights = np.random.uniform(-1, 1, input_size)
         self.iterations_qty = 500*data_size
@@ -30,7 +30,7 @@ class Oja:
         norm_weights = self.weights
         norma2 = math.sqrt(sum(norm_weights * norm_weights))   # calculo la norma 2
         norm_weights = norm_weights / norma2                   # lo divido por la norma
-
+        print(ii)
         return norm_weights
 
     def standarize(self, data):

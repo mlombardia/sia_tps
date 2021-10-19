@@ -51,16 +51,22 @@ def noise(letter, p):
     return aux
 
 def ex2(config):
-    print("HELLO")
 
     letters = parse(config)
     # printLetter(letters[3])
     # print(len(letters))
-    print("Goodbye")
-    print(letters[2])
-    print(letters[20])
-    print(letters[23])
-    print(letters[24])
+    print("Letra C")
+    printLetter(letters[2])
+    print()
+    print("Letra U")
+    printLetter(letters[20])
+    print()
+    print("Letra X")
+    printLetter(letters[23])
+    print()
+    print("Letra Y")
+    printLetter(letters[24])
+    print()
 
     learn = []
     learn.append(letters[2]) #C
@@ -71,11 +77,13 @@ def ex2(config):
     hopfield = Hopfield(learn)
     # print(hopfield.weights)
 
+    p = 0.1
+    print("Noise percentage", p)
 
     for i in range(len(learn)):
         print("\nletter without noise being tested:")
         printLetter(learn[i])
-        print(hopfield.stimulus(noise(learn[i], 0.1)))
+        print(hopfield.stimulus(noise(learn[i], p)))
 
 
 

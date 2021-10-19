@@ -68,6 +68,8 @@ class Kohonen:
                 winner, winner_row, winner_column = self.get_neuron(i)
                 self.get_and_update_neighbours(winner_row, winner_column, self.data[i], initial_eta if ii == 0 else 1/ii)
                 winner.registers += 1
+                if ii == self.iter-1:
+                    winner.final_registers += 1
             ii += 1
         return winner, winner_row, winner_column
 
@@ -217,6 +219,35 @@ class Kohonen:
         plot.colorbar(im)
         plot.show()
 
+    def graphic_final_entries_per_node(self):
+        to_display = np.zeros((self.k, self.k))
+        for i in range(self.k):
+            for j in range(self.k):
+                to_display[i][j] = self.neurons[i][
+                    j].final_registers  # le pongo cuantos registros hay en cada nodo de la matriz de neuronas
+
+        fig, axis = plot.subplots()
+        axis.set_title(f'Final registers per node - k={self.k}')
+        im = plot.imshow(to_display, cmap='hot', interpolation='nearest')
+        axis.set_xticks(np.arange(self.k))
+        axis.set_yticks(np.arange(self.k))
+        axis.set_xticklabels(range(self.k))
+        axis.set_yticklabels(range(self.k))
+
+        # Loop over data dimensions and create text annotations.
+        max_val = np.amax(np.array(to_display))
+
+        for i in range(self.k):
+            for j in range(self.k):
+                if to_display[i][j] > max_val / 2:
+                    color = "k"
+                else:
+                    color = "w"
+                text = axis.text(j, i, f'{int(to_display[i][j])}', ha="center", va="center", color=color)
+
+        plot.colorbar(im)
+        plot.show()
+
     def do_kohonen(self):
         winner, row, column = self.find_winner_neuron()
         print("winner weights")
@@ -225,6 +256,7 @@ class Kohonen:
         self.graphic_entries_per_node()
         self.graphic_u_matrix()
         self.graphic_countrys_agrupations()
+        self.graphic_final_entries_per_node()
 
 
 

@@ -43,26 +43,4 @@ class Hopfield:
         return aux
 
 
-    # def iteration(self):
-    #     for i in range(len(self.S)):
-    #         S_aux = []
-    #         aux = 0
-    #         for j in range(len(self.weights)):
-    #             if j != i:
-    #                 aux += self.weights[i][j] * self.S[j]
-    #         S_aux.append(np.sign(aux))
-    #     self.S = S_aux
-
-
-# - init weights (con patrones almacenados/conocidos)
-
-# para primer patron desconocido
-# - viene nuevo patrón -> S(t+1), S(t+2), ... , S(t) = S(t-1)
-# - este es el patron
-
-# para segundo patron desconocido
-# - viene nuevo patrón -> S(t+1), S(t+2), ... , S(t) = S(t-1)
-# - este es el patron
-
-##meterle 1 cuando sign da
 

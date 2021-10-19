@@ -55,8 +55,8 @@ def biplot(score, coeff, labels, countries_labels):
     xs = score[:, 0]  # todas las filas, columna 0 de la matriz test
     ys = score[:, 1]  # filas, columna 1 de la matriz test
     n = coeff.shape[0]
-    scalex = 1.0 #/ (xs.max() - xs.min())
-    scaley = 1.0 #/ (ys.max() - ys.min())
+    scalex = 0.25 #/ (xs.max() - xs.min())
+    scaley = 0.25 #/ (ys.max() - ys.min())
     plt.scatter(xs * scalex, ys * scaley, s=5)
     for i in range(n):
         plt.arrow(0, 0, coeff[i, 0], coeff[i, 1], color='r', alpha=0.5)
