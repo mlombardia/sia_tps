@@ -24,16 +24,24 @@ class Hopfield:
     def stimulus(self, unknown):
         S = []
         S.append(np.array(unknown)) #S[0]
-        S.append(np.sign(np.dot(self.weights, S[-1]))) #S[1]
+        S.append(self.dot_sign(self.weights, S[0])) #S[1]
         i = 1
         while S[i].tolist() != S[i-1].tolist():
-            S.append(np.sign(np.dot(self.weights, S[-1])))
+            S.append(self.dot_sign(self.weights, S[-1]))
             i += 1
         #se estancó
         if S[-1].tolist() in self.patterns:
             return S[-1], True #el patrón
         else:
             return S[-1], False #estado espureo
+
+    def dot_sign(self, arr1, arr2):
+        aux = np.sign(np.dot(arr1, arr2))
+        for j in range(len(aux)):
+            if aux[j] == 0:
+                aux[j] = 1
+        return aux
+
 
     # def iteration(self):
     #     for i in range(len(self.S)):
@@ -55,3 +63,6 @@ class Hopfield:
 # para segundo patron desconocido
 # - viene nuevo patrón -> S(t+1), S(t+2), ... , S(t) = S(t-1)
 # - este es el patron
+
+##meterle 1 cuando sign da
+

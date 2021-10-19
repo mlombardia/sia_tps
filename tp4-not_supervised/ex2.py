@@ -54,16 +54,28 @@ def ex2(config):
     print("HELLO")
 
     letters = parse(config)
-    printLetter(letters[3])
+    # printLetter(letters[3])
+    # print(len(letters))
     print("Goodbye")
+    print(letters[2])
+    print(letters[20])
+    print(letters[23])
+    print(letters[24])
 
-    hopfield = Hopfield(letters)
-    print(hopfield.weights)
+    learn = []
+    learn.append(letters[2]) #C
+    learn.append(letters[20]) #U
+    learn.append(letters[23]) #X
+    learn.append(letters[24]) #Y
 
-    for i in range(len(letters)):
+    hopfield = Hopfield(learn)
+    # print(hopfield.weights)
+
+
+    for i in range(len(learn)):
         print("\nletter without noise being tested:")
-        printLetter(letters[i])
-        print(hopfield.stimulus(noise(letters[i], 0.1)))
+        printLetter(learn[i])
+        print(hopfield.stimulus(noise(learn[i], 0.1)))
 
 
 

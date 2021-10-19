@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 *.xml
 tp3-perceptrons/.idea/tp3-perceptrons.iml
+*.iml
