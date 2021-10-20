@@ -86,41 +86,50 @@ def ex2(config):
     hopfield = Hopfield(learn)
 
 
-    ##ACÁ PARA DIBUJAR LOS RESULTADOS
-    # for i in range(len(learn)):
-    #     print("\nLetter without noise:")
-    #     printLetter(learn[i])
-    #     ans = hopfield.stimulus(noise(learn[i], 0.3))
-    #     print("\nFound state:")
-    #     print(printLetter(ans[0]))
+    #ACÁ PARA DIBUJAR LOS RESULTADOS
+    for i in range(len(learn)):
+        print("\nLetter without noise:")
+        printLetter(learn[i])
+        ans = hopfield.stimulus(noise(learn[i], 0.3))
+        print("\nFound state:")
+        print(printLetter(ans[0]))
 
+    x = []
+    hits_list = []
+    miss_list = []
+    spur_list = []
 
-    ##ACÁ PARA LOS DATOS DEL GRAFICO:
-    # for j in range(100):
-    #     hits = 0
-    #     miss = 0
-    #     spur = 0
-    #     p = j/100
-    #     # print("Noise percentage", p)
-    #     for i in range(len(learn)):
-    #         # print("\nLetter without noise:")
-    #         # printLetter(learn[i])
-    #         ans = hopfield.stimulus(noise(learn[i], p))
-    #         if ans[0] is False:
-    #             miss += 1
-    #         elif ans[1] == True:
-    #             if eq(ans[0], learn[i]):
-    #                 hits += 1
-    #             else:
-    #                 # printLetter(learn[i])
-    #                 # printLetter(ans[0])
-    #                 miss += 1
-    #             hits += 1
-    #         else:
-    #             spur += 1
-    #         # print("\nFound state:")
-    #         # print(printLetter(ans[0]))
-    #     print("i", j, " hits ", hits, ", misses ", miss, ", spur ", spur)
+    #ACÁ PARA LOS DATOS DEL GRAFICO:
+    for j in range(100):
+        hits = 0
+        miss = 0
+        spur = 0
+        p = j/100
+        x.append(p)     # en x appendeo el ruido asi en ese eje queda el ruido
+        print()
+        print("Noise percentage", p)
+        for i in range(len(learn)):
+            # print("\nLetter without noise:")
+            # printLetter(learn[i])
+            ans = hopfield.stimulus(noise(learn[i], p))
+            if ans[0] is False:
+                miss += 1
+            elif ans[1] == True:
+                if eq(ans[0], learn[i]):
+                    hits += 1
+                else:
+                    # printLetter(learn[i])
+                    # printLetter(ans[0])
+                    miss += 1
+                hits += 1
+            else:
+                spur += 1
+        hits_list.append(hits)
+        miss_list.append(miss)
+        spur_list.append(spur)
+            # print("\nFound state:")
+            # print(printLetter(ans[0]))
+        print("i", j, " hits ", hits, ", misses ", miss, ", spur ", spur)
 
 
 

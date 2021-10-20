@@ -22,10 +22,6 @@ class Kohonen:
     def __init__(self, k, data, neurons, radius):
         self.data_with_names = np.array(data)
         self.data = self.standarize(data)
-        print(self.data_with_names)
-        print()
-        print(self.data)
-        print()
         self.k = k
         self.iter = 50*k
         self.neurons = neurons
@@ -250,9 +246,10 @@ class Kohonen:
 
     def do_kohonen(self):
         winner, row, column = self.find_winner_neuron()
-        print("winner weights")
+        print("winner weights:")
         print(winner.weights)
-        print("winner row", row, "winner_column", column)
+        print()
+        print("winner row: ", row, "winner_column: ", column)
         self.graphic_entries_per_node()
         self.graphic_u_matrix()
         self.graphic_countrys_agrupations()
