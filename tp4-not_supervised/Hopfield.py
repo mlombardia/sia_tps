@@ -29,6 +29,8 @@ class Hopfield:
         while S[i].tolist() != S[i-1].tolist():
             S.append(self.dot_sign(self.weights, S[-1]))
             i += 1
+            if i >= 25:
+                return False, False
         #se estancó
         if S[-1].tolist() in self.patterns:
             return S[-1], True #el patrón
