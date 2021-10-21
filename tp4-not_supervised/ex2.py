@@ -1,6 +1,6 @@
 import os
 import random
-
+import matplotlib.pyplot as plt
 import numpy as np
 
 from Hopfield import *
@@ -73,15 +73,15 @@ def ex2(config):
     letters = parse(config)
     learn = []
 
-    # learn.append(letters[2]) #C
+    #learn.append(letters[2]) #C
     learn.append(letters[10]) #K
     learn.append(letters[20]) #U
-    # learn.append(letters[23]) #X
+    #learn.append(letters[23]) #X
     learn.append(letters[9]) #J
     learn.append(letters[24]) #Y
-    # learn.append(letters[18]) #S
-    # learn.append(letters[14]) #O
-    # learn.append(letters[8]) #I
+    #learn.append(letters[18]) #S
+    #learn.append(letters[14]) #O
+    #learn.append(letters[8]) #I
 
     hopfield = Hopfield(learn)
 
@@ -98,14 +98,15 @@ def ex2(config):
     hits_list = []
     miss_list = []
     spur_list = []
-
+    j=0
     #ACÁ PARA LOS DATOS DEL GRAFICO:
-    for j in range(100):
+    while j < 100:
         hits = 0
         miss = 0
         spur = 0
         p = j/100
         x.append(p)     # en x appendeo el ruido asi en ese eje queda el ruido
+        j += 4
         print()
         print("Noise percentage", p)
         for i in range(len(learn)):
@@ -121,7 +122,6 @@ def ex2(config):
                     # printLetter(learn[i])
                     # printLetter(ans[0])
                     miss += 1
-                hits += 1
             else:
                 spur += 1
         hits_list.append(hits)
@@ -130,6 +130,14 @@ def ex2(config):
             # print("\nFound state:")
             # print(printLetter(ans[0]))
         print("i", j, " hits ", hits, ", misses ", miss, ", spur ", spur)
+    plot(x, [hits_list[0:25],miss_list[0:25],spur_list[0:25]],['hits','miss','spur'], 'Noise %', 'Qty.', 'Hits/miss/spur over Noise evolution ')
 
+def plot(x_info, y_info, line_label, xlabel, ylabel, legend):
+    for i in range(len(y_info)):
+        plt.plot(x_info, y_info[i], label=line_label[i])
 
+    plt.xlabel(xlabel, fontsize=16)
+    plt.ylabel(ylabel, fontsize=16)
+    plt.legend(title=legend)
+    plt.show()
 
