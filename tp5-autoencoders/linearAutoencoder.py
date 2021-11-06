@@ -3,9 +3,9 @@ from font_utils import *
 
 class LinearAutoencoder:
 
-    layer1 = NeuronLayer(32, get_input())
-    layer2 = NeuronLayer(2, get_input())
-    layer3 = NeuronLayer(32, get_input())
+    layer1 = NeuronLayer(32, 7)
+    layer2 = NeuronLayer(2)
+    layer3 = NeuronLayer(32, 7)
 
     encoderDecoder = MultiLayerPerceptron([layer1, layer2, layer3])
 
