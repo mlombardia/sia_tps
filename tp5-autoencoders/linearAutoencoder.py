@@ -12,7 +12,13 @@ def transform(t):
     return t/255
 
 def detransform(t):
-    return np.rint(t*255)
+    to_detransform = np.rint(t*255)
+    for i in range(len(to_detransform)):
+        if to_detransform[i] > 255:
+            to_detransform[i] = 255
+        if to_detransform[i] < 0:
+            to_detransform[i] = 0
+    return to_detransform
 
 x = transform(x)
 
