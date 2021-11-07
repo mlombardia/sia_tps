@@ -20,11 +20,11 @@ def der_lineal_act(x):
 
 
 def sigmoid_act(x):
-    return 1 / (1 + np.exp(-2 * x))
+    return 1 / (1 + np.exp(-1 * x))
 
 
 def der_sigmoid_act(x):
-    return (2*np.exp(-2*x)) / ((1+np.exp(-2*x))**2)
+    return sigmoid_act(x)*(1-sigmoid_act(x))
 
 
 def tanh_act(x):

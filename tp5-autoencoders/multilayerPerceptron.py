@@ -16,17 +16,17 @@ class NeuronLayer:  # es una matriz
 
     def init_weights(self, inputs=None):
         self.inputs = inputs if inputs is not None else self.inputs
-        print()
-        if inputs is None:
-            print("inputs + 1 = ", self.inputs + 1)
-        else:
-            print("inputs + 1 = ", inputs + 1)
-        print("neurons qty = ", self.neurons_qty)
+        # print()
+        # if inputs is None:
+        #     print("inputs + 1 = ", self.inputs + 1)
+        # else:
+        #     print("inputs + 1 = ", inputs + 1)
+        # print("neurons qty = ", self.neurons_qty)
         self.weights = 2 * np.random.random((self.neurons_qty, self.inputs + 1)) - 1
         # weights es una matriz de neurons_qty x inputs+1
         # es inputs+1 por el biased
         # los numeros de los inputs entre -1 y 1
-        print(self.weights)
+        # print(self.weights)
 
     def get_functions(self, activation_function):
         if activation_function == "tanh":
@@ -70,11 +70,12 @@ class NeuronLayer:  # es una matriz
 
 
 class MultiLayerPerceptron:
-    def __init__(self, neuron_layers, eta=0.01, delta=0.049):
+    def __init__(self, neuron_layers, eta=0.01, delta=0.049, init_layers=True):
         self.eta = eta
         self.delta = delta
         self.neuron_layers = neuron_layers
-        self._init_layers()
+        if init_layers:
+            self._init_layers()
 
     def _init_layers(self):
         for i in range(len(self.neuron_layers)):
@@ -137,7 +138,7 @@ class MultiLayerPerceptron:
         random.shuffle(shuffled_list)
         p = len(training_set)
         Error = 1
-        min_error = 2 * p
+        min_error = float("inf")
         errors = []
         training_accuracies = []
         epochs = []
