@@ -1,3 +1,6 @@
+import numpy as np
+import  binascii
+
 font1_input = [[0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
                [0x04, 0x04, 0x04, 0x04, 0x04, 0x00, 0x04],
                [0x09, 0x09, 0x12, 0x00, 0x00, 0x00, 0x00],
@@ -107,9 +110,44 @@ font3_output = [0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a
                 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7a, 0x7b, 0x7c, 0x7d, 0x7e, 0x7f]
 
 
-def get_input():
-    return font1_input
+def get_input(font):
+    if font == 1:
+        return font1_input
+    elif font == 2:
+        return font2_input
+    else:
+        return font3_input
+
+def get_output(font):
+    if font == 1:
+        return font1_output
+    elif font == 2:
+        return font2_output
+    else:
+        return font3_output
+
+def printFont(font):
+    #font = (0x1e, 0x11, 0x11, 0x1e, 0x10, 0x10, 0x10)  # 0x50, P
+    for i in font:
+
+        a = format(i, "b").zfill(5)
+        line = ""
+        for c in a:
+            if c != "0" and c != 0:
+                line += "█"
+            else:
+                line += " "
+        print(line)
+        line = ""
+
+def toHexa(arr):
+    to_ret = []
+    for i in arr.astype(np.int64):
+        to_ret.append(hex(i))
+    print(to_ret)
+    return to_ret
 
 
-def get_output():
-    return font1_output
+
+
+
