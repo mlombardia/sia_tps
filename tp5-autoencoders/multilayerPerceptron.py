@@ -13,6 +13,8 @@ class NeuronLayer:  # es una matriz
         self.weights = None
         self.h = None
         self.v = None
+        self.momentum = False
+        self.alpha = None
 
     def init_weights(self, inputs=None):
         self.inputs = inputs if inputs is not None else self.inputs
@@ -61,19 +63,26 @@ class NeuronLayer:  # es una matriz
         return output
 
     def back_propagate(self, dif, v, eta):
+
         v = np.insert(v, 0, 1)
         delta = np.multiply(self.df(self.h), dif)
         aux = v.reshape((-1, 1))
         d_w = eta * v.reshape((-1, 1)) * delta
-        self.weights = self.weights + np.transpose(d_w)
+        if self.momentum:
+            self.weights = (np.transpose(d_w)) + (self.alpha * self.weights)
+        else:
+            self.weights = self.weights + np.transpose(d_w)
         return delta
 
 
 class MultiLayerPerceptron:
-    def __init__(self, neuron_layers, eta=0.01, delta=0.049, init_layers=True):
+    def __init__(self, neuron_layers, eta=0.001, delta=0.049, init_layers=True, momentum = False):
+        self.alpha = 0.8
+        self.beta = 0.8
         self.eta = eta
         self.delta = delta
         self.neuron_layers = neuron_layers
+        self.momentum = momentum
         if init_layers:
             self._init_layers()
 
@@ -84,6 +93,8 @@ class MultiLayerPerceptron:
                     i - 1].neurons_qty)  # se fija cuantas salidas (neuronas) tiene la capa anterior y se lo pone a esta nueva capa
             else:
                 self.neuron_layers[i].init_weights()  # no le paso nada porque ya lo tenia del main
+            self.neuron_layers[i].momentum = self.momentum
+            self.neuron_layers[i].alpha = self.alpha
 
     def predict(self, a_input):
         res = a_input
@@ -129,7 +140,7 @@ class MultiLayerPerceptron:
             delta = self.neuron_layers[i].back_propagate(dif, v, self.eta)
         return delta
 
-    def train(self, training_set, expected_set, error_epsilon=0, iterations_qty=10000):
+    def train(self, training_set, expected_set, error_epsilon=0, iterations_qty=10000, adaptative_eta=False):
         training_set = np.array(training_set)
         expected_set = np.array(expected_set)
         ii = 0
@@ -165,6 +176,12 @@ class MultiLayerPerceptron:
                 j += 1
             training_accuracies.append(training_correct_cases / len(training_set))
             Error = self.calculate_mean_square_error(training_set, expected_set)
+            if adaptative_eta and len(errors) > 1:
+                if (Error - errors[-1]) < 0: # and (errors[-1] - errors[-2]) < 0:
+                    self.eta += self.alpha
+                elif (Error - errors[-1]) > 0:
+                    self.eta -= self.beta * self.eta
+
             if Error < min_error:
                 min_error = Error
             errors.append(Error)
