@@ -127,9 +127,9 @@ def get_output(font):
         return font3_output
 
 def printFont(font):
+    '''
     #font = (0x1e, 0x11, 0x11, 0x1e, 0x10, 0x10, 0x10)  # 0x50, P
     for i in font:
-
         a = format(i, "b").zfill(5)
         line = ""
         for c in a:
@@ -139,6 +139,19 @@ def printFont(font):
                 line += " "
         print(line)
         line = ""
+        '''
+    char = 0
+    line = ""
+    for i in font:
+        if i > 0:
+            line += "█"
+        else:
+            line += " "
+        char += 1
+        if char %5 == 0:
+            line += "\n"
+    print(line)
+
 
 def toHexa(arr):
     to_ret = []
