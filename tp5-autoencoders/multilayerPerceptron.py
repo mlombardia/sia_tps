@@ -80,6 +80,7 @@ class NeuronLayer:  # es una matriz
 
 class MultiLayerPerceptron:
     def __init__(self, neuron_layers, eta=0.001, delta=0.049, init_layers=True, momentum = False):
+        self.momentum_number = 0.8
         self.alpha = 0.0001
         self.beta = 0.0001
         self.eta = eta
@@ -98,7 +99,7 @@ class MultiLayerPerceptron:
             else:
                 self.neuron_layers[i].init_weights()  # no le paso nada porque ya lo tenia del main
             self.neuron_layers[i].momentum = self.momentum
-            self.neuron_layers[i].alpha = self.alpha
+            self.neuron_layers[i].alpha = self.momentum_number
 
     def predict(self, a_input):
         res = a_input
