@@ -4,8 +4,8 @@ import numpy as np
 
 
 x = np.array(get_input(2))
-x = [x[6], x[7], x[8], x[9], x[10]]
-x = np.array(x)
+##x = [x[6], x[7], x[8], x[9], x[10]]
+#x = np.array(x)
 
 
 #print(x)
@@ -53,9 +53,9 @@ layers = [
     NeuronLayer(35, activation="tanh")
 ]
 
-encoderDecoder = MultiLayerPerceptron(layers, init_layers=True, momentum=False, eta=0.001)
+encoderDecoder = MultiLayerPerceptron(layers, init_layers=True, momentum=True, eta=0.001)
 
-min_error, errors, epochs, training_accuracies = encoderDecoder.train(x, x, iterations_qty=10000, adaptative_eta=False)
+min_error, errors, epochs, training_accuracies = encoderDecoder.train(x, x, iterations_qty=50000, adaptative_eta=True)
 print(min_error)
 
 encoder = MultiLayerPerceptron(encoderDecoder.neuron_layers[0:int(len(layers)/2)], init_layers=False)     # desde el inicio hasta el medio

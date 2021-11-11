@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import random
 from activationFunctions import *
@@ -15,6 +17,7 @@ class NeuronLayer:  # es una matriz
         self.v = None
         self.momentum = False
         self.alpha = None
+        self.last_dw = 0
 
     def init_weights(self, inputs=None):
         self.inputs = inputs if inputs is not None else self.inputs
@@ -63,26 +66,27 @@ class NeuronLayer:  # es una matriz
         return output
 
     def back_propagate(self, dif, v, eta):
-
         v = np.insert(v, 0, 1)
         delta = np.multiply(self.df(self.h), dif)
         aux = v.reshape((-1, 1))
         d_w = eta * v.reshape((-1, 1)) * delta
         if self.momentum:
-            self.weights = (np.transpose(d_w)) + (self.alpha * self.weights)
+            self.weights = np.transpose(d_w) + self.weights + (self.alpha * np.transpose(self.last_dw))
         else:
             self.weights = self.weights + np.transpose(d_w)
+        self.last_dw = d_w
         return delta
 
 
 class MultiLayerPerceptron:
     def __init__(self, neuron_layers, eta=0.001, delta=0.049, init_layers=True, momentum = False):
-        self.alpha = 0.8
-        self.beta = 0.8
+        self.alpha = 0.0001
+        self.beta = 0.0001
         self.eta = eta
         self.delta = delta
         self.neuron_layers = neuron_layers
         self.momentum = momentum
+        self.k = 9
         if init_layers:
             self._init_layers()
 
@@ -155,6 +159,7 @@ class MultiLayerPerceptron:
         epochs = []
         training_correct_cases = 0
         mean_square_error = 0
+        eta_iteration = 0
         while ii < iterations_qty and Error > error_epsilon:
             j = 0
             training_correct_cases = 0
@@ -176,11 +181,27 @@ class MultiLayerPerceptron:
                 j += 1
             training_accuracies.append(training_correct_cases / len(training_set))
             Error = self.calculate_mean_square_error(training_set, expected_set)
+
             if adaptative_eta and len(errors) > 1:
-                if (Error - errors[-1]) < 0: # and (errors[-1] - errors[-2]) < 0:
-                    self.eta += self.alpha
+                #print(eta_iteration)
+                if (Error - errors[-1]) < 0:
+                    if eta_iteration <= 0:
+                        eta_iteration -= 1
+                    else:
+                        eta_iteration = 0
                 elif (Error - errors[-1]) > 0:
-                    self.eta -= self.beta * self.eta
+                    if eta_iteration >= 0:
+                        eta_iteration += 1
+                    else:
+                        eta_iteration = 0
+
+                if eta_iteration < -self.k: # and (errors[-1] - errors[-2]) < 0:
+                    if self.eta + self.alpha * self.eta < math.inf: #MAX
+                        self.eta += self.alpha
+                elif eta_iteration > self.k:
+                    if self.eta - self.beta * self.eta > -math.inf: #MIN
+                        self.eta -= self.beta * self.eta
+                #print(self.eta)
 
             if Error < min_error:
                 min_error = Error
