@@ -4,10 +4,10 @@ import numpy as np
 
 
 x = np.array(get_input(2))
-x = [x[6], x[7], x[8], x[9], x[10]]
-x = np.array(x)
+#x = [x[6], x[11], x[19], x[9], x[10]]
+#x = np.array(x)
 
-RAND = 0.1
+RAND = 1/35
 
 
 
@@ -18,12 +18,13 @@ x_std = np.std(x, axis=0)   # normalizacion de datos
 
 # printFont(x[4])
 
+
 def noise(t):
     to_ret = []
     for i in t:
         aux = []
         for num in i:
-            a = format(num, "b").zfill(5)
+            a = format(num, "b").zfill(5) #a = 00111010101
             for j in a:
                 rand = random.uniform(0, 1)
                 if j == "0":
@@ -54,16 +55,19 @@ def transform(t): #to binary: [7 6] = [0 0 1 1 1 0 0 1 1 0]
         to_ret.append(aux)
     return np.array(to_ret)
 
-x = transform(x)
 x_noise = noise(x)
 x_noise2 = noise(x)
-#print(x)
+x = transform(x)
+
+#printFont(x[0])
+#printFont(x_noise[0])
+#printFont(x_noise2[0])
 
 layers = [
     # "capa" inicial que son los valores
     NeuronLayer(30, 35, activation="tanh"), #35 de entrada
     NeuronLayer(20, activation="tanh"),
-    NeuronLayer(2, activation="tanh"), #latent code Z
+    NeuronLayer(10, activation="tanh"), #latent code Z
     NeuronLayer(20, activation="tanh"),
     NeuronLayer(30, activation="tanh"),
     NeuronLayer(35, activation="tanh")

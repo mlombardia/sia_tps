@@ -197,10 +197,10 @@ class MultiLayerPerceptron:
                         eta_iteration = 0
 
                 if eta_iteration < -self.k: # and (errors[-1] - errors[-2]) < 0:
-                    if self.eta + self.alpha * self.eta < math.inf: #MAX
+                    if self.eta + self.alpha * self.eta < 1000: #MAX
                         self.eta += self.alpha
                 elif eta_iteration > self.k:
-                    if self.eta - self.beta * self.eta > -math.inf: #MIN
+                    if self.eta - self.beta * self.eta > -1000: #MIN
                         self.eta -= self.beta * self.eta
                 #print(self.eta)
 
