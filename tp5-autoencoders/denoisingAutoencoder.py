@@ -75,7 +75,7 @@ layers = [
 
 encoderDecoder = MultiLayerPerceptron(layers, init_layers=True, momentum=True, eta=0.001)
 
-min_error, errors, epochs, training_accuracies = encoderDecoder.train(x_noise, x, iterations_qty=25000, adaptative_eta=True)
+min_error, errors, epochs, training_accuracies = encoderDecoder.train(x_noise, x, iterations_qty=100000, adaptative_eta=True)
 print(min_error)
 
 encoder = MultiLayerPerceptron(encoderDecoder.neuron_layers[0:int(len(layers)/2)], init_layers=False)     # desde el inicio hasta el medio
