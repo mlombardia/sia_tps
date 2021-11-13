@@ -1,14 +1,12 @@
 from multilayerPerceptron import *
 from font_utils import *
 import numpy as np
+import PIL
 
 
 x = np.array(get_input(2))
-#x = [x[6], x[11], x[19], x[9], x[10]]
+##x = [x[6], x[7], x[8], x[9], x[10]]
 #x = np.array(x)
-
-RAND = 1/35
-
 
 
 #print(x)
@@ -17,29 +15,6 @@ x_mean = np.mean(x, axis=0) # normalizacion de datos
 x_std = np.std(x, axis=0)   # normalizacion de datos
 
 # printFont(x[4])
-
-
-def noise(t):
-    to_ret = []
-    for i in t:
-        aux = []
-        for num in i:
-            a = format(num, "b").zfill(5) #a = 00111010101
-            for j in a:
-                rand = random.uniform(0, 1)
-                if j == "0":
-                    if rand < RAND:
-                        aux.append(1)
-                    else:
-                        aux.append(-1)
-                elif j == "1":
-                    if rand < RAND:
-                        aux.append(-1)
-                    else:
-                        aux.append(1)
-        to_ret.append(aux)
-    return np.array(to_ret)
-
 
 def transform(t): #to binary: [7 6] = [0 0 1 1 1 0 0 1 1 0]
     to_ret = []
@@ -55,13 +30,19 @@ def transform(t): #to binary: [7 6] = [0 0 1 1 1 0 0 1 1 0]
         to_ret.append(aux)
     return np.array(to_ret)
 
-x_noise = noise(x)
-x_noise2 = noise(x)
-x = transform(x)
+def detransform(t): #no se usa
+    t = (t+1)/2 #ahora tengo en 0-1
 
-#printFont(x[0])
-#printFont(x_noise[0])
-#printFont(x_noise2[0])
+    to_detransform = np.rint(t*255)
+    for i in range(len(to_detransform)):
+        if to_detransform[i] > 255:
+            to_detransform[i] = 255
+        if to_detransform[i] < 0:
+            to_detransform[i] = 0
+    return to_detransform
+
+x = transform(x)
+#print(x)
 
 layers = [
     # "capa" inicial que son los valores
@@ -75,7 +56,7 @@ layers = [
 
 encoderDecoder = MultiLayerPerceptron(layers, init_layers=True, momentum=True, eta=0.001)
 
-min_error, errors, epochs, training_accuracies = encoderDecoder.train(x_noise, x, iterations_qty=25000, adaptative_eta=True)
+min_error, errors, epochs, training_accuracies = encoderDecoder.train(x, x, iterations_qty=50000, adaptative_eta=True)
 print(min_error)
 
 encoder = MultiLayerPerceptron(encoderDecoder.neuron_layers[0:int(len(layers)/2)], init_layers=False)     # desde el inicio hasta el medio
@@ -84,7 +65,7 @@ decoder = MultiLayerPerceptron(encoderDecoder.neuron_layers[int(len(layers)/2):]
 
 
 for i in range(len(x)):
-    to_predict = x_noise2[i, :]
+    to_predict = x[i, :]
     encoded = encoder.predict(to_predict)
     decoded = decoder.predict(encoded)
     #print(f"{detransform(to_predict)} -> {encoded} -> {detransform(decoded)}" )
@@ -93,3 +74,6 @@ for i in range(len(x)):
     print()
     print()
     printFont(decoded)#.astype(np.int64))
+
+
+
