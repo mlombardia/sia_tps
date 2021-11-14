@@ -55,9 +55,9 @@ layers = [
     NeuronLayer(35, activation="tanh")
 ]
 
-encoderDecoder = MultiLayerPerceptron(layers, init_layers=True, momentum=False, eta=0.00001)
+encoderDecoder = MultiLayerPerceptron(layers, init_layers=True, momentum=True, eta=0.0005) #si usamos eta adapt creo que conviene usar 0.000001
 
-min_error, errors, epochs, training_accuracies = encoderDecoder.train(x, x, iterations_qty=30000, adaptative_eta=True)
+min_error, errors, epochs, training_accuracies = encoderDecoder.train(x, x, iterations_qty=20000, adaptative_eta=False)
 print(min_error)
 
 encoder = MultiLayerPerceptron(encoderDecoder.neuron_layers[0:int(len(layers)/2)], init_layers=False)     # desde el inicio hasta el medio
@@ -76,8 +76,8 @@ for i in range(len(x)):
     print()
     print()
     printFont(decoded)#.astype(np.int64))
-    aux_1.append(decoded[0])
-    aux_2.append(decoded[1])
+    aux_1.append(encoded[0])
+    aux_2.append(encoded[1])
     #print("(",decoded[0],",",decoded[1],")")
 
 print(aux_1)
@@ -93,8 +93,8 @@ for i in values:
         decoded = decoder.predict(new_letter)
         printFont(decoded)
 
-plt.xlim([-1, 1])
-plt.ylim([-1, 1])
+plt.xlim([-1.1, 1.1])
+plt.ylim([-1.1, 1.1])
 for i, txt in enumerate(text_names):
     plt.annotate(txt, (aux_1[i], aux_2[i]))
 plt.scatter(aux_1, aux_2)
