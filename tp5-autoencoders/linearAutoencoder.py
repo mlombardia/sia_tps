@@ -1,6 +1,7 @@
 from multilayerPerceptron import *
 from font_utils import *
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 x = np.array(get_input(2))
@@ -47,22 +48,23 @@ layers = [
     # "capa" inicial que son los valores
     NeuronLayer(30, 35, activation="tanh"), #35 de entrada
     NeuronLayer(20, activation="tanh"),
-    NeuronLayer(10, activation="tanh"), #latent code Z
+    NeuronLayer(2, activation="tanh"), #latent code Z
     NeuronLayer(20, activation="tanh"),
     NeuronLayer(30, activation="tanh"),
     NeuronLayer(35, activation="tanh")
 ]
 
-encoderDecoder = MultiLayerPerceptron(layers, init_layers=True, momentum=True, eta=0.001)
+encoderDecoder = MultiLayerPerceptron(layers, init_layers=True, momentum=True, eta=0.0001)
 
-min_error, errors, epochs, training_accuracies = encoderDecoder.train(x, x, iterations_qty=50000, adaptative_eta=True)
+min_error, errors, epochs, training_accuracies = encoderDecoder.train(x, x, iterations_qty=15000, adaptative_eta=True)
 print(min_error)
 
 encoder = MultiLayerPerceptron(encoderDecoder.neuron_layers[0:int(len(layers)/2)], init_layers=False)     # desde el inicio hasta el medio
 
 decoder = MultiLayerPerceptron(encoderDecoder.neuron_layers[int(len(layers)/2):], init_layers=False)    # las ultimas capas
 
-
+aux_1 = []
+aux_2 = []
 for i in range(len(x)):
     to_predict = x[i, :]
     encoded = encoder.predict(to_predict)
@@ -73,6 +75,16 @@ for i in range(len(x)):
     print()
     print()
     printFont(decoded)#.astype(np.int64))
+    aux_1.append(decoded[0])
+    aux_2.append(decoded[1])
+    #print("(",decoded[0],",",decoded[1],")")
+
+print(aux_1)
+print(aux_2)
+plt.xlim([-1, 1])
+plt.ylim([-1, 1])
+plt.scatter(aux_1, aux_2)
+plt.show()
 
 
 

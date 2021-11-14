@@ -80,14 +80,14 @@ class NeuronLayer:  # es una matriz
 
 class MultiLayerPerceptron:
     def __init__(self, neuron_layers, eta=0.001, delta=0.049, init_layers=True, momentum = False):
-        self.momentum_number = 0.8
-        self.alpha = 0.0001
-        self.beta = 0.0001
+        self.momentum_number = 0.75
+        self.alpha = eta*0.1
+        self.beta = eta*0.1
         self.eta = eta
         self.delta = delta
         self.neuron_layers = neuron_layers
         self.momentum = momentum
-        self.k = 9
+        self.k = 4
         if init_layers:
             self._init_layers()
 
