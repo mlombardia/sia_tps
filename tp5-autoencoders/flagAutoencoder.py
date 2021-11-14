@@ -4,11 +4,17 @@ import numpy as np
 from PIL import Image
 
 flag1 = Image.open("flags/tile010.png").convert('RGB')
+flag2 = Image.open("flags/tile020.png").convert('RGB')
+
 data_flag1 = np.asarray(flag1)
 data_flag1 = np.delete(data_flag1, [0, 15], axis=1)
 data_flag1 = np.delete(data_flag1, [0,1,15,14,13], axis=0)
+data_flag2 = np.asarray(flag2)
+data_flag2 = np.delete(data_flag2, [0, 15], axis=1)
+data_flag2 = np.delete(data_flag2, [0,1,15,14,13], axis=0)
 
 flag1 = Image.fromarray(data_flag1)
+flag2 = Image.fromarray(data_flag2)
 
 #flag1.show()
 
@@ -51,11 +57,12 @@ def dechoclify(arr):
 
 
 data_flag1 = choclify(data_flag1)
+data_flag2 = choclify(data_flag2)
 
 
 
 #x = np.array(get_input(2))
-x = [data_flag1]
+x = [data_flag1, data_flag2]
 x = np.array(x)
 
 
