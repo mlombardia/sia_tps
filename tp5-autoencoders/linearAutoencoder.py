@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 
 x = np.array(get_input(2))
+text_names = get_annotation(2)
 ##x = [x[6], x[7], x[8], x[9], x[10]]
 #x = np.array(x)
 
@@ -54,9 +55,9 @@ layers = [
     NeuronLayer(35, activation="tanh")
 ]
 
-encoderDecoder = MultiLayerPerceptron(layers, init_layers=True, momentum=True, eta=0.0001)
+encoderDecoder = MultiLayerPerceptron(layers, init_layers=True, momentum=False, eta=0.00001)
 
-min_error, errors, epochs, training_accuracies = encoderDecoder.train(x, x, iterations_qty=15000, adaptative_eta=True)
+min_error, errors, epochs, training_accuracies = encoderDecoder.train(x, x, iterations_qty=30000, adaptative_eta=True)
 print(min_error)
 
 encoder = MultiLayerPerceptron(encoderDecoder.neuron_layers[0:int(len(layers)/2)], init_layers=False)     # desde el inicio hasta el medio
@@ -81,10 +82,20 @@ for i in range(len(x)):
 
 print(aux_1)
 print(aux_2)
+
+#ej 1.a 4)
+print("\n\n\n-------------------------\n")
+values = [-1,0,1]
+for i in values:
+    for j in values:
+        print(i, " ", j, ": ")
+        new_letter = [i, j]
+        decoded = decoder.predict(new_letter)
+        printFont(decoded)
+
 plt.xlim([-1, 1])
 plt.ylim([-1, 1])
+for i, txt in enumerate(text_names):
+    plt.annotate(txt, (aux_1[i], aux_2[i]))
 plt.scatter(aux_1, aux_2)
 plt.show()
-
-
-
